@@ -7,7 +7,6 @@ import Icon from '../components/Icon.astro';
 import Logo from '../components/Logo.astro';
 import QuangCao from '../components/QuangCao.astro';
 import DuLieuTruyen from '../components/DuLieuTruyen.astro';
-import GocTacGia from '../components/GocTacGia.astro';
 import HinhTamTrang from '../components/HinhTamTrang.astro';
 import { DS_TAM_TRANG, tamTrangCuaTruyen } from '../lib/tam-trang';
 import caiDat from '../data/cai-dat.json';
@@ -38,7 +37,6 @@ const tamTrang = DS_TAM_TRANG.map((t) => ({ ...t, so: tamTrangMoiTruyen.filter((
       <p>{caiDat.khauHieu}</p>
       <p class="sap-ra-mat">Truyện đầu tiên sắp ra mắt. Hãy quay lại sau ít ngày nữa nhé!</p>
     </section>
-    <div class="goc-tac-gia-giua"><GocTacGia /></div>
     </>
   ) : (
     <>
@@ -93,7 +91,6 @@ const tamTrang = DS_TAM_TRANG.map((t) => ({ ...t, so: tamTrangMoiTruyen.filter((
         </section>
 
         <aside class="cot-phu">
-          <GocTacGia />
           <section class="hop-phu">
             <h2><span class="huy-hieu-muc nho"><Icon ten="luoi" co={14} /></span>Thể loại</h2>
             <div class="luoi-the-loai">
