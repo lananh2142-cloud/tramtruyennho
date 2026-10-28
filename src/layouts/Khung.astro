@@ -28,7 +28,7 @@ const dsTheLoai = await tatCaTheLoai();
     <meta property="og:type" content="website" />
     <meta property="og:url" content={urlTrang} />
     {urlAnh && <meta property="og:image" content={urlAnh} />}
-    <meta name="theme-color" content="#151927" />
+    <meta name="theme-color" content="#fbf7f2" />
     <link rel="icon" href={link('/favicon.svg')} type="image/svg+xml" />
     <link rel="sitemap" href={link('/sitemap-index.xml')} />
     <link rel="alternate" type="application/rss+xml" title={caiDat.tenWeb} href={link('/rss.xml')} />
@@ -155,7 +155,7 @@ const dsTheLoai = await tatCaTheLoai();
       });
       document.getElementById('doi-giao-dien').addEventListener('click', function () {
         var r = document.documentElement;
-        var moi = (r.dataset.theme || 'dark') === 'light' ? 'dark' : 'light';
+        var moi = r.dataset.theme === 'dark' ? 'light' : 'dark';
         r.dataset.theme = moi;
         try { localStorage.setItem('giao-dien', moi); } catch (e) {}
       });

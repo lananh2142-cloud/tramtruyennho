@@ -1,0 +1,87 @@
+---
+// Banner truyện đề cử dạng xếp bìa: bìa giữa to nhất, các bìa khác xếp lớp hai bên; tự chuyển truyện
+import BiaTruyen from './BiaTruyen.astro';
+import { linkChuong, linkTruyen, type TomTat } from '../lib/du-lieu';
+interface Props { ds: TomTat[] }
+const { ds } = Astro.props;
+// Vị trí ban đầu của từng bìa so với bìa giữa (cùng cách tính với đoạn mã chạy trên trình duyệt bên dưới)
+const viTri = (i: number) => {
+  let lech = i;
+  if (lech > ds.length / 2) lech -= ds.length;
+  return Math.abs(lech) <= 2 ? lech : 9;
+};
+---
+<section class="banner-xoay" aria-roledescription="carousel" aria-label="Truyện đề cử">
+  <div class="san-khau" id="san-khau">
+    {ds.map(({ truyen }, i) => (
+      <button type="button" class="the-xoay" data-chi-so={i} data-vt={viTri(i)}
+        aria-label={`Xem truyện ${truyen.data.ten}`}>
+        <BiaTruyen truyen={truyen} lon />
+      </button>
+    ))}
+  </div>
+  <div class="noi-dung-xoay">
+    {ds.map(({ truyen, dsChuong }, i) => (
+      <div class="tt-xoay" data-chi-so={i} hidden={i !== 0}>
+        <h2><a href={linkTruyen(truyen.id)}>{truyen.data.ten}</a></h2>
+        {truyen.data.tacGia && <p class="tac-gia-xoay">{truyen.data.tacGia}</p>}
+        <p class="mo-ta-xoay">{truyen.data.gioiThieu}</p>
+        <a class="nut-vien" href={dsChuong[0] ? linkChuong(truyen.id, dsChuong[0].data.so) : linkTruyen(truyen.id)}>Đọc Ngay</a>
+      </div>
+    ))}
+    {ds.length > 1 && (
+      <div class="cham-xoay" role="tablist" aria-label="Chọn truyện">
+        {ds.map((_, i) => <button type="button" data-chi-so={i} class={i === 0 ? 'chon' : ''} aria-label={`Truyện thứ ${i + 1}`}></button>)}
+      </div>
+    )}
+  </div>
+</section>
+
+<script>
+  const banner = document.querySelector<HTMLElement>('.banner-xoay');
+  if (banner) {
+    const the = [...banner.querySelectorAll<HTMLElement>('.the-xoay')];
+    const tt = [...banner.querySelectorAll<HTMLElement>('.tt-xoay')];
+    const cham = [...banner.querySelectorAll<HTMLElement>('.cham-xoay button')];
+    const n = the.length;
+    let hienTai = 0;
+
+    // Đặt vị trí từng bìa so với bìa đang chọn: 0 là giữa, -1/1 kế bên, -2/2 xa hơn, còn lại ẩn
+    const chon = (i: number) => {
+      hienTai = (i + n) % n;
+      the.forEach((t, j) => {
+        let lech = j - hienTai;
+        if (lech > n / 2) lech -= n;
+        if (lech < -n / 2) lech += n;
+        t.dataset.vt = String(Math.abs(lech) <= 2 ? lech : 9);
+      });
+      tt.forEach((x, j) => (x.hidden = j !== hienTai));
+      cham.forEach((c, j) => c.classList.toggle('chon', j === hienTai));
+    };
+
+    the.forEach((t) => t.addEventListener('click', () => {
+      const i = Number(t.dataset.chiSo);
+      if (i === hienTai) location.href = tt[i].querySelector<HTMLAnchorElement>('h2 a')!.href;
+      else chon(i);
+    }));
+    cham.forEach((c) => c.addEventListener('click', () => chon(Number(c.dataset.chiSo))));
+
+    // Vuốt trái/phải trên điện thoại
+    let x0: number | null = null;
+    banner.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+    banner.addEventListener('touchend', (e) => {
+      if (x0 === null) return;
+      const dx = e.changedTouches[0].clientX - x0;
+      if (Math.abs(dx) > 40) chon(hienTai + (dx < 0 ? 1 : -1));
+      x0 = null;
+    });
+
+    // Tự chuyển truyện, dừng khi người đọc rê chuột vào hoặc máy tắt hiệu ứng chuyển động
+    if (n > 1 && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      let dung = false;
+      banner.addEventListener('mouseenter', () => (dung = true));
+      banner.addEventListener('mouseleave', () => (dung = false));
+      setInterval(() => { if (!dung && !document.hidden) chon(hienTai + 1); }, 6000);
+    }
+  }
+</script>

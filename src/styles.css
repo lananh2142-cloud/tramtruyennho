@@ -1,22 +1,24 @@
 /* ===== Màu sắc =====
-   --nen*: nền, --chu*: chữ, --vien: đường viền, --nhan: màu điểm nhấn (vàng),
-   --nut / --tren-nut: nền và chữ của nút chính. Mặc định giao diện tối; bấm nút mặt trăng để chuyển sáng. */
+   Tông nâu đất, nền kem (mặc định sáng); bấm nút mặt trăng để chuyển sang tối.
+   --nen*: nền, --chu*: chữ, --vien: đường viền, --nhan: màu điểm nhấn, --nut / --tren-nut: nút chính */
 :root {
-  --nen: #151927; --nen-2: #1c2133; --nen-3: #252b40; --vien: #2c3349;
-  --chu: #e9ecf3; --chu-phu: #9aa3b8; --chu-mo: #6f7890;
-  --nhan: #f2b544; --nhan-chu: #f5c35f; --nut: #f2b544; --nut-hover: #f7c75e; --tren-nut: #1a1408;
-  --xanh: #4cc38a; --do: #f26d6d;
-  --bong: 0 1px 2px rgba(0,0,0,.25), 0 8px 24px rgba(0,0,0,.18);
+  --nen: #fbf7f2; --nen-2: #ffffff; --nen-3: #f4ece3; --vien: #eadfd3;
+  --chu: #2b211b; --chu-phu: #66574c; --chu-mo: #9a897c;
+  --nhan: #b0623a; --nhan-chu: #9c4f2a; --nut: #9c4f2a; --nut-hover: #833f1f; --tren-nut: #ffffff;
+  --xanh: #2f8a5b; --do: #c94b3b;
+  --banner-1: #7a3410; --banner-2: #c9876a;
+  --bong: 0 1px 2px rgba(60,35,20,.06), 0 8px 24px rgba(60,35,20,.08);
   --bo: 12px; --co-chu: 19px; --gian-dong: 1.85;
-  color-scheme: dark;
-}
-:root[data-theme="light"] {
-  --nen: #f5f6fa; --nen-2: #ffffff; --nen-3: #eef0f5; --vien: #e2e5ed;
-  --chu: #1c2130; --chu-phu: #5d6578; --chu-mo: #8a91a3;
-  --nhan: #e0a12f; --nhan-chu: #a96b0b; --nut: #f2b544; --nut-hover: #e8a838; --tren-nut: #1a1408;
-  --xanh: #1f9d63; --do: #d64545;
-  --bong: 0 1px 2px rgba(16,24,40,.06), 0 8px 24px rgba(16,24,40,.08);
   color-scheme: light;
+}
+:root[data-theme="dark"] {
+  --nen: #1a1512; --nen-2: #231c18; --nen-3: #2e2520; --vien: #3a2f28;
+  --chu: #f1e9e2; --chu-phu: #bcaea3; --chu-mo: #8c7d72;
+  --nhan: #d9875a; --nhan-chu: #e39a70; --nut: #c06a3e; --nut-hover: #d27a4c; --tren-nut: #ffffff;
+  --xanh: #5cc48c; --do: #f07b6b;
+  --banner-1: #4a200b; --banner-2: #8a5238;
+  --bong: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+  color-scheme: dark;
 }
 
 /* ===== Nền tảng ===== */
@@ -116,30 +118,46 @@ h2 small { font-size: .8em; color: var(--chu-mo); font-weight: 500; }
 .gioi-thieu-web p { margin: 0; color: var(--chu-phu); }
 .gioi-thieu-web .sap-ra-mat { margin-top: 22px; display: inline-block; padding: 8px 16px; border-radius: 99px; background: var(--nen-3); color: var(--chu); font-size: .9rem; }
 
-/* Banner truyện nổi bật */
-.banner { position: relative; overflow: hidden; display: flex; align-items: center; gap: 40px; padding: 40px 48px; border-radius: 20px; border: 1px solid var(--vien);
-  background: linear-gradient(110deg, var(--nen-2) 35%, color-mix(in srgb, var(--m1) 30%, var(--nen-2))); }
-.banner::after { content: ''; position: absolute; right: -80px; top: -80px; width: 420px; height: 420px; border-radius: 50%; pointer-events: none;
-  background: radial-gradient(circle, color-mix(in srgb, var(--m1) 35%, transparent), transparent 70%); }
-.banner-nen { position: absolute; z-index: 0; inset: -40px; background-size: cover; filter: blur(36px) saturate(1.2); opacity: .45; transform: scale(1.1); }
+/* Banner truyện đề cử dạng xếp bìa */
+.banner-xoay { position: relative; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); align-items: center; gap: 48px;
+  min-height: 400px; padding: 44px 56px; border-radius: 16px; color: #fff;
+  background: linear-gradient(115deg, var(--banner-1), var(--banner-2)); }
+.san-khau { position: relative; height: 320px; }
+.the-xoay { position: absolute; top: 50%; left: 50%; width: 190px; padding: 0; border: 3px solid rgba(255,255,255,.9); border-radius: 10px; background: none; cursor: pointer;
+  box-shadow: 0 14px 34px rgba(40,15,0,.4); transition: transform .5s ease, opacity .5s ease, filter .5s ease; transform: translate(-50%, -50%); }
+.the-xoay .bia { border-radius: 7px; box-shadow: none; font-size: 1.05rem; }
+.the-xoay[data-vt="0"] { z-index: 5; }
+.the-xoay[data-vt="1"] { z-index: 4; transform: translate(calc(-50% + 120px), -50%) scale(.8); filter: brightness(.85); }
+.the-xoay[data-vt="-1"] { z-index: 4; transform: translate(calc(-50% - 120px), -50%) scale(.8); filter: brightness(.85); }
+.the-xoay[data-vt="2"] { z-index: 3; transform: translate(calc(-50% + 205px), -50%) scale(.62); filter: brightness(.7); }
+.the-xoay[data-vt="-2"] { z-index: 3; transform: translate(calc(-50% - 205px), -50%) scale(.62); filter: brightness(.7); }
+.the-xoay[data-vt="9"] { z-index: 1; opacity: 0; pointer-events: none; transform: translate(-50%, -50%) scale(.5); }
+.noi-dung-xoay { min-width: 0; }
+.tt-xoay h2 { margin: 0 0 14px; font-size: clamp(1.4rem, 3vw, 1.9rem); line-height: 1.3; }
+.tt-xoay h2 a { color: #fff; }
+.tac-gia-xoay { margin: 0 0 18px; color: #ffd9c4; font-size: .92rem; font-weight: 500; }
+.mo-ta-xoay { margin: 0 0 28px; color: rgba(255,255,255,.92); line-height: 1.7; display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
+.nut-vien { display: inline-flex; align-items: center; justify-content: center; height: 46px; padding: 0 64px; border: 2px solid #fff; border-radius: 99px; color: #fff; font-weight: 600; }
+.nut-vien:hover { background: #fff; color: var(--banner-1); text-decoration: none; }
+.cham-xoay { display: flex; gap: 8px; margin-top: 28px; }
+.cham-xoay button { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 99px; background: rgba(255,255,255,.45); cursor: pointer; transition: width .3s, background .3s; }
+.cham-xoay button.chon { width: 24px; background: #fff; }
+@media (max-width: 860px) {
+  .banner-xoay { grid-template-columns: 1fr; gap: 20px; padding: 28px 20px 24px; text-align: center; }
+  .san-khau { height: 250px; }
+  .the-xoay { width: 140px; }
+  .the-xoay[data-vt="1"] { transform: translate(calc(-50% + 88px), -50%) scale(.78); }
+  .the-xoay[data-vt="-1"] { transform: translate(calc(-50% - 88px), -50%) scale(.78); }
+  .the-xoay[data-vt="2"] { transform: translate(calc(-50% + 150px), -50%) scale(.6); }
+  .the-xoay[data-vt="-2"] { transform: translate(calc(-50% - 150px), -50%) scale(.6); }
+  .mo-ta-xoay { -webkit-line-clamp: 4; margin-bottom: 20px; }
+  .cham-xoay { justify-content: center; margin-top: 20px; }
+}
+
 .dau-truyen { position: relative; overflow: hidden; }
 .dau-truyen > :not(.banner-nen) { position: relative; z-index: 2; }
-.banner:has(.banner-nen)::before, .dau-truyen:has(.banner-nen)::before { content: ''; position: absolute; inset: 0; z-index: 1; background: linear-gradient(100deg, var(--nen-2) 30%, color-mix(in srgb, var(--nen-2) 55%, transparent)); }
-.banner-chu { position: relative; z-index: 2; flex: 1; min-width: 0; }
-.banner-nhan { margin: 0 0 10px; display: inline-block; font-size: .78rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--nhan-chu); }
-.banner h1 { margin: 0 0 12px; font-size: clamp(1.7rem, 4vw, 2.6rem); }
-.banner h1 a { color: var(--chu); }
-.banner-phu { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 0 0 14px; color: var(--chu-phu); font-size: .9rem; }
-.banner-phu span { display: inline-flex; align-items: center; gap: 6px; }
-.banner-mo-ta { margin: 0; max-width: 620px; color: var(--chu-phu); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-.banner-bia { position: relative; z-index: 2; flex: 0 0 auto; }
-.banner-bia .bia { width: 200px; box-shadow: 0 20px 40px rgba(0,0,0,.35); }
-@media (max-width: 700px) {
-  .banner { flex-direction: column-reverse; align-items: stretch; gap: 20px; padding: 24px 20px; }
-  .banner-bia { align-self: center; }
-  .banner-bia .bia { width: 140px; }
-  .banner .nut-hang .nut { flex: 1; }
-}
+.banner-nen { position: absolute; z-index: 0; inset: -40px; background-size: cover; filter: blur(36px) saturate(1.2); opacity: .45; transform: scale(1.1); }
+.dau-truyen:has(.banner-nen)::before { content: ''; position: absolute; inset: 0; z-index: 1; background: linear-gradient(100deg, var(--nen-2) 30%, color-mix(in srgb, var(--nen-2) 55%, transparent)); }
 
 /* Đọc tiếp */
 .hang-doc-tiep { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }

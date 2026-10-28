@@ -2,11 +2,12 @@
 import Khung from '../layouts/Khung.astro';
 import OBia from '../components/OBia.astro';
 import BiaTruyen from '../components/BiaTruyen.astro';
+import BannerTruyen from '../components/BannerTruyen.astro';
 import Icon from '../components/Icon.astro';
 import QuangCao from '../components/QuangCao.astro';
 import DuLieuTruyen from '../components/DuLieuTruyen.astro';
 import caiDat from '../data/cai-dat.json';
-import { tomTatTatCa, tatCaTheLoai, linkChuong, linkTruyen, linkTheLoai, link, laMoi, anhHienThi } from '../lib/du-lieu';
+import { tomTatTatCa, tatCaTheLoai, linkChuong, linkTruyen, linkTheLoai, link, laMoi } from '../lib/du-lieu';
 import { kieuTheLoai } from '../lib/the-loai';
 
 const tatCa = await tomTatTatCa();
@@ -20,7 +21,6 @@ const moiCapNhat = theoCapNhat.filter((t) => t.chuongMoi).slice(0, 15);
 const hoanThanh = theoCapNhat.filter((t) => t.truyen.data.trangThai === 'Hoàn thành').slice(0, 12);
 const moiDang = [...tatCa].sort((a, b) => b.truyen.data.ngayDang.valueOf() - a.truyen.data.ngayDang.valueOf()).slice(0, 6);
 const dsTheLoai = await tatCaTheLoai();
-const hinhNoiBat = noiBat ? await anhHienThi(noiBat.truyen) : undefined;
 ---
 <Khung>
   {!noiBat ? (
@@ -32,25 +32,7 @@ const hinhNoiBat = noiBat ? await anhHienThi(noiBat.truyen) : undefined;
     </section>
   ) : (
     <>
-      <!-- Banner truyện nổi bật -->
-      <section class="banner" style={`--m1:${kieuTheLoai(noiBat.truyen.data.theLoai[0]).mau[0]};--m2:${kieuTheLoai(noiBat.truyen.data.theLoai[0]).mau[1]}`}>
-        {hinhNoiBat?.src && <div class="banner-nen" style={`background-image:url("${hinhNoiBat.src}");background-position:${hinhNoiBat.viTri}`} aria-hidden="true"></div>}
-        <div class="banner-chu">
-          <p class="banner-nhan">Truyện nổi bật</p>
-          <h1><a href={linkTruyen(noiBat.truyen.id)}>{noiBat.truyen.data.ten}</a></h1>
-          <p class="banner-phu">
-            {noiBat.truyen.data.tacGia && <span><Icon ten="nguoi" co={15} /> {noiBat.truyen.data.tacGia}</span>}
-            <span><Icon ten="tep" co={15} /> {noiBat.dsChuong.length} chương</span>
-            <span>{noiBat.truyen.data.theLoai.join(' · ')}</span>
-          </p>
-          <p class="banner-mo-ta">{noiBat.truyen.data.gioiThieu}</p>
-          <div class="nut-hang">
-            {noiBat.dsChuong[0] && <a class="nut chinh lon" href={linkChuong(noiBat.truyen.id, noiBat.dsChuong[0].data.so)}><Icon ten="sach" co={18} /> Đọc ngay</a>}
-            <a class="nut lon" href={linkTruyen(noiBat.truyen.id)}>Chi tiết</a>
-          </div>
-        </div>
-        <a class="banner-bia" href={linkTruyen(noiBat.truyen.id)} tabindex="-1" aria-hidden="true"><BiaTruyen truyen={noiBat.truyen} lon /></a>
-      </section>
+      <BannerTruyen ds={deCu.slice(0, 7)} />
 
       <!-- Đọc tiếp: hiện nếu người đọc đã từng đọc truyện ở đây -->
       <section id="doc-tiep" hidden>
