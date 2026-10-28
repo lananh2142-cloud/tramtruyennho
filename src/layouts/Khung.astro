@@ -2,6 +2,7 @@
 import caiDat from '../data/cai-dat.json';
 import { link, tatCaTheLoai, linkTheLoai } from '../lib/du-lieu';
 import Icon from '../components/Icon.astro';
+import Logo from '../components/Logo.astro';
 import '../styles.css';
 
 interface Props {
@@ -71,7 +72,7 @@ const dsTheLoai = await tatCaTheLoai();
     <header class="dau-trang" id="dau-trang">
       <div class="khung hang-dau">
         <a class="logo" href={link('/')} aria-label={`${caiDat.tenWeb} – Trang chủ`}>
-          <span class="logo-dau" aria-hidden="true"><Icon ten="sach" co={18} /></span>
+          <Logo co={40} />
           <span>{caiDat.tenWeb}</span>
         </a>
         <form class="o-tim-dau" action={link('/danh-sach/')} method="get" role="search">
@@ -105,7 +106,7 @@ const dsTheLoai = await tatCaTheLoai();
       <div class="khung chan-luoi">
         <div class="chan-gioi-thieu">
           <a class="logo" href={link('/')}>
-            <span class="logo-dau" aria-hidden="true"><Icon ten="sach" co={18} /></span>
+            <Logo co={40} />
             <span>{caiDat.tenWeb}</span>
           </a>
           <p>{caiDat.moTa}</p>

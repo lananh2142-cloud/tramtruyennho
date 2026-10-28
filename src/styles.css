@@ -389,3 +389,57 @@ h2 small { font-size: .8em; color: var(--chu-mo); font-weight: 500; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; }
 }
+
+/* ===== Làm web sinh động hơn (nhẹ nhàng, không lòe loẹt) ===== */
+/* Ánh màu ấm rất nhẹ phía sau nền */
+body::before { content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(ellipse 70% 45% at 15% -5%, color-mix(in srgb, var(--nhan) 12%, transparent), transparent 70%),
+    radial-gradient(ellipse 50% 35% at 100% 0%, color-mix(in srgb, #f4978e 10%, transparent), transparent 70%); }
+.logo-hinh { flex: 0 0 auto; display: block; }
+.logo:hover .logo-hinh { transform: rotate(-6deg); transition: transform .2s; }
+.gioi-thieu-web .logo-hinh { margin: 0 auto; }
+
+/* Tiêu đề mục có biểu tượng trong vòng tròn màu */
+.dau-muc h2, .hop-phu h2 { display: flex; align-items: center; gap: 10px; }
+.huy-hieu-muc { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 10px;
+  background: color-mix(in srgb, var(--nhan) 15%, var(--nen-2)); color: var(--nhan-chu); }
+.huy-hieu-muc.nho { width: 26px; height: 26px; border-radius: 8px; }
+
+/* Banner: kéo bằng tay */
+.san-khau { touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: grab; }
+.san-khau.dang-keo { cursor: grabbing; }
+.san-khau.dang-keo .the-xoay { transition: none; }
+.the-xoay img { -webkit-user-drag: none; pointer-events: none; }
+.banner-xoay::before { content: ''; position: absolute; left: -10%; top: -40%; width: 60%; height: 140%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(255,255,255,.18), transparent); }
+
+/* Mới cập nhật: danh sách có ảnh bìa nhỏ */
+.ds-cap-nhat { list-style: none; margin: 0; padding: 6px 18px; background: var(--nen-2); border: 1px solid var(--vien); border-radius: var(--bo); box-shadow: var(--bong); }
+.ds-cap-nhat li { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--vien); }
+.ds-cap-nhat li:last-child { border-bottom: 0; }
+.ds-cap-nhat .giua { flex: 1; min-width: 0; }
+.ds-cap-nhat .ten { color: var(--chu); font-weight: 600; }
+.ds-cap-nhat .ten:hover { color: var(--nhan-chu); text-decoration: none; }
+.ds-cap-nhat .giua p { margin: 2px 0 0; font-size: .82rem; }
+.ds-cap-nhat .phai { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right; }
+.ds-cap-nhat .chuong { font-size: .88rem; font-weight: 500; white-space: nowrap; padding: 3px 10px; border-radius: 99px; background: color-mix(in srgb, var(--nhan) 12%, var(--nen-2)); }
+.ds-cap-nhat .chuong:hover { text-decoration: none; background: color-mix(in srgb, var(--nhan) 22%, var(--nen-2)); }
+.ds-cap-nhat li:hover .bia { transform: translateY(-2px); }
+
+/* Thể loại: mỗi thể loại một màu pastel riêng */
+.thanh-the-loai a[style] { background: color-mix(in srgb, var(--m1) 10%, var(--nen-2)); border-color: color-mix(in srgb, var(--m1) 28%, var(--vien));
+  color: color-mix(in srgb, var(--m1) 60%, var(--chu)); }
+.thanh-the-loai a[style]:hover { border-color: var(--m1); }
+.thanh-the-loai a.chon[style] { background: var(--m1); border-color: var(--m1); color: #fff; }
+.luoi-the-loai a:hover { background: color-mix(in srgb, var(--m1) 12%, var(--nen-2)); }
+
+/* Thẻ, hộp: bóng mềm cho có chiều sâu */
+.hop-phu, .the-doc-tiep { box-shadow: var(--bong); }
+.o-bia .bia { box-shadow: 0 6px 16px rgba(60,35,20,.18); }
+
+/* Trên điện thoại: các hàng truyện vuốt ngang như ứng dụng */
+@media (max-width: 600px) {
+  .luoi-bia.cuon-ngang { display: flex; overflow-x: auto; gap: 12px; margin: 0 -16px; padding: 4px 16px 10px; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .luoi-bia.cuon-ngang::-webkit-scrollbar { display: none; }
+  .luoi-bia.cuon-ngang > * { flex: 0 0 34%; scroll-snap-align: start; }
+}
