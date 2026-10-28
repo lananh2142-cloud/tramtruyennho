@@ -6,6 +6,7 @@ gioiThieu: Mười năm trước, dưới gốc phượng sân trường, họ h
 theLoai: [Ngôn tình, Học đường]
 trangThai: Đang ra
 deCu: true
+tamTrang: [Muốn khóc một chút, Muốn mơ mộng]
 ngayDang: 2026-02-10
 ---
 <img src="/images/mau-hoa-phuong.jpg" alt="Gốc phượng sân trường">
