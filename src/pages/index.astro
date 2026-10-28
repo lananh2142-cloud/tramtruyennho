@@ -1,97 +1,147 @@
 ---
 import Khung from '../layouts/Khung.astro';
-import TheTruyen from '../components/TheTruyen.astro';
+import OBia from '../components/OBia.astro';
 import BiaTruyen from '../components/BiaTruyen.astro';
 import QuangCao from '../components/QuangCao.astro';
-import ThanhTheLoai from '../components/ThanhTheLoai.astro';
+import DuLieuTruyen from '../components/DuLieuTruyen.astro';
 import caiDat from '../data/cai-dat.json';
-import { tatCaTruyen, chuongCuaTruyen, chuongMoiNhat, slugCuaChuong, linkChuong, linkTruyen, link, ngay } from '../lib/du-lieu';
+import { tomTatTatCa, tatCaTheLoai, linkChuong, linkTruyen, linkTheLoai, link, laMoi } from '../lib/du-lieu';
 import { kieuTheLoai } from '../lib/the-loai';
 
-const dsTruyen = await tatCaTruyen();
-const chuongTheoTruyen = Object.fromEntries(await Promise.all(dsTruyen.map(async (t) => [t.id, await chuongCuaTruyen(t.id)])));
-const soChuong = Object.fromEntries(dsTruyen.map((t) => [t.id, chuongTheoTruyen[t.id].length]));
-const tongChuong = Object.values(soChuong).reduce((a, b) => a + b, 0);
-const tenTruyen = Object.fromEntries(dsTruyen.map((t) => [t.id, t.data.ten]));
-const moiNhat = await chuongMoiNhat(8);
+const tatCa = await tomTatTatCa();
+const tongChuong = tatCa.reduce((a, t) => a + t.dsChuong.length, 0);
+const theoCapNhat = [...tatCa].sort((a, b) => b.capNhat.valueOf() - a.capNhat.valueOf());
 
-// Chương đăng trong 7 ngày gần nhất được gắn nhãn "MỚI"
-const BAY_NGAY = 7 * 24 * 60 * 60 * 1000;
-const laMoi = (d: Date) => Date.now() - d.valueOf() < BAY_NGAY;
-const truyenCoChuongMoi = new Set(moiNhat.filter((c) => laMoi(c.data.ngayDang)).map(slugCuaChuong));
-
-// Truyện nổi bật: truyện vừa có chương mới nhất
-const noiBat = moiNhat[0] ? dsTruyen.find((t) => t.id === slugCuaChuong(moiNhat[0])) : dsTruyen[0];
+// Truyện đề cử: truyện được bật "đề cử"; nếu chưa chọn truyện nào thì lấy truyện mới cập nhật
+const daChon = theoCapNhat.filter((t) => t.truyen.data.deCu);
+const deCu = (daChon.length > 0 ? daChon : theoCapNhat).slice(0, 12);
+const moiCapNhat = theoCapNhat.filter((t) => t.chuongMoi).slice(0, 15);
+const hoanThanh = theoCapNhat.filter((t) => t.truyen.data.trangThai === 'Hoàn thành').slice(0, 12);
+const moiDang = [...tatCa].sort((a, b) => b.truyen.data.ngayDang.valueOf() - a.truyen.data.ngayDang.valueOf()).slice(0, 6);
+const dsTheLoai = await tatCaTheLoai();
+const noiBat = theoCapNhat[0];
 ---
 <Khung>
-  <section class="bia-trang">
+  <section class:list={['bia-trang', { gon: tatCa.length > 0 }]}>
     <div class="dom-sang" aria-hidden="true">
       {Array.from({ length: 14 }, (_, i) => <span style={`--x:${(i * 37) % 100}%;--tre:${(i * 0.7) % 6}s;--co:${4 + (i % 4) * 2}px`}></span>)}
     </div>
     <p class="chao">✨ Chào mừng bạn đến với</p>
     <h1>{caiDat.tenWeb}</h1>
     <p class="khau-hieu">{caiDat.khauHieu}</p>
-    {dsTruyen.length > 0 && <div class="so-lieu">
-      <div><strong>{dsTruyen.length}</strong><span>truyện</span></div>
-      <div><strong>{tongChuong}</strong><span>chương</span></div>
-      <div><strong>100%</strong><span>miễn phí</span></div>
-    </div>}
+    {tatCa.length > 0 && (
+      <div class="so-lieu">
+        <div><strong>{tatCa.length}</strong><span>truyện</span></div>
+        <div><strong>{tongChuong}</strong><span>chương</span></div>
+        <div><strong>100%</strong><span>miễn phí</span></div>
+      </div>
+    )}
     <div class="nut-hang giua">
-      {noiBat && chuongTheoTruyen[noiBat.id][0] && <a class="nut chinh lon" href={linkChuong(noiBat.id, chuongTheoTruyen[noiBat.id][0].data.so)}>📖 Đọc ngay</a>}
+      {noiBat?.dsChuong[0] && <a class="nut chinh lon" href={linkChuong(noiBat.truyen.id, noiBat.dsChuong[0].data.so)}>📖 Đọc ngay</a>}
       <a class="nut lon" href={link('/danh-sach/')}>🧭 Khám phá truyện</a>
     </div>
   </section>
 
-  <ThanhTheLoai />
-
-  {dsTruyen.length === 0 && (
+  {tatCa.length === 0 ? (
     <section class="cho-truyen">
       <span class="bieu-tuong" aria-hidden="true">📖</span>
       <h2>Truyện đầu tiên sắp ra mắt</h2>
       <p>Hãy quay lại sau ít ngày nữa nhé!</p>
     </section>
-  )}
+  ) : (
+    <>
+      <!-- Đọc tiếp: hiện bằng JavaScript nếu người đọc đã từng đọc truyện ở đây -->
+      <section id="doc-tiep" class="doc-tiep" hidden>
+        <div class="dau-muc"><h2 class="tieu-de-muc">📌 Đọc tiếp</h2><a href={link('/tu-truyen/')}>Tủ truyện →</a></div>
+        <div class="hang-doc-tiep" id="hang-doc-tiep"></div>
+      </section>
 
-  {noiBat && (
-    <section class="noi-bat hien-dan" style={`--m1:${kieuTheLoai(noiBat.data.theLoai[0]).mau[0]};--m2:${kieuTheLoai(noiBat.data.theLoai[0]).mau[1]}`}>
-      <BiaTruyen truyen={noiBat} lon />
-      <div>
-        <p class="nhan-noi-bat">🔥 Truyện nổi bật</p>
-        <h2><a href={linkTruyen(noiBat.id)}>{noiBat.data.ten}</a></h2>
-        <p class="mo-ta-dai">{noiBat.data.gioiThieu}</p>
-        <div class="nut-hang">
-          <a class="nut chinh" href={linkTruyen(noiBat.id)}>Xem truyện →</a>
+      <section class="hien-dan">
+        <div class="dau-muc"><h2 class="tieu-de-muc">🔥 Truyện đề cử</h2><a href={link('/danh-sach/')}>Xem tất cả →</a></div>
+        <div class="luoi-bia">
+          {deCu.map((tt) => <OBia tt={tt} />)}
         </div>
+      </section>
+
+      <div class="hai-cot">
+        <section class="hien-dan">
+          <div class="dau-muc"><h2 class="tieu-de-muc">⚡ Mới cập nhật</h2><a href={link('/danh-sach/?sap=moi')}>Xem thêm →</a></div>
+          <table class="bang-cap-nhat">
+            <thead><tr><th>Tên truyện</th><th class="an-dt">Thể loại</th><th>Chương mới</th><th class="an-dt">Cập nhật</th></tr></thead>
+            <tbody>
+              {moiCapNhat.map(({ truyen, chuongMoi, capNhat }) => (
+                <tr>
+                  <td>
+                    <a class="ten" href={linkTruyen(truyen.id)}>{truyen.data.ten}</a>
+                    {truyen.data.trangThai === 'Hoàn thành' ? <span class="nhan-nho full">Full</span> : laMoi(capNhat) && <span class="nhan-nho moi">Mới</span>}
+                  </td>
+                  <td class="an-dt">{truyen.data.theLoai.slice(0, 2).map((tl, i) => <>{i > 0 && ', '}<a class="phu-nhat" href={linkTheLoai(tl)}>{tl}</a></>)}</td>
+                  <td><a class="chuong" href={linkChuong(truyen.id, chuongMoi!.data.so)}>Chương {chuongMoi!.data.so}</a></td>
+                  <td class="an-dt"><time datetime={capNhat.toISOString()} data-tuong-doi>{capNhat.toLocaleDateString('vi-VN')}</time></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+
+        <aside class="cot-phu">
+          <section class="hop-phu hien-dan">
+            <h2>📂 Thể loại</h2>
+            <div class="luoi-the-loai">
+              {dsTheLoai.map(({ ten, soTruyen }) => {
+                const k = kieuTheLoai(ten);
+                return <a href={linkTheLoai(ten)} style={`--m1:${k.mau[0]}`}>{`${k.icon} ${ten}`} <span>{soTruyen}</span></a>;
+              })}
+            </div>
+          </section>
+          <section class="hop-phu hien-dan">
+            <h2>✨ Truyện mới đăng</h2>
+            <ol class="ds-nho">
+              {moiDang.map(({ truyen, dsChuong }) => (
+                <li>
+                  <a href={linkTruyen(truyen.id)}><BiaTruyen truyen={truyen} nho /></a>
+                  <div>
+                    <a class="ten" href={linkTruyen(truyen.id)}>{truyen.data.ten}</a>
+                    <p>{truyen.data.theLoai[0] ?? ''} · {dsChuong.length} chương</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </section>
+        </aside>
       </div>
-    </section>
+
+      <QuangCao />
+
+      {hoanThanh.length > 0 && (
+        <section class="hien-dan">
+          <div class="dau-muc"><h2 class="tieu-de-muc">✅ Truyện đã hoàn thành</h2><a href={link('/hoan-thanh/')}>Xem tất cả →</a></div>
+          <div class="luoi-bia">
+            {hoanThanh.map((tt) => <OBia tt={tt} />)}
+          </div>
+        </section>
+      )}
+
+      <DuLieuTruyen />
+      <script>
+        import { lichSu, thoiGianTruoc } from '../scripts/tu-truyen';
+        const duLieu = JSON.parse(document.getElementById('du-lieu-truyen')!.textContent!);
+        const ds = Object.entries(lichSu()).filter(([slug]) => duLieu[slug]).sort((a, b) => b[1].luc - a[1].luc).slice(0, 4);
+        if (ds.length > 0) {
+          const hang = document.getElementById('hang-doc-tiep')!;
+          for (const [slug, dd] of ds) {
+            const t = duLieu[slug];
+            const a = document.createElement('a');
+            a.className = 'the-doc-tiep';
+            a.href = t.linkChuong + dd.so + '/';
+            a.innerHTML = `<span class="icon" style="background:linear-gradient(160deg,${t.mau[0]},${t.mau[1]})">${t.icon}</span>
+              <span><strong></strong><small>Đang đọc chương ${dd.so}/${t.soChuong} · ${thoiGianTruoc(dd.luc)}</small></span>`;
+            a.querySelector('strong')!.textContent = t.ten;
+            hang.appendChild(a);
+          }
+          document.getElementById('doc-tiep')!.hidden = false;
+        }
+      </script>
+    </>
   )}
-
-  {moiNhat.length > 0 && <section class="hien-dan">
-    <h2 class="tieu-de-muc">⚡ Chương mới cập nhật</h2>
-    {moiNhat.length === 0 ? <p>Chưa có chương nào.</p> : (
-      <ul class="ds-moi">
-        {moiNhat.map((c) => {
-          const slug = slugCuaChuong(c);
-          return (
-            <li>
-              <a href={linkChuong(slug, c.data.so)}>
-                <span class="ten-truyen">{tenTruyen[slug] ?? slug} {laMoi(c.data.ngayDang) && <span class="huy-hieu-moi nho">MỚI</span>}</span>
-                <span class="ten-chuong">Chương {c.data.so}: {c.data.ten}</span>
-              </a>
-              <time>{ngay(c.data.ngayDang)}</time>
-            </li>
-          );
-        })}
-      </ul>
-    )}
-  </section>}
-
-  <QuangCao />
-
-  {dsTruyen.length > 0 && <section>
-    <h2 class="tieu-de-muc hien-dan">📚 Tất cả truyện</h2>
-    <div class="luoi-truyen">
-      {dsTruyen.map((t) => <TheTruyen truyen={t} soChuong={soChuong[t.id]} moi={truyenCoChuongMoi.has(t.id)} />)}
-    </div>
-  </section>}
 </Khung>

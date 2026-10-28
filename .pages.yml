@@ -14,6 +14,7 @@ content:
     fields:
       - { name: ten, label: Tên truyện, type: string, required: true }
       - { name: ma, label: "Mã truyện (viết thường, không dấu, nối bằng gạch ngang, ví dụ: ngoi-nha-cuoi-hem). Đặt một lần, không đổi.", type: string, required: true }
+      - { name: tacGia, label: Tác giả (bút danh), type: string }
       - { name: gioiThieu, label: Giới thiệu ngắn, type: text, required: true }
       - { name: anhBia, label: Ảnh bìa (tỉ lệ 2:3), type: image }
       - name: theLoai
@@ -29,6 +30,7 @@ content:
         default: Đang ra
         options:
           values: [Đang ra, Hoàn thành, Tạm dừng]
+      - { name: deCu, label: Đưa lên mục Truyện đề cử ở trang chủ, type: boolean }
       - { name: ngayDang, label: Ngày đăng, type: date, required: true }
       - { name: body, label: Lời giới thiệu thêm (không bắt buộc), type: rich-text }
 

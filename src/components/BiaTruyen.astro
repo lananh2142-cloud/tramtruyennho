@@ -2,16 +2,16 @@
 // Bìa truyện: dùng ảnh nếu có, nếu không thì tự vẽ bìa theo màu thể loại
 import { anh, type Truyen } from '../lib/du-lieu';
 import { kieuTheLoai } from '../lib/the-loai';
-interface Props { truyen: Truyen; lon?: boolean }
-const { truyen, lon = false } = Astro.props;
+interface Props { truyen: Truyen; lon?: boolean; nho?: boolean }
+const { truyen, lon = false, nho = false } = Astro.props;
 const d = truyen.data;
 const k = kieuTheLoai(d.theLoai[0]);
 ---
-<div class:list={['bia', { lon }]} style={`--m1:${k.mau[0]};--m2:${k.mau[1]}`}>
+<div class:list={['bia', { lon, nho }]} style={`--m1:${k.mau[0]};--m2:${k.mau[1]}`}>
   {d.anhBia ? <img src={anh(d.anhBia)} alt={`Bìa truyện ${d.ten}`} loading="lazy" /> : (
     <div class="bia-tu-ve">
       <span class="bia-icon" aria-hidden="true">{k.icon}</span>
-      <span class="bia-chu">{d.ten}</span>
+      {!nho && <span class="bia-chu">{d.ten}</span>}
     </div>
   )}
 </div>

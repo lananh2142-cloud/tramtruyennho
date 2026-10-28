@@ -55,3 +55,24 @@ export async function tatCaTheLoai(): Promise<{ ten: string; soTruyen: number }[
   for (const t of await tatCaTruyen()) for (const tl of t.data.theLoai) dem.set(tl, (dem.get(tl) ?? 0) + 1);
   return [...dem].map(([ten, soTruyen]) => ({ ten, soTruyen })).sort((a, b) => b.soTruyen - a.soTruyen || a.ten.localeCompare(b.ten, 'vi'));
 }
+
+// Thông tin tóm tắt của một truyện, dùng chung cho nhiều trang
+export interface TomTat {
+  truyen: Truyen;
+  dsChuong: Chuong[];
+  chuongMoi?: Chuong;
+  capNhat: Date;
+}
+
+export async function tomTatTatCa(): Promise<TomTat[]> {
+  const ds = await tatCaTruyen();
+  return Promise.all(ds.map(async (truyen) => {
+    const dsChuong = await chuongCuaTruyen(truyen.id);
+    const chuongMoi = dsChuong[dsChuong.length - 1];
+    const capNhat = dsChuong.reduce((m, c) => (c.data.ngayDang > m ? c.data.ngayDang : m), truyen.data.ngayDang);
+    return { truyen, dsChuong, chuongMoi, capNhat };
+  }));
+}
+
+// Truyện có chương mới trong 7 ngày gần nhất
+export const laMoi = (d: Date) => Date.now() - d.valueOf() < 7 * 24 * 60 * 60 * 1000;

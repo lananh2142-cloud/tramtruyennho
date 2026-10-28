@@ -7,10 +7,13 @@ const truyen = defineCollection({
   schema: z.object({
     ten: z.string(),
     ma: z.string().optional(),
+    tacGia: z.string().optional(),
     gioiThieu: z.string(),
     anhBia: z.string().optional(),
     theLoai: z.array(z.string()).default([]),
     trangThai: z.enum(['Đang ra', 'Hoàn thành', 'Tạm dừng']).default('Đang ra'),
+    // Bật lên để truyện hiện ở mục "Truyện đề cử" trên trang chủ
+    deCu: z.boolean().default(false),
     ngayDang: z.coerce.date(),
   }),
 });

@@ -1,6 +1,7 @@
 ---
 import caiDat from '../data/cai-dat.json';
-import { link } from '../lib/du-lieu';
+import { link, tatCaTheLoai, linkTheLoai } from '../lib/du-lieu';
+import { kieuTheLoai } from '../lib/the-loai';
 import '../styles.css';
 
 interface Props {
@@ -12,6 +13,7 @@ const { tieuDe, moTa = caiDat.moTa, anh } = Astro.props;
 const tieuDeDayDu = tieuDe ? `${tieuDe} | ${caiDat.tenWeb}` : `${caiDat.tenWeb} – ${caiDat.khauHieu}`;
 const urlTrang = new URL(Astro.url.pathname, Astro.site);
 const urlAnh = anh ? new URL(anh, Astro.site).href : undefined;
+const dsTheLoai = await tatCaTheLoai();
 ---
 <!doctype html>
 <html lang="vi">
@@ -37,8 +39,15 @@ const urlAnh = anh ? new URL(anh, Astro.site).href : undefined;
       try {
         var g = localStorage.getItem('giao-dien');
         if (g) document.documentElement.dataset.theme = g;
+        var r = document.documentElement;
         var c = localStorage.getItem('co-chu');
-        if (c) document.documentElement.style.setProperty('--co-chu', c + 'px');
+        if (c) r.style.setProperty('--co-chu', c + 'px');
+        var gd = localStorage.getItem('gian-dong');
+        if (gd) r.style.setProperty('--gian-dong', gd);
+        var nd = localStorage.getItem('nen-doc');
+        if (nd) r.dataset.nenDoc = nd;
+        var pc = localStorage.getItem('phong-chu');
+        if (pc) r.dataset.phongChu = pc;
       } catch (e) {}
     </script>
     {caiDat.thongKe.googleSearchConsole && <meta name="google-site-verification" content={caiDat.thongKe.googleSearchConsole} />}
@@ -59,17 +68,31 @@ const urlAnh = anh ? new URL(anh, Astro.site).href : undefined;
     )}
   </head>
   <body>
-    <header class="dau-trang">
-      <div class="khung">
+    <header class="dau-trang" id="dau-trang">
+      <div class="khung hang-dau">
         <a class="logo" href={link('/')}>
           <span class="logo-mat" aria-hidden="true">✦</span> {caiDat.tenWeb}
         </a>
-        <nav>
-          <a href={link('/')}>Trang chủ</a>
+        <form class="o-tim-dau" action={link('/danh-sach/')} method="get" role="search">
+          <input name="q" type="search" placeholder="Tìm tên truyện, tác giả..." aria-label="Tìm truyện" />
+          <button type="submit" aria-label="Tìm">🔍</button>
+        </form>
+        <nav class="menu-chinh" id="menu-chinh">
+          {dsTheLoai.length > 0 && (
+            <details class="menu-the-loai">
+              <summary>Thể loại</summary>
+              <div class="menu-tha">
+                {dsTheLoai.map(({ ten }) => <a href={linkTheLoai(ten)}>{`${kieuTheLoai(ten).icon} ${ten}`}</a>)}
+              </div>
+            </details>
+          )}
           <a href={link('/danh-sach/')}>Danh sách</a>
+          <a href={link('/hoan-thanh/')}>Hoàn thành</a>
+          <a href={link('/tu-truyen/')}>♡ Tủ truyện</a>
           {caiDat.ungHo.batTat && <a href={link('/ung-ho/')} class="nut-ung-ho">Ủng hộ</a>}
-          <button id="doi-giao-dien" type="button" aria-label="Đổi sáng/tối" title="Đổi sáng/tối">☾</button>
         </nav>
+        <button id="doi-giao-dien" type="button" aria-label="Đổi sáng/tối" title="Đổi sáng/tối">☾</button>
+        <button id="nut-menu" type="button" aria-label="Mở menu" aria-expanded="false" aria-controls="menu-chinh">☰</button>
       </div>
     </header>
     <main class="khung">
@@ -80,6 +103,8 @@ const urlAnh = anh ? new URL(anh, Astro.site).href : undefined;
         <p><strong>{caiDat.tenWeb}</strong> — {caiDat.khauHieu}</p>
         <p class="lien-ket-chan">
           <a href={link('/gioi-thieu/')}>Giới thiệu</a> ·
+          <a href={link('/danh-sach/')}>Danh sách truyện</a> ·
+          <a href={link('/tu-truyen/')}>Tủ truyện</a> ·
           <a href={link('/chinh-sach/')}>Chính sách bảo mật</a> ·
           <a href={link('/rss.xml')}>RSS</a>
           {caiDat.facebook && <> · <a href={caiDat.facebook} rel="noopener" target="_blank">Facebook</a></>}
@@ -100,6 +125,17 @@ const urlAnh = anh ? new URL(anh, Astro.site).href : undefined;
         }, { rootMargin: '0px 0px -40px 0px' });
         document.querySelectorAll('.hien-dan').forEach(function (el) { el.classList.add('cho-hien'); io.observe(el); });
       }
+      // Menu trên điện thoại
+      var nutMenu = document.getElementById('nut-menu');
+      nutMenu.addEventListener('click', function () {
+        var mo = document.getElementById('dau-trang').classList.toggle('mo-menu');
+        nutMenu.setAttribute('aria-expanded', mo);
+        nutMenu.textContent = mo ? '✕' : '☰';
+      });
+      // Đóng menu thể loại khi bấm ra ngoài
+      document.addEventListener('click', function (e) {
+        document.querySelectorAll('details.menu-the-loai[open]').forEach(function (d) { if (!d.contains(e.target)) d.open = false; });
+      });
       document.getElementById('doi-giao-dien').addEventListener('click', function () {
         var r = document.documentElement;
         var hienTai = r.dataset.theme || 'dark';
@@ -107,6 +143,10 @@ const urlAnh = anh ? new URL(anh, Astro.site).href : undefined;
         r.dataset.theme = moi;
         try { localStorage.setItem('giao-dien', moi); } catch (e) {}
       });
+    </script>
+    <script>
+      import { capNhatThoiGian } from '../scripts/tu-truyen';
+      capNhatThoiGian();
     </script>
   </body>
 </html>

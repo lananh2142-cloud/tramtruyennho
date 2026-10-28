@@ -1,35 +1,79 @@
 ---
 import Khung from '../layouts/Khung.astro';
-import TheTruyen from '../components/TheTruyen.astro';
+import OBia from '../components/OBia.astro';
 import ThanhTheLoai from '../components/ThanhTheLoai.astro';
-import { tatCaTruyen, chuongCuaTruyen } from '../lib/du-lieu';
+import { tomTatTatCa, khongDau } from '../lib/du-lieu';
 
-const dsTruyen = await tatCaTruyen();
-const soChuong = Object.fromEntries(await Promise.all(dsTruyen.map(async (t) => [t.id, (await chuongCuaTruyen(t.id)).length])));
-const boDau = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase();
+const tatCa = await tomTatTatCa();
 ---
 <Khung tieuDe="Danh sách truyện">
   <h1>Danh sách truyện</h1>
   <ThanhTheLoai />
-  <input id="tim-kiem" class="o-tim" type="search" placeholder="Tìm tên truyện..." aria-label="Tìm truyện" />
-  <div class="luoi-truyen" id="luoi">
-    {dsTruyen.map((t) => (
-      <div data-tim={boDau(`${t.data.ten} ${t.data.gioiThieu} ${t.data.theLoai.join(' ')}`)}>
-        <TheTruyen truyen={t} soChuong={soChuong[t.id]} />
+  <div class="bo-loc">
+    <input id="tim-kiem" class="o-tim" type="search" placeholder="Tìm tên truyện, tác giả..." aria-label="Tìm truyện" />
+    <select id="loc-trang-thai" aria-label="Lọc trạng thái">
+      <option value="">Mọi trạng thái</option>
+      <option>Đang ra</option>
+      <option>Hoàn thành</option>
+      <option>Tạm dừng</option>
+    </select>
+    <select id="sap-xep" aria-label="Sắp xếp">
+      <option value="moi">Mới cập nhật</option>
+      <option value="ten">Tên A → Z</option>
+      <option value="chuong">Nhiều chương nhất</option>
+      <option value="dang">Mới đăng</option>
+    </select>
+  </div>
+  <p class="phu" id="dem-ket-qua"></p>
+  <div class="luoi-bia" id="luoi">
+    {tatCa.map((tt) => (
+      <div
+        data-tim={khongDau(`${tt.truyen.data.ten} ${tt.truyen.data.tacGia ?? ''} ${tt.truyen.data.theLoai.join(' ')}`).replace(/-/g, ' ')}
+        data-trang-thai={tt.truyen.data.trangThai}
+        data-ten={tt.truyen.data.ten}
+        data-cap-nhat={tt.capNhat.valueOf()}
+        data-dang={tt.truyen.data.ngayDang.valueOf()}
+        data-chuong={tt.dsChuong.length}
+      >
+        <OBia tt={tt} />
       </div>
     ))}
   </div>
-  <p id="khong-thay" hidden>Không tìm thấy truyện nào.</p>
-  <script is:inline>
-    (function () {
-      var o = document.getElementById('tim-kiem');
-      var the = document.querySelectorAll('#luoi > [data-tim]');
-      var boDau = function (s) { return s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase(); };
-      o.addEventListener('input', function () {
-        var q = boDau(o.value.trim()), dem = 0;
-        the.forEach(function (t) { var hien = !q || t.dataset.tim.indexOf(q) !== -1; t.hidden = !hien; if (hien) dem++; });
-        document.getElementById('khong-thay').hidden = dem > 0;
+  <p id="khong-thay" class="trong" hidden>Không tìm thấy truyện nào phù hợp.</p>
+  <script>
+    const o = document.getElementById('tim-kiem') as HTMLInputElement;
+    const tt = document.getElementById('loc-trang-thai') as HTMLSelectElement;
+    const sx = document.getElementById('sap-xep') as HTMLSelectElement;
+    const luoi = document.getElementById('luoi')!;
+    const the = [...luoi.children] as HTMLElement[];
+    const boDau = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+
+    // Nhận từ khoá từ ô tìm kiếm trên đầu trang (?q=...) và kiểu sắp xếp (?sap=...)
+    const tham = new URLSearchParams(location.search);
+    o.value = tham.get('q') ?? '';
+    if (tham.get('sap')) sx.value = tham.get('sap')!;
+
+    const ap = () => {
+      const q = boDau(o.value);
+      let dem = 0;
+      const sapXep = [...the].sort((a, b) => {
+        switch (sx.value) {
+          case 'ten': return a.dataset.ten!.localeCompare(b.dataset.ten!, 'vi');
+          case 'chuong': return Number(b.dataset.chuong) - Number(a.dataset.chuong);
+          case 'dang': return Number(b.dataset.dang) - Number(a.dataset.dang);
+          default: return Number(b.dataset.capNhat) - Number(a.dataset.capNhat);
+        }
       });
-    })();
+      for (const t of sapXep) {
+        const hien = (!q || t.dataset.tim!.includes(q)) && (!tt.value || t.dataset.trangThai === tt.value);
+        t.hidden = !hien;
+        if (hien) dem++;
+        luoi.appendChild(t);
+      }
+      document.getElementById('khong-thay')!.hidden = dem > 0;
+      document.getElementById('dem-ket-qua')!.textContent = `${dem} truyện`;
+    };
+    [o, tt, sx].forEach((el) => el.addEventListener('input', ap));
+    ap();
   </script>
 </Khung>
