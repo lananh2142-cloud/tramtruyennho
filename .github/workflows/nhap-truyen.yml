@@ -4,7 +4,7 @@ name: Đăng nhanh bằng Word/PDF
 
 on:
   push:
-    branches: [main, ban-thu-nhap-file]
+    branches: [main]
     paths: ['nhap-truyen/**']
   workflow_dispatch:
 
