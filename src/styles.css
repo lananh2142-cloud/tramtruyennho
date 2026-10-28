@@ -470,7 +470,9 @@ h2 small { font-size: .8em; color: var(--chu-mo); font-weight: 500; }
 .o-tam-trang { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 14px; color: var(--chu);
   background: color-mix(in srgb, var(--m1) 9%, var(--nen-2)); border: 1px solid color-mix(in srgb, var(--m1) 22%, var(--vien)); transition: transform .2s, box-shadow .2s; }
 .o-tam-trang:hover { text-decoration: none; transform: translateY(-2px); box-shadow: 0 8px 20px color-mix(in srgb, var(--m1) 20%, transparent); }
-.tam-trang-icon { flex: 0 0 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; background: var(--m1); }
+.o-tam-trang .hinh-tam-trang { flex: 0 0 auto; transition: transform .25s; }
+.o-tam-trang:hover .hinh-tam-trang { transform: scale(1.08) rotate(-4deg); }
+.chip-tam-trang .hinh-tam-trang { margin-left: -6px; }
 .o-tam-trang strong { display: block; font-size: .95rem; }
 .o-tam-trang small { color: var(--chu-mo); font-size: .8rem; }
 @media (max-width: 600px) { .luoi-tam-trang { grid-template-columns: 1fr 1fr; gap: 10px; } .o-tam-trang { flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; } }
@@ -490,5 +492,5 @@ h2 small { font-size: .8em; color: var(--chu-mo); font-weight: 500; }
 #thanh-tien-do .be-sach-chay { right: -11px; top: 0; transform: none; }
 
 /* Tâm trạng ở trang truyện */
-.cac-the-loai a.chip-tam-trang { display: inline-flex; align-items: center; gap: 5px; border-color: color-mix(in srgb, var(--m1) 35%, var(--vien));
+.cac-the-loai a.chip-tam-trang { display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px 2px 8px; border-color: color-mix(in srgb, var(--m1) 35%, var(--vien));
   background: color-mix(in srgb, var(--m1) 10%, var(--nen-2)); color: color-mix(in srgb, var(--m1) 65%, var(--chu)); }

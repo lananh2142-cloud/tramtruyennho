@@ -8,6 +8,7 @@ import Logo from '../components/Logo.astro';
 import QuangCao from '../components/QuangCao.astro';
 import DuLieuTruyen from '../components/DuLieuTruyen.astro';
 import GocTacGia from '../components/GocTacGia.astro';
+import HinhTamTrang from '../components/HinhTamTrang.astro';
 import { DS_TAM_TRANG, tamTrangCuaTruyen } from '../lib/tam-trang';
 import caiDat from '../data/cai-dat.json';
 import { tomTatTatCa, tatCaTheLoai, linkChuong, linkTruyen, linkTheLoai, link, laMoi } from '../lib/du-lieu';
@@ -52,7 +53,7 @@ const tamTrang = DS_TAM_TRANG.map((t) => ({ ...t, so: tamTrangMoiTruyen.filter((
           <div class="luoi-tam-trang">
             {tamTrang.map((t) => (
               <a class="o-tam-trang" href={link(`/danh-sach/?tam-trang=${t.ma}`)} style={`--m1:${t.mau}`}>
-                <span class="tam-trang-icon"><Icon ten={t.icon} co={20} /></span>
+                <HinhTamTrang ma={t.ma} co={52} />
                 <span><strong>{t.ten}</strong><small>{t.moTa} · {t.so} truyện</small></span>
               </a>
             ))}
