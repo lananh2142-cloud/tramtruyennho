@@ -10,13 +10,7 @@ ngayDang: 2026-10-28
 
 Tôi viết những dòng này khi vẫn còn có thể viết. Có lẽ đến lúc bạn đọc được chúng, tôi đã không còn hiểu nổi những gì chính tay mình ghi lại. Nếu trong câu chuyện này xuất hiện những khoảng trống như thế này: _____, xin đừng nghĩ đó là lỗi đánh máy. Đã từng có một từ nằm ở đó.  
 
-Tôi từng biết nó. Từng đọc, từng viết, từng nói ra hàng nghìn lần mà không cần suy nghĩ.  
-
-Rồi bỗng một ngày, nó biến mất.  
-
-Không phải biến mất khỏi thế giới. Chỉ biến mất khỏi tôi. Người khác vẫn có thể nói từ ấy. Vẫn có thể viết nó ra giấy, chỉ vào nó trong từ điển, thậm chí đánh vần từng chữ cái cho tôi nghe. Nhưng tôi sẽ chẳng hiểu gì.  
-
-Tôi chỉ nhìn thấy những nét mực vô nghĩa, như thể có ai đó vừa xóa mất một phần ngôn ngữ khỏi đầu tôi, để lại nguyên vẹn mọi thứ xung quanh. Điều đáng sợ nhất là tôi biết chính xác chuyện ấy bắt đầu từ khi nào.  
+Tôi từng biết nó. Từng đọc, từng viết, từng nói ra hàng nghìn lần mà không cần suy nghĩ. Rồi bỗng một ngày, nó biến mất.  Không phải biến mất khỏi thế giới. Chỉ biến mất khỏi tôi. Người khác vẫn có thể nói ra từ ấy. Vẫn có thể viết nó ra giấy, chỉ vào nó trong từ điển, thậm chí đánh vần từng chữ cái cho tôi nghe. Nhưng tôi sẽ chẳng hiểu gì.  Tôi chỉ nhìn thấy những nét mực vô nghĩa, như thể có ai đó vừa xóa mất một phần ngôn ngữ khỏi đầu tôi, để lại nguyên vẹn mọi thứ xung quanh. Điều đáng sợ nhất là tôi biết chính xác chuyện ấy bắt đầu từ khi nào.  
 
 Đó là đêm con trai tôi cất tiếng nói đầu tiên.  
 
