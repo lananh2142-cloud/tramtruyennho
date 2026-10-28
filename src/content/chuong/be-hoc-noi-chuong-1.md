@@ -124,7 +124,7 @@ Cho đến ba ngày sau, Tôm nói thêm một từ. Lúc đó tôi đang ở tr
 
 – ___!  
 
-Sợi chỉ phía sau mắt tôi giật mạnh. Tôi khựng lại. Chiếc cốc vẫn còn nằm trong tay. Thứ cốc bình sóng sánh dưới ánh sáng ban chiều. Tôi nhìn nó. Trong suốt. Không mùi. Mát lạnh. Tôi biết nó có thể uống được. Biết nó chảy ra từ vòi, rơi xuống từ những đám mây, đầy lên trong sông và biển. Tôi biết là nếu thiếu nó, con người không thể sống. Tôi biết tất cả.  
+Sợi chỉ phía sau mắt tôi giật mạnh. Tôi khựng lại. Chiếc cốc vẫn còn nằm trong tay. Thứ trong cốc sóng sánh dưới ánh sáng ban chiều. Tôi nhìn nó. Trong suốt. Không mùi. Mát lạnh. Tôi biết nó có thể uống được. Biết nó chảy ra từ vòi, rơi xuống từ những đám mây, đầy lên trong sông và biển. Tôi biết là nếu thiếu nó, con người không thể sống. Tôi biết tất cả.  
 
 Chỉ có điều…  
 
