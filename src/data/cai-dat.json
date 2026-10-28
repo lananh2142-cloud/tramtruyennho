@@ -19,5 +19,10 @@
   "thongKe": {
     "googleAnalytics": "",
     "googleSearchConsole": ""
+  },
+  "gocTacGia": {
+    "butDanh": "",
+    "anhDaiDien": "",
+    "loiChao": ""
   }
 }

@@ -1,56 +1,185 @@
 ---
 import Khung from '../../../layouts/Khung.astro';
 import QuangCao from '../../../components/QuangCao.astro';
-import { tatCaTruyen, chuongCuaTruyen, linkChuong, linkTheLoai, ngay, anh, type Truyen } from '../../../lib/du-lieu';
+import BiaTruyen from '../../../components/BiaTruyen.astro';
+import OBia from '../../../components/OBia.astro';
+import Icon from '../../../components/Icon.astro';
+import { tomTatTatCa, linkChuong, linkTheLoai, link, anhHienThi, soChu, phutDoc, hienThoiGian, type TomTat } from '../../../lib/du-lieu';
+import Logo from '../../../components/Logo.astro';
+import HinhTamTrang from '../../../components/HinhTamTrang.astro';
+import { DS_TAM_TRANG, tamTrangCuaTruyen } from '../../../lib/tam-trang';
+import { kieuTheLoai } from '../../../lib/the-loai';
 import { render } from 'astro:content';
 
 export async function getStaticPaths() {
-  const ds = await tatCaTruyen();
-  return ds.map((truyen) => ({ params: { slug: truyen.id }, props: { truyen } }));
+  const tatCa = await tomTatTatCa();
+  return tatCa.map((tt) => {
+    // Truyện cùng thể loại: có chung nhiều thể loại nhất
+    const cungLoai = tatCa
+      .filter((x) => x.truyen.id !== tt.truyen.id)
+      .map((x) => ({ x, diem: x.truyen.data.theLoai.filter((tl) => tt.truyen.data.theLoai.includes(tl)).length }))
+      .filter(({ diem }) => diem > 0)
+      .sort((a, b) => b.diem - a.diem || b.x.capNhat.valueOf() - a.x.capNhat.valueOf())
+      .slice(0, 6)
+      .map(({ x }) => x);
+    return { params: { slug: tt.truyen.id }, props: { tt, cungLoai } };
+  });
 }
 
-const { truyen } = Astro.props as { truyen: Truyen };
+const { tt, cungLoai } = Astro.props as { tt: TomTat; cungLoai: TomTat[] };
+const { truyen, dsChuong, chuongMoi, capNhat } = tt;
 const d = truyen.data;
-const dsChuong = await chuongCuaTruyen(truyen.id);
 const { Content } = await render(truyen);
+const MOI_TRANG = 50;
+const hinh = await anhHienThi(truyen);
+const tamTrang = tamTrangCuaTruyen(d.tamTrang, d.theLoai, dsChuong.length).map((ma) => DS_TAM_TRANG.find((t) => t.ma === ma)!);
+const tongPhut = dsChuong.reduce((a, c) => a + phutDoc(soChu(c.body)), 0);
 ---
-<Khung tieuDe={d.ten} moTa={d.gioiThieu} anh={anh(d.anhBia)}>
-  <article class="trang-truyen">
-    <div class="dau-truyen">
-      <div class="bia lon">
-        {d.anhBia ? <img src={anh(d.anhBia)} alt={`Bìa truyện ${d.ten}`} /> : <span class="bia-chu">{d.ten}</span>}
-      </div>
-      <div>
+<Khung tieuDe={d.ten} moTa={d.gioiThieu} anh={hinh.src}>
+  <nav class="vet-dan" aria-label="Đường dẫn">
+    <a href={link('/')}>Trang chủ</a> ›
+    {d.theLoai[0] && <><a href={linkTheLoai(d.theLoai[0])}>{d.theLoai[0]}</a> ›</>}
+    <span>{d.ten}</span>
+  </nav>
+
+  <article class="trang-truyen" data-slug={truyen.id}>
+    <div class="dau-truyen" style={`--m1:${kieuTheLoai(d.theLoai[0]).mau[0]}`}>
+      {hinh.src && <div class="banner-nen" style={`background-image:url("${hinh.src}");background-position:${hinh.viTri}`} aria-hidden="true"></div>}
+      <BiaTruyen truyen={truyen} lon />
+      <div class="tt-truyen">
         <h1>{d.ten}</h1>
-        <p class="phu">
-          <span class={`nhan ${d.trangThai === 'Hoàn thành' ? 'xong' : ''}`}>{d.trangThai}</span>
-          · {dsChuong.length} chương
-          {d.theLoai.map((tl) => <> · <a href={linkTheLoai(tl)}>{tl}</a></>)}
-        </p>
-        <p class="mo-ta-dai">{d.gioiThieu}</p>
-        {dsChuong.length > 0 && (
-          <div class="nut-hang">
-            <a class="nut chinh" href={linkChuong(truyen.id, dsChuong[0].data.so)}>Đọc từ đầu</a>
-            {dsChuong.length > 1 && <a class="nut" href={linkChuong(truyen.id, dsChuong[dsChuong.length - 1].data.so)}>Chương mới nhất</a>}
-          </div>
-        )}
+        <dl class="bang-tt">
+          {d.tacGia && <><dt>Tác giả</dt><dd>{d.tacGia}</dd></>}
+          <dt>Thể loại</dt>
+          <dd class="cac-the-loai">{d.theLoai.map((tl) => <a href={linkTheLoai(tl)}>{tl}</a>)}</dd>
+          {tamTrang.length > 0 && <><dt>Tâm trạng</dt><dd class="cac-the-loai">{tamTrang.map((t) => <a class="chip-tam-trang" href={link(`/danh-sach/?tam-trang=${t.ma}`)} style={`--m1:${t.mau}`}><HinhTamTrang ma={t.ma} co={20} /> {t.ten}</a>)}</dd></>}
+          <dt>Trạng thái</dt><dd><span class={`nhan ${d.trangThai === 'Hoàn thành' ? 'xong' : ''}`}>{d.trangThai}</span></dd>
+          <dt>Số chương</dt><dd>{dsChuong.length}{dsChuong.length > 0 && <span class="phu-nho"> · đọc hết khoảng {hienThoiGian(tongPhut)}</span>}</dd>
+          <dt>Cập nhật</dt><dd><time datetime={capNhat.toISOString()} data-tuong-doi>{capNhat.toLocaleDateString('vi-VN')}</time></dd>
+        </dl>
+        <div class="hanh-trinh" id="hanh-trinh" hidden>
+          <div class="duong-ray"><div class="da-di" id="da-di"><span class="be-sach-chay"><Logo co={26} /></span></div></div>
+          <p id="chu-hanh-trinh"></p>
+        </div>
+        <div class="nut-hang">
+          {dsChuong.length > 0 && <a class="nut chinh" id="nut-doc" href={linkChuong(truyen.id, dsChuong[0].data.so)}><Icon ten="sach" co={18} /> <span>Đọc từ đầu</span></a>}
+          {chuongMoi && dsChuong.length > 1 && <a class="nut" href={linkChuong(truyen.id, chuongMoi.data.so)}>Chương mới nhất</a>}
+          <button class="nut" id="nut-luu" type="button" aria-pressed="false"><Icon ten="danh-dau" co={17} /> <span>Lưu vào tủ</span></button>
+        </div>
       </div>
     </div>
 
-    <div class="noi-dung-gioi-thieu"><Content /></div>
+    <section class="gioi-thieu-truyen">
+      <h2>Giới thiệu</h2>
+      <div class="noi-dung-gioi-thieu thu-gon" id="gioi-thieu">
+        <p>{d.gioiThieu}</p>
+        <Content />
+      </div>
+      <button class="nut-xem-them" id="xem-them" type="button" hidden>Xem thêm</button>
+    </section>
 
     <QuangCao />
 
-    <h2 class="tieu-de-muc">Danh sách chương</h2>
-    {dsChuong.length === 0 ? <p>Truyện chưa có chương nào.</p> : (
-      <ol class="ds-chuong">
-        {dsChuong.map((c) => (
-          <li>
-            <a href={linkChuong(truyen.id, c.data.so)}>Chương {c.data.so}: {c.data.ten}</a>
-            <time>{ngay(c.data.ngayDang)}</time>
-          </li>
-        ))}
-      </ol>
+    <section>
+      <div class="dau-muc">
+        <h2>Danh sách chương <small>({dsChuong.length})</small></h2>
+        {dsChuong.length > 1 && <button class="nut nho" id="dao-thu-tu" type="button"><Icon ten="dao" co={15} /> <span>Mới nhất trước</span></button>}
+      </div>
+      {dsChuong.length === 0 ? <p>Truyện chưa có chương nào.</p> : (
+        <>
+          <ol class="ds-chuong" id="ds-chuong" data-moi-trang={MOI_TRANG}>
+            {dsChuong.map((c, i) => (
+              <li hidden={i >= MOI_TRANG}>
+                <a href={linkChuong(truyen.id, c.data.so)}>Chương {c.data.so}: {c.data.ten}</a>
+                <time datetime={c.data.ngayDang.toISOString()}>{c.data.ngayDang.toLocaleDateString('vi-VN')}</time>
+              </li>
+            ))}
+          </ol>
+          {dsChuong.length > MOI_TRANG && <nav class="phan-trang" id="phan-trang" aria-label="Trang danh sách chương"></nav>}
+        </>
+      )}
+    </section>
+
+    {cungLoai.length > 0 && (
+      <section>
+        <div class="dau-muc"><h2>Truyện cùng thể loại</h2></div>
+        <div class="luoi-bia cuon-ngang">{cungLoai.map((x) => <OBia tt={x} />)}</div>
+      </section>
     )}
   </article>
+
+  <script>
+    import { lichSu, daLuu, doiLuu } from '../../../scripts/tu-truyen';
+    const slug = document.querySelector<HTMLElement>('.trang-truyen')!.dataset.slug!;
+
+    // Nút "Đọc tiếp" nếu đã đọc dở
+    const dd = lichSu()[slug];
+    const nutDoc = document.getElementById('nut-doc') as HTMLAnchorElement | null;
+    if (dd && nutDoc) {
+      // Hành trình đọc: đã đi qua bao nhiêu "trạm" (chương)
+      const tong = document.querySelectorAll('#ds-chuong li').length;
+      if (tong > 0) {
+        const phanTram = Math.min(100, Math.round((dd.so / tong) * 100));
+        document.getElementById('da-di')!.style.width = phanTram + '%';
+        document.getElementById('chu-hanh-trinh')!.textContent = dd.so >= tong
+          ? `Bạn đã đi hết ${tong} trạm của chuyến này!`
+          : `Bạn đã đi qua ${dd.so}/${tong} trạm (${phanTram}%) – còn ${tong - dd.so} trạm nữa`;
+        document.getElementById('hanh-trinh')!.hidden = false;
+      }
+      nutDoc.href = nutDoc.href.replace(/chuong-\d+\/$/, `chuong-${dd.so}/`);
+      nutDoc.querySelector('span')!.textContent = `Đọc tiếp chương ${dd.so}`;
+    }
+
+    // Lưu vào tủ truyện
+    const nutLuu = document.getElementById('nut-luu')!;
+    const veNutLuu = (luu: boolean) => {
+      nutLuu.querySelector('span')!.textContent = luu ? 'Đã lưu vào tủ' : 'Lưu vào tủ';
+      nutLuu.classList.toggle('da-luu', luu);
+      nutLuu.setAttribute('aria-pressed', String(luu));
+    };
+    veNutLuu(daLuu().includes(slug));
+    nutLuu.addEventListener('click', () => veNutLuu(doiLuu(slug)));
+
+    // Giới thiệu dài thì thu gọn
+    const gt = document.getElementById('gioi-thieu')!;
+    const xemThem = document.getElementById('xem-them')!;
+    if (gt.scrollHeight > gt.clientHeight + 10) xemThem.hidden = false;
+    else gt.classList.remove('thu-gon');
+    xemThem.addEventListener('click', () => {
+      const gon = gt.classList.toggle('thu-gon');
+      xemThem.textContent = gon ? 'Xem thêm' : 'Thu gọn';
+    });
+
+    // Danh sách chương: chia trang và đảo thứ tự
+    const ds = document.getElementById('ds-chuong');
+    if (ds) {
+      const moiTrang = Number(ds.dataset.moiTrang);
+      const phanTrang = document.getElementById('phan-trang');
+      let trang = 0;
+      const hien = () => {
+        const muc = [...ds.children] as HTMLElement[];
+        muc.forEach((li, i) => (li.hidden = Math.floor(i / moiTrang) !== trang));
+        if (!phanTrang) return;
+        const soTrang = Math.ceil(muc.length / moiTrang);
+        phanTrang.innerHTML = '';
+        for (let i = 0; i < soTrang; i++) {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.textContent = `${i * moiTrang + 1}–${Math.min((i + 1) * moiTrang, muc.length)}`;
+          b.className = i === trang ? 'chon' : '';
+          b.addEventListener('click', () => { trang = i; hien(); ds.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+          phanTrang.appendChild(b);
+        }
+      };
+      hien();
+      const nutDao = document.getElementById('dao-thu-tu');
+      nutDao?.addEventListener('click', () => {
+        [...ds.children].reverse().forEach((li) => ds.appendChild(li));
+        ds.classList.toggle('dao');
+        nutDao.querySelector('span')!.textContent = ds.classList.contains('dao') ? 'Cũ nhất trước' : 'Mới nhất trước';
+        trang = 0;
+        hien();
+      });
+    }
+  </script>
 </Khung>

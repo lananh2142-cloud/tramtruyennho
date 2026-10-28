@@ -1,0 +1,22 @@
+---
+// Bìa truyện: dùng ảnh hiển thị của truyện (tác giả chọn, hoặc hình đầu tiên trong truyện);
+// nếu truyện chưa có hình nào thì tự dàn trang một bìa chữ theo màu thể loại
+import { anhHienThi, type Truyen } from '../lib/du-lieu';
+import { kieuTheLoai } from '../lib/the-loai';
+interface Props { truyen: Truyen; lon?: boolean; nho?: boolean }
+const { truyen, lon = false, nho = false } = Astro.props;
+const d = truyen.data;
+const k = kieuTheLoai(d.theLoai[0]);
+const hinh = await anhHienThi(truyen);
+---
+<div class:list={['bia', { lon, nho }]} style={`--m1:${k.mau[0]};--m2:${k.mau[1]}`}>
+  {hinh.src ? <img src={hinh.src} alt={`Ảnh truyện ${d.ten}`} loading="lazy" style={`object-position:${hinh.viTri}`} /> : nho ? (
+    <span class="bia-chu-cai" aria-hidden="true">{d.ten.charAt(0)}</span>
+  ) : (
+    <div class="bia-tu-ve" aria-hidden="true">
+      {d.theLoai[0] && <span class="bia-loai">{d.theLoai[0]}</span>}
+      <span class="bia-ten">{d.ten}</span>
+      {d.tacGia && <span class="bia-tac-gia">{d.tacGia}</span>}
+    </div>
+  )}
+</div>

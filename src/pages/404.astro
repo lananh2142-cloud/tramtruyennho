@@ -1,11 +1,12 @@
 ---
 import Khung from '../layouts/Khung.astro';
 import { link } from '../lib/du-lieu';
+import BeSach from '../components/BeSach.astro';
 ---
 <Khung tieuDe="Không tìm thấy trang">
   <article class="trang-tinh" style="text-align:center">
     <h1>404</h1>
-    <p>Trang bạn tìm không tồn tại hoặc đã bị xoá.</p>
+    <BeSach co={80}>Ôi, trạm này không có trên bản đồ rồi! Có thể trang đã bị xoá hoặc đường dẫn bị gõ nhầm.</BeSach>
     <p><a class="nut chinh" href={link('/')}>Về trang chủ</a></p>
   </article>
 </Khung>

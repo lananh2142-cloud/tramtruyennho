@@ -1,0 +1,10 @@
+---
+import Khung from '../layouts/Khung.astro';
+import OBia from '../components/OBia.astro';
+import { tomTatTatCa } from '../lib/du-lieu';
+const ds = (await tomTatTatCa()).filter((t) => t.truyen.data.trangThai === 'Hoàn thành').sort((a, b) => b.capNhat.valueOf() - a.capNhat.valueOf());
+---
+<Khung tieuDe="Truyện đã hoàn thành" moTa="Danh sách truyện đã hoàn thành (full), đọc trọn bộ miễn phí.">
+  <h1>Truyện đã hoàn thành</h1>
+  {ds.length === 0 ? <p class="phu">Chưa có truyện nào hoàn thành.</p> : <div class="luoi-bia">{ds.map((tt) => <OBia tt={tt} />)}</div>}
+</Khung>

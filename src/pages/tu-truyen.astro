@@ -1,0 +1,74 @@
+---
+import Khung from '../layouts/Khung.astro';
+import DuLieuTruyen from '../components/DuLieuTruyen.astro';
+import { link } from '../lib/du-lieu';
+import BeSach from '../components/BeSach.astro';
+---
+<Khung tieuDe="Tủ truyện của bạn">
+  <h1>Tủ truyện của bạn</h1>
+  <p class="phu">Tủ truyện được lưu ngay trên máy bạn đang dùng, không cần đăng nhập. Nếu bạn đổi máy hoặc xoá dữ liệu trình duyệt, tủ truyện sẽ trống lại.</p>
+
+  <section>
+    <div class="dau-muc"><h2>Đang đọc</h2></div>
+    <div class="ds-tu" id="dang-doc"></div>
+    <div id="dang-doc-trong" hidden><BeSach>Bạn chưa lên chuyến nào cả. <a href={link('/danh-sach/')}>Chọn một truyện</a> và bắt đầu hành trình cùng mình nhé!</BeSach></div>
+  </section>
+
+  <section>
+    <div class="dau-muc"><h2>Đã lưu</h2></div>
+    <div class="ds-tu" id="da-luu"></div>
+    <p class="trong" id="da-luu-trong" hidden>Chưa có truyện nào. Bấm nút <strong>Lưu vào tủ</strong> ở trang truyện để lưu lại.</p>
+  </section>
+
+  <DuLieuTruyen />
+  <script>
+    import { lichSu, daLuu, doiLuu, xoaLichSu, thoiGianTruoc } from '../scripts/tu-truyen';
+    const duLieu = JSON.parse(document.getElementById('du-lieu-truyen')!.textContent!);
+
+    const the = (slug: string, dong2: string, link: string, nutXoa: () => void) => {
+      const t = duLieu[slug];
+      const div = document.createElement('div');
+      div.className = 'the-tu';
+      div.innerHTML = `
+        <a class="bia-mini"></a>
+        <div class="giua"><a class="ten"></a><small></small></div>
+        <a class="nut chinh nho doc">Đọc</a>
+        <button type="button" class="xoa" aria-label="Bỏ khỏi danh sách" title="Bỏ khỏi danh sách"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>`;
+      const bia = div.querySelector('.bia-mini') as HTMLAnchorElement;
+      bia.href = t.link;
+      if (t.anhBia) bia.style.backgroundImage = `url("${t.anhBia}")`;
+      else { bia.style.background = `linear-gradient(160deg,${t.mau[0]},${t.mau[1]})`; bia.textContent = t.ten.charAt(0); }
+      const ten = div.querySelector('.ten') as HTMLAnchorElement;
+      ten.href = t.link;
+      ten.textContent = t.ten;
+      div.querySelector('small')!.textContent = dong2;
+      (div.querySelector('.doc') as HTMLAnchorElement).href = link;
+      div.querySelector('.xoa')!.addEventListener('click', () => { nutXoa(); ve(); });
+      return div;
+    };
+
+    function ve() {
+      const ls = lichSu();
+      const dangDoc = Object.entries(ls).filter(([s]) => duLieu[s]).sort((a, b) => b[1].luc - a[1].luc);
+      const hopDoc = document.getElementById('dang-doc')!;
+      hopDoc.replaceChildren(...dangDoc.map(([slug, dd]) => {
+        const t = duLieu[slug];
+        const conLai = t.chuongMoi - dd.so;
+        return the(slug, `Đang đọc chương ${dd.so}/${t.soChuong} · ${thoiGianTruoc(dd.luc)}${conLai > 0 ? ` · còn ${conLai} chương chưa đọc` : ''}`,
+          t.linkChuong + dd.so + '/', () => xoaLichSu(slug));
+      }));
+      document.getElementById('dang-doc-trong')!.hidden = dangDoc.length > 0;
+
+      const luu = daLuu().filter((s) => duLieu[s]);
+      const hopLuu = document.getElementById('da-luu')!;
+      hopLuu.replaceChildren(...luu.map((slug) => {
+        const t = duLieu[slug];
+        const dd = ls[slug];
+        return the(slug, `${t.soChuong} chương${dd ? ` · đã đọc tới chương ${dd.so}` : ''}`,
+          t.linkChuong + (dd ? dd.so : 1) + '/', () => doiLuu(slug));
+      }));
+      document.getElementById('da-luu-trong')!.hidden = luu.length > 0;
+    }
+    ve();
+  </script>
+</Khung>

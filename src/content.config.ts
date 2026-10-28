@@ -7,10 +7,18 @@ const truyen = defineCollection({
   schema: z.object({
     ten: z.string(),
     ma: z.string().optional(),
+    tacGia: z.string().optional(),
     gioiThieu: z.string(),
+    // Ảnh hiển thị của truyện. Để trống thì web tự lấy hình đầu tiên có trong truyện
     anhBia: z.string().optional(),
+    // Phần nào của ảnh được giữ lại khi ảnh phải cắt cho vừa khung
+    viTriAnh: z.enum(['Giữa', 'Trên', 'Dưới']).default('Giữa'),
     theLoai: z.array(z.string()).default([]),
     trangThai: z.enum(['Đang ra', 'Hoàn thành', 'Tạm dừng']).default('Đang ra'),
+    // Bật lên để truyện hiện ở mục "Truyện đề cử" trên trang chủ
+    deCu: z.boolean().default(false),
+    // Tâm trạng do tác giả chọn; để trống thì web tự xếp theo thể loại và độ dài
+    tamTrang: z.array(z.string()).default([]),
     ngayDang: z.coerce.date(),
   }),
 });
@@ -22,6 +30,8 @@ const chuong = defineCollection({
     truyen: z.string(),
     ten: z.string(),
     so: z.number(),
+    // Lời nhắn của tác giả hiện ở cuối chương (không bắt buộc)
+    loiTacGia: z.string().optional(),
     ngayDang: z.coerce.date(),
   }),
 });

@@ -1,44 +1,90 @@
 ---
 import Khung from '../../../layouts/Khung.astro';
 import QuangCao from '../../../components/QuangCao.astro';
+import Icon from '../../../components/Icon.astro';
 import caiDat from '../../../data/cai-dat.json';
-import { tatCaTruyen, chuongCuaTruyen, linkChuong, linkTruyen, link, type Truyen, type Chuong } from '../../../lib/du-lieu';
+import { tomTatTatCa, linkChuong, linkTruyen, link, anhHienThi, anhTrongNoiDung, anh, soChu, phutDoc, type Truyen, type Chuong } from '../../../lib/du-lieu';
+import Logo from '../../../components/Logo.astro';
+import BeSach from '../../../components/BeSach.astro';
+import GocTacGiaMini from '../../../components/GocTacGiaMini.astro';
 import { render } from 'astro:content';
 
 export async function getStaticPaths() {
-  const dsTruyen = await tatCaTruyen();
   const trang = [];
-  for (const truyen of dsTruyen) {
-    const dsChuong = await chuongCuaTruyen(truyen.id);
+  for (const { truyen, dsChuong } of await tomTatTatCa()) {
+    // Danh sách để nhảy nhanh tới chương (chỉ dùng khi truyện không quá dài)
+    const mucLuc = dsChuong.length <= 300 ? dsChuong.map((c) => ({ so: c.data.so, ten: c.data.ten })) : null;
     dsChuong.forEach((chuong, i) => {
       trang.push({
         params: { slug: truyen.id, chuong: `chuong-${chuong.data.so}` },
-        props: { truyen, chuong, truoc: dsChuong[i - 1], sau: dsChuong[i + 1] },
+        props: { truyen, chuong, truoc: dsChuong[i - 1], sau: dsChuong[i + 1], tong: dsChuong.length, mucLuc },
       });
     });
   }
   return trang;
 }
 
-const { truyen, chuong, truoc, sau } = Astro.props as { truyen: Truyen; chuong: Chuong; truoc?: Chuong; sau?: Chuong };
+interface Props { truyen: Truyen; chuong: Chuong; truoc?: Chuong; sau?: Chuong; tong: number; mucLuc: { so: number; ten: string }[] | null }
+const { truyen, chuong, truoc, sau, tong, mucLuc } = Astro.props;
 const { Content } = await render(chuong);
 const tieuDe = `Chương ${chuong.data.so}: ${chuong.data.ten}`;
+const linkTruoc = truoc && linkChuong(truyen.id, truoc.data.so);
+const linkSau = sau && linkChuong(truyen.id, sau.data.so);
+// Ảnh khi chia sẻ chương lên mạng xã hội: hình đầu tiên trong chương, nếu không có thì ảnh của truyện
+const anhChiaSe = anh(anhTrongNoiDung(chuong.body)[0]) ?? (await anhHienThi(truyen)).src;
 ---
-<Khung tieuDe={`${truyen.data.ten} - ${tieuDe}`} moTa={`Đọc ${truyen.data.ten} - ${tieuDe}. ${truyen.data.gioiThieu}`}>
-  <article class="trang-doc">
-    <p class="duong-dan"><a href={linkTruyen(truyen.id)}>← {truyen.data.ten}</a></p>
-    <h1>{tieuDe}</h1>
-
-    <div class="cong-cu-doc">
-      <button type="button" data-co="-1" aria-label="Chữ nhỏ hơn">A−</button>
-      <button type="button" data-co="1" aria-label="Chữ to hơn">A+</button>
-    </div>
-
-    <nav class="dieu-huong">
-      {truoc ? <a class="nut" href={linkChuong(truyen.id, truoc.data.so)}>← <span class="an-dt">Chương</span> trước</a> : <span class="nut tat">← <span class="an-dt">Chương</span> trước</span>}
-      <a class="nut" href={linkTruyen(truyen.id)}>Mục lục</a>
-      {sau ? <a class="nut" href={linkChuong(truyen.id, sau.data.so)}><span class="an-dt">Chương</span> sau →</a> : <span class="nut tat"><span class="an-dt">Chương</span> sau →</span>}
+<Khung tieuDe={`${truyen.data.ten} - ${tieuDe}`} moTa={`Đọc ${truyen.data.ten} - ${tieuDe}. ${truyen.data.gioiThieu}`} anh={anhChiaSe}>
+  <div class="tien-do" aria-hidden="true"><div id="thanh-tien-do"><span class="be-sach-chay"><Logo co={22} /></span></div></div>
+  <article class="trang-doc" data-slug={truyen.id} data-so={chuong.data.so} data-ten={chuong.data.ten} data-goc={linkChuong(truyen.id, 0).replace(/chuong-0\/$/, 'chuong-')}>
+    <nav class="vet-dan" aria-label="Đường dẫn">
+      <a href={link('/')}>Trang chủ</a> › <a href={linkTruyen(truyen.id)}>{truyen.data.ten}</a> › <span>Chương {chuong.data.so}</span>
     </nav>
+    <p class="ten-truyen-doc"><a href={linkTruyen(truyen.id)}>{truyen.data.ten}</a></p>
+    <h1>{tieuDe}</h1>
+    <p class="vi-tri-chuong">Trạm {chuong.data.so} / {tong} · khoảng {phutDoc(soChu(chuong.body))} phút đọc</p>
+
+    <nav class="thanh-cong-cu" aria-label="Điều hướng chương">
+      {linkTruoc ? <a class="nut" href={linkTruoc} data-phim="truoc" aria-label="Chương trước"><Icon ten="trai" /><span class="an-dt">Chương trước</span></a> : <span class="nut tat"><Icon ten="trai" /><span class="an-dt">Chương trước</span></span>}
+      {mucLuc ? (
+        <select class="chon-chuong" aria-label="Chọn chương">
+          {mucLuc.map((m) => <option value={m.so} selected={m.so === chuong.data.so}>Chương {m.so}: {m.ten}</option>)}
+        </select>
+      ) : (
+        <form class="nhay-chuong">
+          <input type="number" min="1" max={tong} placeholder={`Đến chương (1–${tong})`} aria-label="Số chương" />
+        </form>
+      )}
+      <button class="nut nut-cai-dat" type="button" aria-label="Cài đặt đọc" title="Cài đặt đọc" aria-expanded="false" aria-controls="bang-cai-dat"><Icon ten="cai-dat" /></button>
+      {linkSau ? <a class="nut chinh" href={linkSau} data-phim="sau" aria-label="Chương sau"><span class="an-dt">Chương sau</span><Icon ten="phai" /></a> : <span class="nut tat"><span class="an-dt">Chương sau</span><Icon ten="phai" /></span>}
+    </nav>
+
+    <div class="bang-cai-dat" id="bang-cai-dat" hidden>
+      <div class="dong-cai-dat">
+        <span>Màu nền</span>
+        <div class="chon-nen">
+          <button type="button" data-nen="" title="Theo giao diện web" aria-label="Theo giao diện web" class="nen-mac-dinh">Aa</button>
+          <button type="button" data-nen="trang" title="Trắng" aria-label="Nền trắng">Aa</button>
+          <button type="button" data-nen="giay" title="Giấy vàng" aria-label="Nền giấy vàng">Aa</button>
+          <button type="button" data-nen="xanh" title="Xanh dịu mắt" aria-label="Nền xanh dịu mắt">Aa</button>
+          <button type="button" data-nen="den" title="Đen" aria-label="Nền đen">Aa</button>
+        </div>
+      </div>
+      <div class="dong-cai-dat">
+        <span>Phông chữ</span>
+        <div class="chon-nhom">
+          <button type="button" data-phong="">Có chân</button>
+          <button type="button" data-phong="khong-chan">Không chân</button>
+        </div>
+      </div>
+      <div class="dong-cai-dat">
+        <span>Cỡ chữ</span>
+        <div class="chon-nhom"><button type="button" data-co="-1" aria-label="Chữ nhỏ hơn">A−</button><output id="hien-co"></output><button type="button" data-co="1" aria-label="Chữ to hơn">A+</button></div>
+      </div>
+      <div class="dong-cai-dat">
+        <span>Giãn dòng</span>
+        <div class="chon-nhom"><button type="button" data-gian="-0.1" aria-label="Giảm giãn dòng">−</button><output id="hien-gian"></output><button type="button" data-gian="0.1" aria-label="Tăng giãn dòng">+</button></div>
+      </div>
+    </div>
 
     <QuangCao />
 
@@ -47,35 +93,107 @@ const tieuDe = `Chương ${chuong.data.so}: ${chuong.data.ten}`;
     <QuangCao />
 
     <nav class="dieu-huong">
-      {truoc ? <a class="nut" href={linkChuong(truyen.id, truoc.data.so)}>← <span class="an-dt">Chương</span> trước</a> : <span class="nut tat">← <span class="an-dt">Chương</span> trước</span>}
-      <a class="nut" href={linkTruyen(truyen.id)}>Mục lục</a>
-      {sau ? <a class="nut chinh" href={linkChuong(truyen.id, sau.data.so)}><span class="an-dt">Chương</span> sau →</a> : <span class="nut tat"><span class="an-dt">Chương</span> sau →</span>}
+      {linkTruoc ? <a class="nut" href={linkTruoc}><Icon ten="trai" /> Chương trước</a> : <span class="nut tat"><Icon ten="trai" /> Chương trước</span>}
+      <a class="nut" href={linkTruyen(truyen.id)}><Icon ten="danh-sach" /> Mục lục</a>
+      {linkSau ? <a class="nut chinh" href={linkSau}>Chương sau <Icon ten="phai" /></a> : <span class="nut tat">Chương sau <Icon ten="phai" /></span>}
     </nav>
 
-    {!sau && <p class="het-chuong">Bạn đã đọc đến chương mới nhất. Hãy quay lại sau để đọc tiếp nhé!</p>}
+    {chuong.data.loiTacGia && <GocTacGiaMini loi={chuong.data.loiTacGia} />}
+
+    {!sau && (
+      <BeSach>
+        {truyen.data.trangThai === 'Hoàn thành'
+          ? <>Bạn đã về đến <strong>trạm cuối</strong> của chuyến này rồi! Cảm ơn bạn đã đồng hành cùng Trạm Truyện Nhỏ.</>
+          : <>Bạn đã đến <strong>trạm mới nhất</strong> rồi! Bấm <a href={linkTruyen(truyen.id)}>Lưu vào tủ</a> để không lỡ chuyến tiếp theo nhé.</>}
+      </BeSach>
+    )}
 
     {caiDat.ungHo.batTat && (
       <aside class="hop-ung-ho">
         <p>{caiDat.ungHo.loiNhan}</p>
-        <a class="nut chinh" href={link('/ung-ho/')}>Ủng hộ tác giả</a>
+        <a class="nut chinh" href={link('/ung-ho/')}><Icon ten="ca-phe" /> Ủng hộ tác giả</a>
       </aside>
     )}
   </article>
-  <script is:inline>
-    document.querySelectorAll('[data-co]').forEach(function (b) {
-      b.addEventListener('click', function () {
-        var r = document.documentElement;
-        var hienTai = parseFloat(getComputedStyle(r).getPropertyValue('--co-chu')) || 19;
-        var moi = Math.min(30, Math.max(14, hienTai + Number(b.dataset.co)));
-        r.style.setProperty('--co-chu', moi + 'px');
-        try { localStorage.setItem('co-chu', moi); } catch (e) {}
-      });
+
+  <!-- Thanh điều hướng dưới cùng trên điện thoại -->
+  <nav class="thanh-duoi" aria-label="Điều hướng nhanh">
+    {linkTruoc ? <a href={linkTruoc}><Icon ten="trai" co={20} /><small>Trước</small></a> : <span class="tat"><Icon ten="trai" co={20} /><small>Trước</small></span>}
+    <a href={linkTruyen(truyen.id)}><Icon ten="danh-sach" co={20} /><small>Mục lục</small></a>
+    <button type="button" class="nut-cai-dat"><Icon ten="cai-dat" co={20} /><small>Cài đặt</small></button>
+    {linkSau ? <a href={linkSau}><Icon ten="phai" co={20} /><small>Sau</small></a> : <span class="tat"><Icon ten="phai" co={20} /><small>Sau</small></span>}
+  </nav>
+
+  <script>
+    import { ghiLichSu } from '../../../scripts/tu-truyen';
+    const bai = document.querySelector<HTMLElement>('.trang-doc')!;
+    const r = document.documentElement;
+    ghiLichSu(bai.dataset.slug!, Number(bai.dataset.so), bai.dataset.ten!);
+
+    const luu = (k: string, v: string) => { try { if (v) localStorage.setItem(k, v); else localStorage.removeItem(k); } catch { /* bỏ qua */ } };
+
+    // Nhảy tới chương
+    const den = (so: number) => { if (so > 0) location.href = bai.dataset.goc + so + '/'; };
+    document.querySelector<HTMLSelectElement>('.chon-chuong')?.addEventListener('change', (e) => den(Number((e.target as HTMLSelectElement).value)));
+    document.querySelector<HTMLFormElement>('.nhay-chuong')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      den(Number((e.target as HTMLFormElement).querySelector('input')!.value));
     });
-    document.addEventListener('keydown', function (e) {
-      if (e.target.tagName === 'INPUT') return;
-      var nav = document.querySelector('.dieu-huong');
-      var a = e.key === 'ArrowLeft' ? nav.firstElementChild : e.key === 'ArrowRight' ? nav.lastElementChild : null;
-      if (a && a.href) location.href = a.href;
+
+    // Bảng cài đặt đọc
+    const bang = document.getElementById('bang-cai-dat')!;
+    document.querySelectorAll<HTMLButtonElement>('.nut-cai-dat').forEach((b) => b.addEventListener('click', () => {
+      bang.hidden = !bang.hidden;
+      document.querySelectorAll('.nut-cai-dat').forEach((x) => x.setAttribute('aria-expanded', String(!bang.hidden)));
+      if (!bang.hidden) bang.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }));
+
+    const veCaiDat = () => {
+      const nen = r.dataset.nenDoc ?? '';
+      bang.querySelectorAll<HTMLButtonElement>('[data-nen]').forEach((b) => b.classList.toggle('chon', b.dataset.nen === nen));
+      const phong = r.dataset.phongChu ?? '';
+      bang.querySelectorAll<HTMLButtonElement>('[data-phong]').forEach((b) => b.classList.toggle('chon', b.dataset.phong === phong));
+      document.getElementById('hien-co')!.textContent = String(parseFloat(getComputedStyle(r).getPropertyValue('--co-chu')) || 19);
+      document.getElementById('hien-gian')!.textContent = (parseFloat(getComputedStyle(r).getPropertyValue('--gian-dong')) || 1.85).toFixed(1);
+    };
+    bang.querySelectorAll<HTMLButtonElement>('[data-nen]').forEach((b) => b.addEventListener('click', () => {
+      if (b.dataset.nen) r.dataset.nenDoc = b.dataset.nen; else delete r.dataset.nenDoc;
+      luu('nen-doc', b.dataset.nen!);
+      veCaiDat();
+    }));
+    bang.querySelectorAll<HTMLButtonElement>('[data-phong]').forEach((b) => b.addEventListener('click', () => {
+      if (b.dataset.phong) r.dataset.phongChu = b.dataset.phong; else delete r.dataset.phongChu;
+      luu('phong-chu', b.dataset.phong!);
+      veCaiDat();
+    }));
+    bang.querySelectorAll<HTMLButtonElement>('[data-co]').forEach((b) => b.addEventListener('click', () => {
+      const moi = Math.min(30, Math.max(14, (parseFloat(getComputedStyle(r).getPropertyValue('--co-chu')) || 19) + Number(b.dataset.co)));
+      r.style.setProperty('--co-chu', moi + 'px');
+      luu('co-chu', String(moi));
+      veCaiDat();
+    }));
+    bang.querySelectorAll<HTMLButtonElement>('[data-gian]').forEach((b) => b.addEventListener('click', () => {
+      const moi = Math.min(2.6, Math.max(1.3, (parseFloat(getComputedStyle(r).getPropertyValue('--gian-dong')) || 1.85) + Number(b.dataset.gian)));
+      r.style.setProperty('--gian-dong', moi.toFixed(2));
+      luu('gian-dong', moi.toFixed(2));
+      veCaiDat();
+    }));
+    veCaiDat();
+
+    // Thanh tiến độ đọc
+    const thanh = document.getElementById('thanh-tien-do')!;
+    addEventListener('scroll', () => {
+      const h = document.documentElement.scrollHeight - innerHeight;
+      thanh.style.width = (h > 0 ? Math.min(100, (scrollY / h) * 100) : 100) + '%';
+    }, { passive: true });
+
+    // Phím mũi tên trái/phải để chuyển chương
+    document.addEventListener('keydown', (e) => {
+      const t = e.target as HTMLElement;
+      if (['INPUT', 'SELECT', 'TEXTAREA'].includes(t.tagName)) return;
+      const huong = e.key === 'ArrowLeft' ? 'truoc' : e.key === 'ArrowRight' ? 'sau' : null;
+      const a = huong && document.querySelector<HTMLAnchorElement>(`[data-phim="${huong}"]`);
+      if (a) location.href = a.href;
     });
   </script>
 </Khung>

@@ -1,0 +1,20 @@
+---
+// Danh sách truyện dạng dữ liệu, để trang "Tủ truyện" và mục "Đọc tiếp" hiển thị được trên trình duyệt
+import { tomTatTatCa, linkTruyen, linkChuong, anhHienThi } from '../lib/du-lieu';
+import { kieuTheLoai } from '../lib/the-loai';
+const ds = await tomTatTatCa();
+const duLieu = Object.fromEntries(await Promise.all(ds.map(async ({ truyen, dsChuong, chuongMoi }) => {
+  const k = kieuTheLoai(truyen.data.theLoai[0]);
+  return [truyen.id, {
+    ten: truyen.data.ten,
+    link: linkTruyen(truyen.id),
+    anhBia: (await anhHienThi(truyen)).src,
+    icon: k.icon,
+    mau: k.mau,
+    soChuong: dsChuong.length,
+    chuongMoi: chuongMoi?.data.so ?? 0,
+    linkChuong: linkChuong(truyen.id, 0).replace(/chuong-0\/$/, 'chuong-'),
+  }];
+})));
+---
+<script type="application/json" id="du-lieu-truyen" set:html={JSON.stringify(duLieu)} />

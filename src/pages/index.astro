@@ -1,50 +1,156 @@
 ---
 import Khung from '../layouts/Khung.astro';
-import TheTruyen from '../components/TheTruyen.astro';
+import OBia from '../components/OBia.astro';
+import BiaTruyen from '../components/BiaTruyen.astro';
+import BannerTruyen from '../components/BannerTruyen.astro';
+import Icon from '../components/Icon.astro';
+import Logo from '../components/Logo.astro';
 import QuangCao from '../components/QuangCao.astro';
-import ThanhTheLoai from '../components/ThanhTheLoai.astro';
+import DuLieuTruyen from '../components/DuLieuTruyen.astro';
+import GocTacGia from '../components/GocTacGia.astro';
+import HinhTamTrang from '../components/HinhTamTrang.astro';
+import { DS_TAM_TRANG, tamTrangCuaTruyen } from '../lib/tam-trang';
 import caiDat from '../data/cai-dat.json';
-import { tatCaTruyen, chuongCuaTruyen, chuongMoiNhat, slugCuaChuong, linkChuong, ngay } from '../lib/du-lieu';
+import { tomTatTatCa, tatCaTheLoai, linkChuong, linkTruyen, linkTheLoai, link, laMoi } from '../lib/du-lieu';
+import { kieuTheLoai } from '../lib/the-loai';
 
-const dsTruyen = await tatCaTruyen();
-const soChuong = Object.fromEntries(await Promise.all(dsTruyen.map(async (t) => [t.id, (await chuongCuaTruyen(t.id)).length])));
-const tenTruyen = Object.fromEntries(dsTruyen.map((t) => [t.id, t.data.ten]));
-const moiNhat = await chuongMoiNhat(10);
+const tatCa = await tomTatTatCa();
+const theoCapNhat = [...tatCa].sort((a, b) => b.capNhat.valueOf() - a.capNhat.valueOf());
+
+// Truyện đề cử: truyện được bật "đề cử"; nếu chưa chọn truyện nào thì lấy truyện mới cập nhật
+const daChon = theoCapNhat.filter((t) => t.truyen.data.deCu);
+const deCu = (daChon.length > 0 ? daChon : theoCapNhat).slice(0, 12);
+const noiBat = deCu[0];
+const moiCapNhat = theoCapNhat.filter((t) => t.chuongMoi).slice(0, 15);
+const hoanThanh = theoCapNhat.filter((t) => t.truyen.data.trangThai === 'Hoàn thành').slice(0, 12);
+const moiDang = [...tatCa].sort((a, b) => b.truyen.data.ngayDang.valueOf() - a.truyen.data.ngayDang.valueOf()).slice(0, 6);
+const dsTheLoai = await tatCaTheLoai();
+// Chỉ hiện những tâm trạng đang có truyện phù hợp
+const tamTrangMoiTruyen = tatCa.map((x) => tamTrangCuaTruyen(x.truyen.data.tamTrang, x.truyen.data.theLoai, x.dsChuong.length));
+const tamTrang = DS_TAM_TRANG.map((t) => ({ ...t, so: tamTrangMoiTruyen.filter((ds) => ds.includes(t.ma)).length })).filter((t) => t.so > 0);
 ---
 <Khung>
-  <section class="bia-trang">
-    <h1>{caiDat.tenWeb}</h1>
-    <p>{caiDat.khauHieu}</p>
-  </section>
+  {!noiBat ? (
+    <section class="gioi-thieu-web">
+      <Logo co={96} />
+      <h1>{caiDat.tenWeb}</h1>
+      <p>{caiDat.khauHieu}</p>
+      <p class="sap-ra-mat">Truyện đầu tiên sắp ra mắt. Hãy quay lại sau ít ngày nữa nhé!</p>
+    </section>
+  ) : (
+    <>
+      <BannerTruyen ds={deCu.slice(0, 7)} />
 
-  <ThanhTheLoai />
+      <!-- Đọc tiếp: hiện nếu người đọc đã từng đọc truyện ở đây -->
+      <section id="doc-tiep" hidden>
+        <div class="dau-muc"><h2><span class="huy-hieu-muc"><Icon ten="danh-dau" co={16} /></span>Đọc tiếp</h2><a href={link('/tu-truyen/')}>Tủ truyện <Icon ten="mui-ten" co={15} /></a></div>
+        <div class="hang-doc-tiep" id="hang-doc-tiep"></div>
+      </section>
 
-  <section>
-    <h2 class="tieu-de-muc">Chương mới cập nhật</h2>
-    {moiNhat.length === 0 ? <p>Chưa có chương nào.</p> : (
-      <ul class="ds-moi">
-        {moiNhat.map((c) => {
-          const slug = slugCuaChuong(c);
-          return (
-            <li>
-              <a href={linkChuong(slug, c.data.so)}>
-                <span class="ten-truyen">{tenTruyen[slug] ?? slug}</span>
-                <span class="ten-chuong">Chương {c.data.so}: {c.data.ten}</span>
+      {tamTrang.length > 0 && (
+        <section>
+          <div class="dau-muc"><h2><span class="huy-hieu-muc"><Icon ten="cuoi" co={16} /></span>Hôm nay bạn muốn đọc gì?</h2></div>
+          <div class="luoi-tam-trang">
+            {tamTrang.map((t) => (
+              <a class="o-tam-trang" href={link(`/danh-sach/?tam-trang=${t.ma}`)} style={`--m1:${t.mau}`}>
+                <HinhTamTrang ma={t.ma} co={52} />
+                <span><strong>{t.ten}</strong><small>{t.moTa} · {t.so} truyện</small></span>
               </a>
-              <time>{ngay(c.data.ngayDang)}</time>
-            </li>
-          );
-        })}
-      </ul>
-    )}
-  </section>
+            ))}
+          </div>
+        </section>
+      )}
 
-  <QuangCao />
+      <section>
+        <div class="dau-muc"><h2><span class="huy-hieu-muc"><Icon ten="lua" co={16} /></span>Truyện đề cử</h2><a href={link('/danh-sach/')}>Xem tất cả <Icon ten="mui-ten" co={15} /></a></div>
+        <div class="luoi-bia cuon-ngang">
+          {deCu.map((tt) => <OBia tt={tt} />)}
+        </div>
+      </section>
 
-  <section>
-    <h2 class="tieu-de-muc">Tất cả truyện</h2>
-    <div class="luoi-truyen">
-      {dsTruyen.map((t) => <TheTruyen truyen={t} soChuong={soChuong[t.id]} />)}
-    </div>
-  </section>
+      <div class="hai-cot">
+        <section>
+          <div class="dau-muc"><h2><span class="huy-hieu-muc"><Icon ten="set" co={16} /></span>Mới cập nhật</h2><a href={link('/danh-sach/?sap=moi')}>Xem thêm <Icon ten="mui-ten" co={15} /></a></div>
+          <ol class="ds-cap-nhat">
+            {moiCapNhat.map(({ truyen, chuongMoi, capNhat }) => (
+              <li>
+                <a href={linkTruyen(truyen.id)} tabindex="-1" aria-hidden="true"><BiaTruyen truyen={truyen} nho /></a>
+                <div class="giua">
+                  <a class="ten" href={linkTruyen(truyen.id)}>{truyen.data.ten}</a>
+                  {truyen.data.trangThai === 'Hoàn thành' ? <span class="nhan-nho full">Full</span> : laMoi(capNhat) && <span class="nhan-nho moi">Mới</span>}
+                  <p>{truyen.data.theLoai.slice(0, 2).map((tl, i) => <>{i > 0 && ' · '}<a class="phu-nhat" href={linkTheLoai(tl)}>{tl}</a></>)}</p>
+                </div>
+                <div class="phai">
+                  <a class="chuong" href={linkChuong(truyen.id, chuongMoi!.data.so)}>Chương {chuongMoi!.data.so}</a>
+                  <time datetime={capNhat.toISOString()} data-tuong-doi>{capNhat.toLocaleDateString('vi-VN')}</time>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <aside class="cot-phu">
+          <GocTacGia />
+          <section class="hop-phu">
+            <h2><span class="huy-hieu-muc nho"><Icon ten="luoi" co={14} /></span>Thể loại</h2>
+            <div class="luoi-the-loai">
+              {dsTheLoai.map(({ ten, soTruyen }) => <a href={linkTheLoai(ten)}><span class="cham" style={`--m1:${kieuTheLoai(ten).mau[0]}`}></span>{ten} <span class="so">{soTruyen}</span></a>)}
+            </div>
+          </section>
+          <section class="hop-phu">
+            <h2><span class="huy-hieu-muc nho"><Icon ten="lap-lanh" co={14} /></span>Truyện mới đăng</h2>
+            <ol class="ds-nho">
+              {moiDang.map(({ truyen, dsChuong }) => (
+                <li>
+                  <a href={linkTruyen(truyen.id)} tabindex="-1" aria-hidden="true"><BiaTruyen truyen={truyen} nho /></a>
+                  <div>
+                    <a class="ten" href={linkTruyen(truyen.id)}>{truyen.data.ten}</a>
+                    <p>{truyen.data.theLoai[0] ?? ''} · {dsChuong.length} chương</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </section>
+        </aside>
+      </div>
+
+      <QuangCao />
+
+      {hoanThanh.length > 0 && (
+        <section>
+          <div class="dau-muc"><h2><span class="huy-hieu-muc"><Icon ten="hoan-thanh" co={16} /></span>Truyện đã hoàn thành</h2><a href={link('/hoan-thanh/')}>Xem tất cả <Icon ten="mui-ten" co={15} /></a></div>
+          <div class="luoi-bia cuon-ngang">
+            {hoanThanh.map((tt) => <OBia tt={tt} />)}
+          </div>
+        </section>
+      )}
+
+      <DuLieuTruyen />
+      <script>
+        import { lichSu, thoiGianTruoc } from '../scripts/tu-truyen';
+        const duLieu = JSON.parse(document.getElementById('du-lieu-truyen')!.textContent!);
+        const ds = Object.entries(lichSu()).filter(([slug]) => duLieu[slug]).sort((a, b) => b[1].luc - a[1].luc).slice(0, 4);
+        if (ds.length > 0) {
+          const hang = document.getElementById('hang-doc-tiep')!;
+          for (const [slug, dd] of ds) {
+            const t = duLieu[slug];
+            const a = document.createElement('a');
+            a.className = 'the-doc-tiep';
+            a.href = t.linkChuong + dd.so + '/';
+            const bia = document.createElement('span');
+            bia.className = 'bia-mini';
+            if (t.anhBia) bia.style.backgroundImage = `url("${t.anhBia}")`;
+            else { bia.style.background = `linear-gradient(160deg,${t.mau[0]},${t.mau[1]})`; bia.textContent = t.ten.charAt(0); }
+            const chu = document.createElement('span');
+            chu.innerHTML = '<strong></strong><small></small>';
+            chu.querySelector('strong')!.textContent = t.ten;
+            chu.querySelector('small')!.textContent = `Chương ${dd.so}/${t.soChuong} · ${thoiGianTruoc(dd.luc)}`;
+            a.append(bia, chu);
+            hang.appendChild(a);
+          }
+          document.getElementById('doc-tiep')!.hidden = false;
+        }
+      </script>
+    </>
+  )}
 </Khung>

@@ -1,0 +1,10 @@
+---
+// Bé Sách – linh vật của web – nói một câu trong bong bóng hội thoại
+import Logo from './Logo.astro';
+interface Props { co?: number }
+const { co = 64 } = Astro.props;
+---
+<div class="be-sach">
+  <div class="be-sach-hinh"><Logo co={co} /></div>
+  <div class="bong-thoai"><slot /></div>
+</div>

@@ -1,5 +1,6 @@
 ---
 import { tatCaTheLoai, linkTheLoai, link } from '../lib/du-lieu';
+import { kieuTheLoai } from '../lib/the-loai';
 interface Props { dangChon?: string }
 const { dangChon } = Astro.props;
 const ds = await tatCaTheLoai();
@@ -8,7 +9,7 @@ const ds = await tatCaTheLoai();
   <nav class="thanh-the-loai" aria-label="Thể loại">
     <a href={link('/danh-sach/')} class={!dangChon ? 'chon' : ''}>Tất cả</a>
     {ds.map(({ ten, soTruyen }) => (
-      <a href={linkTheLoai(ten)} class={dangChon === ten ? 'chon' : ''}>{ten} <span>{soTruyen}</span></a>
+      <a href={linkTheLoai(ten)} class={dangChon === ten ? 'chon' : ''} style={`--m1:${kieuTheLoai(ten).mau[0]}`}>{ten} <span>{soTruyen}</span></a>
     ))}
   </nav>
 )}
