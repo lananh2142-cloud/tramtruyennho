@@ -1,26 +1,65 @@
 ---
 import Khung from '../layouts/Khung.astro';
 import TheTruyen from '../components/TheTruyen.astro';
+import BiaTruyen from '../components/BiaTruyen.astro';
 import QuangCao from '../components/QuangCao.astro';
 import ThanhTheLoai from '../components/ThanhTheLoai.astro';
 import caiDat from '../data/cai-dat.json';
-import { tatCaTruyen, chuongCuaTruyen, chuongMoiNhat, slugCuaChuong, linkChuong, ngay } from '../lib/du-lieu';
+import { tatCaTruyen, chuongCuaTruyen, chuongMoiNhat, slugCuaChuong, linkChuong, linkTruyen, link, ngay } from '../lib/du-lieu';
+import { kieuTheLoai } from '../lib/the-loai';
 
 const dsTruyen = await tatCaTruyen();
-const soChuong = Object.fromEntries(await Promise.all(dsTruyen.map(async (t) => [t.id, (await chuongCuaTruyen(t.id)).length])));
+const chuongTheoTruyen = Object.fromEntries(await Promise.all(dsTruyen.map(async (t) => [t.id, await chuongCuaTruyen(t.id)])));
+const soChuong = Object.fromEntries(dsTruyen.map((t) => [t.id, chuongTheoTruyen[t.id].length]));
+const tongChuong = Object.values(soChuong).reduce((a, b) => a + b, 0);
 const tenTruyen = Object.fromEntries(dsTruyen.map((t) => [t.id, t.data.ten]));
-const moiNhat = await chuongMoiNhat(10);
+const moiNhat = await chuongMoiNhat(8);
+
+// Chương đăng trong 7 ngày gần nhất được gắn nhãn "MỚI"
+const BAY_NGAY = 7 * 24 * 60 * 60 * 1000;
+const laMoi = (d: Date) => Date.now() - d.valueOf() < BAY_NGAY;
+const truyenCoChuongMoi = new Set(moiNhat.filter((c) => laMoi(c.data.ngayDang)).map(slugCuaChuong));
+
+// Truyện nổi bật: truyện vừa có chương mới nhất
+const noiBat = moiNhat[0] ? dsTruyen.find((t) => t.id === slugCuaChuong(moiNhat[0])) : dsTruyen[0];
 ---
 <Khung>
   <section class="bia-trang">
+    <div class="dom-sang" aria-hidden="true">
+      {Array.from({ length: 14 }, (_, i) => <span style={`--x:${(i * 37) % 100}%;--tre:${(i * 0.7) % 6}s;--co:${4 + (i % 4) * 2}px`}></span>)}
+    </div>
+    <p class="chao">✨ Chào mừng bạn đến với</p>
     <h1>{caiDat.tenWeb}</h1>
-    <p>{caiDat.khauHieu}</p>
+    <p class="khau-hieu">{caiDat.khauHieu}</p>
+    <div class="so-lieu">
+      <div><strong>{dsTruyen.length}</strong><span>truyện</span></div>
+      <div><strong>{tongChuong}</strong><span>chương</span></div>
+      <div><strong>100%</strong><span>miễn phí</span></div>
+    </div>
+    <div class="nut-hang giua">
+      {noiBat && chuongTheoTruyen[noiBat.id][0] && <a class="nut chinh lon" href={linkChuong(noiBat.id, chuongTheoTruyen[noiBat.id][0].data.so)}>📖 Đọc ngay</a>}
+      <a class="nut lon" href={link('/danh-sach/')}>🧭 Khám phá truyện</a>
+    </div>
   </section>
 
   <ThanhTheLoai />
 
-  <section>
-    <h2 class="tieu-de-muc">Chương mới cập nhật</h2>
+  {noiBat && (
+    <section class="noi-bat hien-dan" style={`--m1:${kieuTheLoai(noiBat.data.theLoai[0]).mau[0]};--m2:${kieuTheLoai(noiBat.data.theLoai[0]).mau[1]}`}>
+      <BiaTruyen truyen={noiBat} lon />
+      <div>
+        <p class="nhan-noi-bat">🔥 Truyện nổi bật</p>
+        <h2><a href={linkTruyen(noiBat.id)}>{noiBat.data.ten}</a></h2>
+        <p class="mo-ta-dai">{noiBat.data.gioiThieu}</p>
+        <div class="nut-hang">
+          <a class="nut chinh" href={linkTruyen(noiBat.id)}>Xem truyện →</a>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="hien-dan">
+    <h2 class="tieu-de-muc">⚡ Chương mới cập nhật</h2>
     {moiNhat.length === 0 ? <p>Chưa có chương nào.</p> : (
       <ul class="ds-moi">
         {moiNhat.map((c) => {
@@ -28,7 +67,7 @@ const moiNhat = await chuongMoiNhat(10);
           return (
             <li>
               <a href={linkChuong(slug, c.data.so)}>
-                <span class="ten-truyen">{tenTruyen[slug] ?? slug}</span>
+                <span class="ten-truyen">{tenTruyen[slug] ?? slug} {laMoi(c.data.ngayDang) && <span class="huy-hieu-moi nho">MỚI</span>}</span>
                 <span class="ten-chuong">Chương {c.data.so}: {c.data.ten}</span>
               </a>
               <time>{ngay(c.data.ngayDang)}</time>
@@ -42,9 +81,9 @@ const moiNhat = await chuongMoiNhat(10);
   <QuangCao />
 
   <section>
-    <h2 class="tieu-de-muc">Tất cả truyện</h2>
+    <h2 class="tieu-de-muc hien-dan">📚 Tất cả truyện</h2>
     <div class="luoi-truyen">
-      {dsTruyen.map((t) => <TheTruyen truyen={t} soChuong={soChuong[t.id]} />)}
+      {dsTruyen.map((t) => <TheTruyen truyen={t} soChuong={soChuong[t.id]} moi={truyenCoChuongMoi.has(t.id)} />)}
     </div>
   </section>
 </Khung>

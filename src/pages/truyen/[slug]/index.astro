@@ -1,6 +1,7 @@
 ---
 import Khung from '../../../layouts/Khung.astro';
 import QuangCao from '../../../components/QuangCao.astro';
+import BiaTruyen from '../../../components/BiaTruyen.astro';
 import { tatCaTruyen, chuongCuaTruyen, linkChuong, linkTheLoai, ngay, anh, type Truyen } from '../../../lib/du-lieu';
 import { render } from 'astro:content';
 
@@ -17,9 +18,7 @@ const { Content } = await render(truyen);
 <Khung tieuDe={d.ten} moTa={d.gioiThieu} anh={anh(d.anhBia)}>
   <article class="trang-truyen">
     <div class="dau-truyen">
-      <div class="bia lon">
-        {d.anhBia ? <img src={anh(d.anhBia)} alt={`Bìa truyện ${d.ten}`} /> : <span class="bia-chu">{d.ten}</span>}
-      </div>
+      <BiaTruyen truyen={truyen} lon />
       <div>
         <h1>{d.ten}</h1>
         <p class="phu">

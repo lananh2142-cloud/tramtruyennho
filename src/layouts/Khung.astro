@@ -87,7 +87,19 @@ const urlAnh = anh ? new URL(anh, Astro.site).href : undefined;
         <p class="nho">© {new Date().getFullYear()} {caiDat.tenWeb}. Mọi truyện trên trang đều thuộc bản quyền của tác giả.</p>
       </div>
     </footer>
+    <button id="len-dau" type="button" aria-label="Lên đầu trang" title="Lên đầu trang">↑</button>
     <script is:inline>
+      // Nút lên đầu trang
+      var lenDau = document.getElementById('len-dau');
+      addEventListener('scroll', function () { lenDau.classList.toggle('hien', scrollY > 600); }, { passive: true });
+      lenDau.addEventListener('click', function () { scrollTo({ top: 0, behavior: 'smooth' }); });
+      // Các khối hiện dần lên khi cuộn tới
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (ds) {
+          ds.forEach(function (d) { if (d.isIntersecting) { d.target.classList.add('da-hien'); io.unobserve(d.target); } });
+        }, { rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('.hien-dan').forEach(function (el) { el.classList.add('cho-hien'); io.observe(el); });
+      }
       document.getElementById('doi-giao-dien').addEventListener('click', function () {
         var r = document.documentElement;
         var hienTai = r.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');

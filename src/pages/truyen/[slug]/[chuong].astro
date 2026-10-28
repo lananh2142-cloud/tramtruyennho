@@ -25,6 +25,7 @@ const { Content } = await render(chuong);
 const tieuDe = `Chương ${chuong.data.so}: ${chuong.data.ten}`;
 ---
 <Khung tieuDe={`${truyen.data.ten} - ${tieuDe}`} moTa={`Đọc ${truyen.data.ten} - ${tieuDe}. ${truyen.data.gioiThieu}`}>
+  <div class="tien-do" aria-hidden="true"><div id="thanh-tien-do"></div></div>
   <article class="trang-doc">
     <p class="duong-dan"><a href={linkTruyen(truyen.id)}>← {truyen.data.ten}</a></p>
     <h1>{tieuDe}</h1>
@@ -35,9 +36,9 @@ const tieuDe = `Chương ${chuong.data.so}: ${chuong.data.ten}`;
     </div>
 
     <nav class="dieu-huong">
-      {truoc ? <a class="nut" href={linkChuong(truyen.id, truoc.data.so)}>← <span class="an-dt">Chương</span> trước</a> : <span class="nut tat">← <span class="an-dt">Chương</span> trước</span>}
+      {truoc ? <a class="nut" href={linkChuong(truyen.id, truoc.data.so)}>← <span class="an-dt">Chương trước</span><span class="chi-dt">Trước</span></a> : <span class="nut tat">← <span class="an-dt">Chương trước</span><span class="chi-dt">Trước</span></span>}
       <a class="nut" href={linkTruyen(truyen.id)}>Mục lục</a>
-      {sau ? <a class="nut" href={linkChuong(truyen.id, sau.data.so)}><span class="an-dt">Chương</span> sau →</a> : <span class="nut tat"><span class="an-dt">Chương</span> sau →</span>}
+      {sau ? <a class="nut" href={linkChuong(truyen.id, sau.data.so)}><span class="an-dt">Chương sau</span><span class="chi-dt">Sau</span> →</a> : <span class="nut tat"><span class="an-dt">Chương sau</span><span class="chi-dt">Sau</span> →</span>}
     </nav>
 
     <QuangCao />
@@ -47,9 +48,9 @@ const tieuDe = `Chương ${chuong.data.so}: ${chuong.data.ten}`;
     <QuangCao />
 
     <nav class="dieu-huong">
-      {truoc ? <a class="nut" href={linkChuong(truyen.id, truoc.data.so)}>← <span class="an-dt">Chương</span> trước</a> : <span class="nut tat">← <span class="an-dt">Chương</span> trước</span>}
+      {truoc ? <a class="nut" href={linkChuong(truyen.id, truoc.data.so)}>← <span class="an-dt">Chương trước</span><span class="chi-dt">Trước</span></a> : <span class="nut tat">← <span class="an-dt">Chương trước</span><span class="chi-dt">Trước</span></span>}
       <a class="nut" href={linkTruyen(truyen.id)}>Mục lục</a>
-      {sau ? <a class="nut chinh" href={linkChuong(truyen.id, sau.data.so)}><span class="an-dt">Chương</span> sau →</a> : <span class="nut tat"><span class="an-dt">Chương</span> sau →</span>}
+      {sau ? <a class="nut chinh" href={linkChuong(truyen.id, sau.data.so)}><span class="an-dt">Chương sau</span><span class="chi-dt">Sau</span> →</a> : <span class="nut tat"><span class="an-dt">Chương sau</span><span class="chi-dt">Sau</span> →</span>}
     </nav>
 
     {!sau && <p class="het-chuong">Bạn đã đọc đến chương mới nhất. Hãy quay lại sau để đọc tiếp nhé!</p>}
@@ -71,6 +72,11 @@ const tieuDe = `Chương ${chuong.data.so}: ${chuong.data.ten}`;
         try { localStorage.setItem('co-chu', moi); } catch (e) {}
       });
     });
+    var thanh = document.getElementById('thanh-tien-do');
+    addEventListener('scroll', function () {
+      var h = document.documentElement.scrollHeight - innerHeight;
+      thanh.style.width = (h > 0 ? Math.min(100, scrollY / h * 100) : 100) + '%';
+    }, { passive: true });
     document.addEventListener('keydown', function (e) {
       if (e.target.tagName === 'INPUT') return;
       var nav = document.querySelector('.dieu-huong');
