@@ -11,6 +11,6 @@ const d = truyen.data;
   <div class="thong-tin">
     <h3>{d.ten}</h3>
     <p class="mo-ta">{d.gioiThieu}</p>
-    <p class="phu"><span class={`nhan ${d.trangThai === 'Hoàn thành' ? 'xong' : ''}`}>{d.trangThai}</span> · {soChuong} chương</p>
+    <p class="phu"><span class={`nhan ${d.trangThai === 'Hoàn thành' ? 'xong' : ''}`}>{d.trangThai}</span> · {soChuong} chương{d.theLoai.length > 0 && <> · {d.theLoai.slice(0, 2).join(', ')}</>}</p>
   </div>
 </a>

@@ -2,6 +2,7 @@
 import Khung from '../layouts/Khung.astro';
 import TheTruyen from '../components/TheTruyen.astro';
 import QuangCao from '../components/QuangCao.astro';
+import ThanhTheLoai from '../components/ThanhTheLoai.astro';
 import caiDat from '../data/cai-dat.json';
 import { tatCaTruyen, chuongCuaTruyen, chuongMoiNhat, slugCuaChuong, linkChuong, ngay } from '../lib/du-lieu';
 
@@ -15,6 +16,8 @@ const moiNhat = await chuongMoiNhat(10);
     <h1>{caiDat.tenWeb}</h1>
     <p>{caiDat.khauHieu}</p>
   </section>
+
+  <ThanhTheLoai />
 
   <section>
     <h2 class="tieu-de-muc">Chương mới cập nhật</h2>

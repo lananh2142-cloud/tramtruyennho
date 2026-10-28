@@ -26,7 +26,7 @@ const urlAnh = anh ? new URL(anh, Astro.site).href : undefined;
     <meta property="og:type" content="website" />
     <meta property="og:url" content={urlTrang} />
     {urlAnh && <meta property="og:image" content={urlAnh} />}
-    <meta name="theme-color" content="#0d0b0b" />
+    <meta name="theme-color" content="#a84a24" />
     <link rel="icon" href={link('/favicon.svg')} type="image/svg+xml" />
     <link rel="sitemap" href={link('/sitemap-index.xml')} />
     <link rel="alternate" type="application/rss+xml" title={caiDat.tenWeb} href={link('/rss.xml')} />
@@ -41,6 +41,19 @@ const urlAnh = anh ? new URL(anh, Astro.site).href : undefined;
         if (c) document.documentElement.style.setProperty('--co-chu', c + 'px');
       } catch (e) {}
     </script>
+    {caiDat.thongKe.googleSearchConsole && <meta name="google-site-verification" content={caiDat.thongKe.googleSearchConsole} />}
+    {caiDat.thongKe.googleAnalytics && (
+      <>
+        <!-- Google Analytics: đếm lượt đọc. Chỉ chủ web xem được số liệu tại analytics.google.com -->
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${caiDat.thongKe.googleAnalytics}`}></script>
+        <script is:inline define:vars={{ gaId: caiDat.thongKe.googleAnalytics }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag() { dataLayer.push(arguments); }
+          gtag('js', new Date());
+          gtag('config', gaId);
+        </script>
+      </>
+    )}
     {caiDat.quangCao.adsenseId && (
       <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${caiDat.quangCao.adsenseId}`} crossorigin="anonymous"></script>
     )}
@@ -49,7 +62,7 @@ const urlAnh = anh ? new URL(anh, Astro.site).href : undefined;
     <header class="dau-trang">
       <div class="khung">
         <a class="logo" href={link('/')}>
-          <span class="logo-mat" aria-hidden="true">◉</span> {caiDat.tenWeb}
+          <span class="logo-mat" aria-hidden="true">✦</span> {caiDat.tenWeb}
         </a>
         <nav>
           <a href={link('/')}>Trang chủ</a>
@@ -77,7 +90,7 @@ const urlAnh = anh ? new URL(anh, Astro.site).href : undefined;
     <script is:inline>
       document.getElementById('doi-giao-dien').addEventListener('click', function () {
         var r = document.documentElement;
-        var hienTai = r.dataset.theme || 'dark';
+        var hienTai = r.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         var moi = hienTai === 'light' ? 'dark' : 'light';
         r.dataset.theme = moi;
         try { localStorage.setItem('giao-dien', moi); } catch (e) {}

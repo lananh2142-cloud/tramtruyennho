@@ -20,6 +20,14 @@ Trong trang quản trị → mục **Cài đặt web**.
 - **Mã ngân hàng**: điền mã viết tắt (VCB, MB, TCB, ACB, BIDV, VBA, TPB...) để web tự tạo mã QR chuyển khoản.
 - **Mã AdSense**: chỉ điền khi Google đã duyệt tài khoản AdSense.
 
+## Xem thống kê truy cập (chỉ mình bạn xem được)
+- **Google Analytics** (https://analytics.google.com): bao nhiêu người đọc, đọc truyện nào, đến từ Facebook hay Google, dùng điện thoại hay máy tính.
+- **Google Search Console** (https://search.google.com/search-console): web hiện trên Google bao nhiêu lần, người ta tìm từ khoá gì để thấy truyện của bạn.
+Cả hai đăng nhập bằng Gmail của bạn; người đọc không xem được. Mã của hai công cụ này điền trong **Cài đặt web → Thống kê truy cập**.
+
+## Thể loại
+Mỗi truyện chọn một hoặc nhiều thể loại. Web tự tạo trang riêng cho từng thể loại (ví dụ `/the-loai/ngon-tinh/`).
+
 ## Kiếm tiền – lộ trình gợi ý
 1. **Ngay bây giờ:** bật trang Ủng hộ (QR ngân hàng/Momo).
 2. **Khi có ~20–30 chương và người đọc đều đặn:** mua tên miền riêng (~250.000đ/năm), rồi đăng ký Google AdSense.

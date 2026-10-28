@@ -1,7 +1,7 @@
 {
-  "tenWeb": "Truyện Đêm Khuya",
-  "khauHieu": "Những câu chuyện kinh dị không nên đọc một mình",
-  "moTa": "Đọc truyện kinh dị, truyện ma Việt Nam miễn phí. Cập nhật chương mới thường xuyên.",
+  "tenWeb": "Góc Truyện",
+  "khauHieu": "Đọc truyện online miễn phí, cập nhật chương mới mỗi tuần",
+  "moTa": "Đọc truyện online miễn phí: ngôn tình, kinh dị, tiên hiệp, trinh thám, đô thị... Truyện nguyên tác, cập nhật chương mới thường xuyên.",
   "ungHo": {
     "batTat": true,
     "nganHang": "Tên ngân hàng (ví dụ: Vietcombank)",
@@ -15,5 +15,9 @@
   "quangCao": {
     "adsenseId": ""
   },
-  "facebook": ""
+  "facebook": "",
+  "thongKe": {
+    "googleAnalytics": "",
+    "googleSearchConsole": ""
+  }
 }

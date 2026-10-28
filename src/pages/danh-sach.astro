@@ -1,6 +1,7 @@
 ---
 import Khung from '../layouts/Khung.astro';
 import TheTruyen from '../components/TheTruyen.astro';
+import ThanhTheLoai from '../components/ThanhTheLoai.astro';
 import { tatCaTruyen, chuongCuaTruyen } from '../lib/du-lieu';
 
 const dsTruyen = await tatCaTruyen();
@@ -9,6 +10,7 @@ const boDau = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(
 ---
 <Khung tieuDe="Danh sách truyện">
   <h1>Danh sách truyện</h1>
+  <ThanhTheLoai />
   <input id="tim-kiem" class="o-tim" type="search" placeholder="Tìm tên truyện..." aria-label="Tìm truyện" />
   <div class="luoi-truyen" id="luoi">
     {dsTruyen.map((t) => (

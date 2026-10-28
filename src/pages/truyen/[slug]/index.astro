@@ -1,7 +1,7 @@
 ---
 import Khung from '../../../layouts/Khung.astro';
 import QuangCao from '../../../components/QuangCao.astro';
-import { tatCaTruyen, chuongCuaTruyen, linkChuong, ngay, anh, type Truyen } from '../../../lib/du-lieu';
+import { tatCaTruyen, chuongCuaTruyen, linkChuong, linkTheLoai, ngay, anh, type Truyen } from '../../../lib/du-lieu';
 import { render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -25,7 +25,7 @@ const { Content } = await render(truyen);
         <p class="phu">
           <span class={`nhan ${d.trangThai === 'Hoàn thành' ? 'xong' : ''}`}>{d.trangThai}</span>
           · {dsChuong.length} chương
-          {d.theLoai.length > 0 && <> · {d.theLoai.join(', ')}</>}
+          {d.theLoai.map((tl) => <> · <a href={linkTheLoai(tl)}>{tl}</a></>)}
         </p>
         <p class="mo-ta-dai">{d.gioiThieu}</p>
         {dsChuong.length > 0 && (

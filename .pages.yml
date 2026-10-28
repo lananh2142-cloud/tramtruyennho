@@ -16,7 +16,13 @@ content:
       - { name: ma, label: "Mã truyện (viết thường, không dấu, nối bằng gạch ngang, ví dụ: ngoi-nha-cuoi-hem). Đặt một lần, không đổi.", type: string, required: true }
       - { name: gioiThieu, label: Giới thiệu ngắn, type: text, required: true }
       - { name: anhBia, label: Ảnh bìa (tỉ lệ 2:3), type: image }
-      - { name: theLoai, label: Thể loại, type: string, list: true }
+      - name: theLoai
+        label: Thể loại (chọn một hoặc nhiều, có thể gõ thể loại mới)
+        type: select
+        options:
+          multiple: true
+          creatable: true
+          values: [Ngôn tình, Kinh dị, Linh dị, Tiên hiệp, Kiếm hiệp, Huyền huyễn, Đô thị, Trinh thám, Xuyên không, Cổ đại, Hiện đại, Học đường, Hài hước, Khoa học viễn tưởng, Phiêu lưu, Truyện ngắn]
       - name: trangThai
         label: Trạng thái
         type: select
@@ -66,4 +72,10 @@ content:
         type: object
         fields:
           - { name: adsenseId, label: "Mã Google AdSense (dạng ca-pub-xxxxxxxx)", type: string }
+      - name: thongKe
+        label: Thống kê truy cập (chỉ bạn xem được)
+        type: object
+        fields:
+          - { name: googleAnalytics, label: "Mã Google Analytics (dạng G-XXXXXXXXXX)", type: string }
+          - { name: googleSearchConsole, label: Mã xác minh Google Search Console, type: string }
       - { name: facebook, label: Link trang Facebook, type: string }
