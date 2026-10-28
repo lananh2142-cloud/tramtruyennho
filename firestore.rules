@@ -1,11 +1,11 @@
 // Luật truy cập kho dữ liệu Firebase của Trạm Truyện Nhỏ.
 // Dán toàn bộ nội dung này vào Firebase → Firestore Database → Rules → Publish.
-// MA_TAC_GIA: thay bằng "Mã tài khoản" của tác giả (xem ở trang Tài khoản trên web).
+// Mã tài khoản của tác giả (Embe) nằm trong laTacGia(); xem mã ở trang Tài khoản trên web.
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     function daDangNhap() { return request.auth != null; }
-    function laTacGia() { return daDangNhap() && request.auth.uid in ['MA_TAC_GIA']; }
+    function laTacGia() { return daDangNhap() && request.auth.uid in ['5vF8M4gzaYRFTq3Lxo4pcogSxVI2']; }
     // Đăng ký bằng email phải xác minh email; Google và Facebook thì đã xác minh sẵn
     function daXacMinh() {
       return request.auth.token.email_verified == true
