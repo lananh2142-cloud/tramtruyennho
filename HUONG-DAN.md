@@ -1,5 +1,7 @@
 # Hướng dẫn sử dụng trang web truyện
 
+Địa chỉ web: https://tramtruyennho.pages.dev (chạy miễn phí trên Cloudflare Pages, tự cập nhật mỗi khi có thay đổi trong kho GitHub).
+
 ## Đăng truyện mới (cách dễ nhất – qua trang quản trị)
 
 1. Vào https://app.pagescms.org và đăng nhập bằng tài khoản GitHub.
