@@ -1,7 +1,14 @@
 # Cấu hình trang quản trị Pages CMS (https://app.pagescms.org) để đăng truyện không cần biết code
 media:
-  input: public/images
-  output: /images
+  - name: hinh
+    label: Hình ảnh
+    input: public/images
+    output: /images
+  - name: file-truyen
+    label: File truyện (Word, PDF)
+    input: nhap-truyen-file
+    output: /nhap-truyen-file
+    extensions: [docx, pdf]
 
 content:
   - name: truyen
@@ -60,6 +67,38 @@ content:
       - { name: ngayDang, label: Ngày đăng, type: date, required: true }
       - { name: body, label: Nội dung chương, type: rich-text, required: true }
       - { name: loiTacGia, label: Lời tác giả cuối chương (không bắt buộc), type: text }
+
+  # Đăng nhanh: tải file Word/PDF lên, GitHub tự tách thành các chương (scripts/nhap-truyen.mjs)
+  - name: nhap
+    label: Đăng nhanh bằng Word/PDF
+    type: collection
+    path: nhap-truyen
+    filename: "{year}-{month}-{day}-{hour}{minute}{second}.md"
+    view:
+      fields: [truyen, ketQua]
+    fields:
+      - name: truyen
+        label: Truyện (chọn truyện đã tạo ở mục Truyện)
+        type: reference
+        required: true
+        options:
+          collection: truyen
+          search: ten
+          label: "{fields.ten}"
+      - name: file
+        label: "File Word (.docx) hoặc PDF. Web tự tách chương theo các dòng như \"Chương 1\", \"Phần 2: ...\""
+        type: file
+        required: true
+        options:
+          media: file-truyen
+          extensions: [docx, pdf]
+      - { name: chuongBatDau, label: "Chương đầu tiên trong file là chương số mấy (thường là 1)", type: number, default: 1 }
+      - { name: tenChuong, label: "Tên chương (chỉ dùng khi file chỉ có một chương và không có dòng \"Chương ...\")", type: string }
+      - { name: ghiDe, label: Ghi đè nếu chương đã có (dùng khi muốn sửa lại chương đã đăng), type: boolean }
+      - name: ketQua
+        label: Kết quả (web tự điền sau khoảng 1–2 phút, bạn để trống)
+        type: text
+        readonly: true
 
   - name: cai-dat
     label: Cài đặt web

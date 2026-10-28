@@ -12,5 +12,10 @@
     "@astrojs/sitemap": "3.6.0",
     "astro": "5.18.2",
     "firebase": "11.10.0"
+  },
+  "devDependencies": {
+    "mammoth": "1.11.0",
+    "pdfjs-dist": "4.10.38",
+    "yaml": "2.8.1"
   }
 }

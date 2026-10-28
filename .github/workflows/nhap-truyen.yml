@@ -1,0 +1,37 @@
+# Đăng nhanh bằng Word/PDF: khi tác giả tạo yêu cầu trong trang quản trị (mục "Đăng nhanh bằng Word/PDF"),
+# GitHub tự chạy scripts/nhap-truyen.mjs để tách file thành các chương rồi lưu lại. Cloudflare tự cập nhật web sau đó.
+name: Đăng nhanh bằng Word/PDF
+
+on:
+  push:
+    branches: [main, ban-thu-nhap-file]
+    paths: ['nhap-truyen/**']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nhap-truyen
+  cancel-in-progress: false
+
+jobs:
+  nhap:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: node scripts/nhap-truyen.mjs
+      - name: Lưu các chương vừa tạo
+        run: |
+          git config user.name "Trạm Truyện Nhỏ"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A nhap-truyen nhap-truyen-file src/content/chuong public/images
+          if git diff --cached --quiet; then echo "Không có gì mới."; exit 0; fi
+          git commit -m "Đăng chương từ file Word/PDF"
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin HEAD:"$GITHUB_REF_NAME"
