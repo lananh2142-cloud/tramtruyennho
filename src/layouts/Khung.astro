@@ -40,6 +40,11 @@ const dsTheLoai = await tatCaTheLoai();
         var g = localStorage.getItem('giao-dien');
         if (g) document.documentElement.dataset.theme = g;
         var r = document.documentElement;
+        // TẠM CHO BẢN XEM THỬ: chọn bộ màu bằng ?mau=hoang-hon / ngan-ha / sang-ruc / vang-dem
+        var mThu = new URLSearchParams(location.search).get('mau');
+        if (mThu) localStorage.setItem('mau-thu', mThu);
+        mThu = localStorage.getItem('mau-thu');
+        if (mThu && mThu !== 'vang-dem') r.dataset.mau = mThu;
         var c = localStorage.getItem('co-chu');
         if (c) r.style.setProperty('--co-chu', c + 'px');
         var gd = localStorage.getItem('gian-dong');
