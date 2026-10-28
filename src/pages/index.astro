@@ -31,12 +31,15 @@ const tamTrang = DS_TAM_TRANG.map((t) => ({ ...t, so: tamTrangMoiTruyen.filter((
 ---
 <Khung>
   {!noiBat ? (
+    <>
     <section class="gioi-thieu-web">
       <Logo co={96} />
       <h1>{caiDat.tenWeb}</h1>
       <p>{caiDat.khauHieu}</p>
       <p class="sap-ra-mat">Truyện đầu tiên sắp ra mắt. Hãy quay lại sau ít ngày nữa nhé!</p>
     </section>
+    <div class="goc-tac-gia-giua"><GocTacGia /></div>
+    </>
   ) : (
     <>
       <BannerTruyen ds={deCu.slice(0, 7)} />

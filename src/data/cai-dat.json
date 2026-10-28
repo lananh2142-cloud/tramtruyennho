@@ -3,7 +3,7 @@
   "khauHieu": "Đọc truyện online miễn phí, cập nhật chương mới mỗi tuần",
   "moTa": "Đọc truyện online miễn phí: ngôn tình, kinh dị, tiên hiệp, trinh thám, đô thị... Truyện nguyên tác, cập nhật chương mới thường xuyên.",
   "ungHo": {
-    "batTat": true,
+    "batTat": false,
     "nganHang": "Tên ngân hàng (ví dụ: Vietcombank)",
     "maNganHang": "",
     "soTaiKhoan": "0000000000",
@@ -21,8 +21,8 @@
     "googleSearchConsole": ""
   },
   "gocTacGia": {
-    "butDanh": "",
+    "butDanh": "Embe",
     "anhDaiDien": "",
-    "loiChao": ""
+    "loiChao": "📖✨ CHÀO MỪNG BẠN ĐẾN VỚI TRẠM TRUYỆN NHỎ\n🌷 Có những câu chuyện khiến ta bật cười, có những câu chuyện làm ta rơi nước mắt, và cũng có những câu chuyện khép lại rồi nhưng dư âm vẫn còn mãi.\n✍️ Nơi đây, mỗi trang viết là một hành trình, mỗi nhân vật là một cuộc đời và mỗi câu chuyện là một thế giới đang chờ bạn khám phá.\n💌 Cảm ơn bạn đã ghé thăm góc nhỏ này\n✨ Hy vọng bạn đến vì tò mò, ở lại vì yêu thích và rời đi với một câu chuyện chẳng thể nào quên. ❤️"
   }
 }

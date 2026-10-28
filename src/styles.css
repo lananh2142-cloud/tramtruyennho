@@ -454,7 +454,10 @@ h2 small { font-size: .8em; color: var(--chu-mo); font-weight: 500; }
 .tac-gia-dau strong { display: block; font-size: 1rem; }
 .tac-gia-dau span { color: var(--chu-mo); font-size: .82rem; }
 .anh-tac-gia { border-radius: 50%; object-fit: cover; flex: 0 0 auto; }
-.loi-chao { margin: 14px 0 0; padding: 12px 14px; border-radius: 10px; background: var(--nen-3); color: var(--chu-phu); font-size: .9rem; font-style: italic; line-height: 1.6; }
+.loi-chao { margin: 14px 0 0; padding: 14px 16px; border-radius: 12px; background: var(--nen-3); color: var(--chu-phu); font-size: .88rem; line-height: 1.65; }
+.loi-chao p { margin: 0 0 .7em; }
+.loi-chao p:last-child { margin-bottom: 0; }
+.loi-chao .dong-dau { color: var(--nhan-chu); font-weight: 700; font-size: .84rem; letter-spacing: .02em; }
 
 /* Lời tác giả cuối chương */
 .loi-tac-gia { display: flex; gap: 14px; align-items: flex-start; margin: 32px 0 8px; padding: 16px 18px; border-radius: var(--bo);
@@ -495,3 +498,6 @@ h2 small { font-size: .8em; color: var(--chu-mo); font-weight: 500; }
 /* Bìa lớn ở trang giới thiệu truyện bo tròn hơn; bìa nhỏ trên điện thoại bo vừa phải */
 .dau-truyen > .bia { border-radius: 20px; }
 @media (max-width: 600px) { .o-bia .bia { border-radius: 13px; } }
+
+/* Góc tác giả ở giữa trang chủ khi web chưa có truyện */
+.goc-tac-gia-giua { max-width: 560px; margin: 24px auto 0; }

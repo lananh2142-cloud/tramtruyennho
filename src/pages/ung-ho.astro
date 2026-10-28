@@ -1,7 +1,8 @@
 ---
 import Khung from '../layouts/Khung.astro';
 import caiDat from '../data/cai-dat.json';
-import { anh } from '../lib/du-lieu';
+import { anh, link } from '../lib/du-lieu';
+import BeSach from '../components/BeSach.astro';
 
 const u = caiDat.ungHo;
 // Nếu có mã ngân hàng (VCB, MB, TCB, ACB...), tự tạo mã QR chuyển khoản bằng dịch vụ miễn phí VietQR
@@ -10,6 +11,7 @@ const qr = anh(u.anhQR) ||
     ? `https://img.vietqr.io/image/${u.maNganHang}-${u.soTaiKhoan}-compact2.png?addInfo=${encodeURIComponent('Ung ho ' + caiDat.tenWeb)}&accountName=${encodeURIComponent(u.chuTaiKhoan)}`
     : '');
 ---
+{u.batTat ? (
 <Khung tieuDe="Ủng hộ tác giả">
   <article class="trang-tinh hop-ung-ho-lon">
     <h1>Ủng hộ tác giả</h1>
@@ -24,3 +26,11 @@ const qr = anh(u.anhQR) ||
     <p class="nho">Mọi sự ủng hộ, dù nhỏ, đều giúp tác giả có thêm động lực ra chương mới. Xin cảm ơn!</p>
   </article>
 </Khung>
+) : (
+<Khung tieuDe="Ủng hộ tác giả" anTimKiem>
+  <article class="trang-tinh" style="text-align:center">
+    <h1>Ủng hộ tác giả</h1>
+    <BeSach co={80}>Trang ủng hộ đang được chuẩn bị. Cảm ơn bạn đã quan tâm! Trong lúc chờ, <a href={link('/danh-sach/')}>đọc truyện</a> cùng mình nhé.</BeSach>
+  </article>
+</Khung>
+)}

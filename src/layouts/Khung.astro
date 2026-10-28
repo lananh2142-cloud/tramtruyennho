@@ -9,8 +9,9 @@ interface Props {
   tieuDe?: string;
   moTa?: string;
   anh?: string;
+  anTimKiem?: boolean;
 }
-const { tieuDe, moTa = caiDat.moTa, anh } = Astro.props;
+const { tieuDe, moTa = caiDat.moTa, anh, anTimKiem = false } = Astro.props;
 const tieuDeDayDu = tieuDe ? `${tieuDe} | ${caiDat.tenWeb}` : `${caiDat.tenWeb} – ${caiDat.khauHieu}`;
 const urlTrang = new URL(Astro.url.pathname, Astro.site);
 const urlAnh = anh ? new URL(anh, Astro.site).href : undefined;
@@ -23,6 +24,7 @@ const dsTheLoai = await tatCaTheLoai();
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{tieuDeDayDu}</title>
     <meta name="description" content={moTa} />
+    {anTimKiem && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={urlTrang} />
     <meta property="og:title" content={tieuDeDayDu} />
     <meta property="og:description" content={moTa} />

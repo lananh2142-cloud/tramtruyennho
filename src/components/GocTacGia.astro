@@ -5,6 +5,7 @@ import Logo from './Logo.astro';
 import Icon from './Icon.astro';
 import { anh } from '../lib/du-lieu';
 const g = caiDat.gocTacGia;
+const dongChao = g.loiChao.split('\n').map((d) => d.trim()).filter(Boolean);
 ---
 {(g.butDanh || g.loiChao) && (
   <section class="hop-phu goc-tac-gia">
@@ -16,6 +17,10 @@ const g = caiDat.gocTacGia;
         <span>Tác giả của Trạm</span>
       </div>
     </div>
-    {g.loiChao && <p class="loi-chao">“{g.loiChao}”</p>}
+    {dongChao.length > 0 && (
+      <div class="loi-chao">
+        {dongChao.map((d, i) => <p class={i === 0 && dongChao.length > 1 ? 'dong-dau' : ''}>{d}</p>)}
+      </div>
+    )}
   </section>
 )}
