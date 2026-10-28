@@ -2,6 +2,7 @@
 truyen: mau-ngoi-nha-cuoi-hem
 ten: Chương thử số 23
 so: 23
+loiTacGia: "Chương này mình viết lúc 3 giờ sáng thật đó, vừa viết vừa sợ. Chương sau sẽ hé lộ người đứng trên gác là ai!"
 ngayDang: 2026-10-28T03:00:00
 ---
 Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. Đoạn văn thử của chương 23. 
