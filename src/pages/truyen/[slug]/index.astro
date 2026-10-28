@@ -6,6 +6,7 @@ import OBia from '../../../components/OBia.astro';
 import Icon from '../../../components/Icon.astro';
 import { tomTatTatCa, linkChuong, linkTheLoai, link, anhHienThi, soChu, phutDoc, hienThoiGian, type TomTat } from '../../../lib/du-lieu';
 import Logo from '../../../components/Logo.astro';
+import BinhLuan from '../../../components/BinhLuan.astro';
 import HinhTamTrang from '../../../components/HinhTamTrang.astro';
 import { DS_TAM_TRANG, tamTrangCuaTruyen } from '../../../lib/tam-trang';
 import { kieuTheLoai } from '../../../lib/the-loai';
@@ -106,6 +107,7 @@ const tongPhut = dsChuong.reduce((a, c) => a + phutDoc(soChu(c.body)), 0);
         <div class="luoi-bia cuon-ngang">{cungLoai.map((x) => <OBia tt={x} />)}</div>
       </section>
     )}
+    <BinhLuan truyen={truyen.id} />
   </article>
 
   <script>

@@ -132,9 +132,11 @@ const tamTrang = DS_TAM_TRANG.map((t) => ({ ...t, so: tamTrangMoiTruyen.filter((
       <script>
         import { lichSu, thoiGianTruoc } from '../scripts/tu-truyen';
         const duLieu = JSON.parse(document.getElementById('du-lieu-truyen')!.textContent!);
+        const veDocTiep = () => {
         const ds = Object.entries(lichSu()).filter(([slug]) => duLieu[slug]).sort((a, b) => b[1].luc - a[1].luc).slice(0, 4);
+        const hang = document.getElementById('hang-doc-tiep')!;
+        hang.replaceChildren();
         if (ds.length > 0) {
-          const hang = document.getElementById('hang-doc-tiep')!;
           for (const [slug, dd] of ds) {
             const t = duLieu[slug];
             const a = document.createElement('a');
@@ -153,6 +155,10 @@ const tamTrang = DS_TAM_TRANG.map((t) => ({ ...t, so: tamTrangMoiTruyen.filter((
           }
           document.getElementById('doc-tiep')!.hidden = false;
         }
+        };
+        veDocTiep();
+        // Vẽ lại khi dữ liệu vừa được đồng bộ từ tài khoản
+        addEventListener('tt-da-dong-bo', veDocTiep);
       </script>
     </>
   )}

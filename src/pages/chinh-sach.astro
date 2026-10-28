@@ -1,13 +1,44 @@
 ---
 import Khung from '../layouts/Khung.astro';
 import caiDat from '../data/cai-dat.json';
+import firebase from '../data/firebase.json';
+import { link } from '../lib/du-lieu';
+const coTaiKhoan = Boolean(firebase.apiKey);
 ---
 <Khung tieuDe="Chính sách bảo mật">
   <article class="trang-tinh">
     <h1>Chính sách bảo mật</h1>
-    <p>{caiDat.tenWeb} không yêu cầu bạn đăng ký tài khoản và không thu thập thông tin cá nhân như tên, email hay số điện thoại.</p>
+    {coTaiKhoan ? (
+      <p>Bạn đọc truyện trên {caiDat.tenWeb} hoàn toàn không cần tài khoản. Tài khoản chỉ cần khi bạn muốn đồng bộ tủ truyện giữa các thiết bị hoặc bình luận.</p>
+    ) : (
+      <p>{caiDat.tenWeb} không yêu cầu bạn đăng ký tài khoản và không thu thập thông tin cá nhân như tên, email hay số điện thoại.</p>
+    )}
+
+    {coTaiKhoan && (
+      <>
+        <h2>Tài khoản</h2>
+        <p>Bạn có thể tạo tài khoản bằng email và mật khẩu, hoặc đăng nhập bằng Google{firebase.facebook && ' hay Facebook'}. Khi đó {caiDat.tenWeb} lưu:</p>
+        <ul>
+          <li>Tên hiển thị, email và ảnh đại diện (nếu đăng nhập bằng Google{firebase.facebook && ' hay Facebook'}, các thông tin này do Google{firebase.facebook && ' hoặc Facebook'} cung cấp khi bạn đồng ý).</li>
+          <li>Tủ truyện của bạn: những truyện bạn đã lưu và chương bạn đang đọc, để đồng bộ giữa các thiết bị.</li>
+        </ul>
+        <p>Mật khẩu được Google Firebase mã hoá và quản lý; {caiDat.tenWeb} không xem được mật khẩu của bạn. Dữ liệu được lưu trên dịch vụ Google Firebase. Tủ truyện chỉ chính bạn xem được. Chúng tôi không bán hay chia sẻ thông tin của bạn cho bất kỳ ai.</p>
+
+        <h2>Bình luận</h2>
+        <p>Bình luận của bạn được hiển thị công khai kèm tên hiển thị và ảnh đại diện. Bạn có thể xoá bình luận của mình bất cứ lúc nào. Tác giả có thể xoá các bình luận không phù hợp.</p>
+
+        <h2 id="xoa-du-lieu">Xoá tài khoản và dữ liệu</h2>
+        <p>Bạn có thể tự xoá toàn bộ dữ liệu của mình bất cứ lúc nào:</p>
+        <ol>
+          <li>Đăng nhập, rồi mở trang <a href={link('/tai-khoan/')}>Tài khoản</a>.</li>
+          <li>Bấm <strong>Xoá tài khoản</strong> và xác nhận.</li>
+        </ol>
+        <p>Tài khoản, tủ truyện và mọi bình luận của bạn sẽ bị xoá vĩnh viễn ngay lập tức.</p>
+      </>
+    )}
+
     <h2>Lưu trữ trên trình duyệt</h2>
-    <p>Trang web lưu một số cài đặt đọc (giao diện sáng/tối, cỡ chữ) ngay trên trình duyệt của bạn. Thông tin này không được gửi đi đâu.</p>
+    <p>Trang web lưu một số cài đặt đọc (giao diện sáng/tối, cỡ chữ, màu nền) và tủ truyện ngay trên trình duyệt của bạn{coTaiKhoan ? '. Khi bạn đăng nhập, tủ truyện được đồng bộ với tài khoản như mô tả ở trên' : '. Thông tin này không được gửi đi đâu'}.</p>
     <h2>Thống kê truy cập</h2>
     <p>Trang web dùng Google Analytics để đếm số lượt đọc và biết truyện nào được yêu thích, nhằm cải thiện nội dung. Công cụ này dùng cookie và chỉ thu thập thông tin ẩn danh như loại thiết bị, khu vực và trang đã xem; không thu thập tên, email hay số điện thoại. Bạn có thể chặn bằng <a href="https://tools.google.com/dlpage/gaoptout" rel="noopener" target="_blank">tiện ích chặn Google Analytics</a>.</p>
     <h2>Quảng cáo</h2>
