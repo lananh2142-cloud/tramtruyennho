@@ -26,7 +26,7 @@ const urlAnh = anh ? new URL(anh, Astro.site).href : undefined;
     <meta property="og:type" content="website" />
     <meta property="og:url" content={urlTrang} />
     {urlAnh && <meta property="og:image" content={urlAnh} />}
-    <meta name="theme-color" content="#a84a24" />
+    <meta name="theme-color" content="#0c0a12" />
     <link rel="icon" href={link('/favicon.svg')} type="image/svg+xml" />
     <link rel="sitemap" href={link('/sitemap-index.xml')} />
     <link rel="alternate" type="application/rss+xml" title={caiDat.tenWeb} href={link('/rss.xml')} />
@@ -102,7 +102,7 @@ const urlAnh = anh ? new URL(anh, Astro.site).href : undefined;
       }
       document.getElementById('doi-giao-dien').addEventListener('click', function () {
         var r = document.documentElement;
-        var hienTai = r.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        var hienTai = r.dataset.theme || 'dark';
         var moi = hienTai === 'light' ? 'dark' : 'light';
         r.dataset.theme = moi;
         try { localStorage.setItem('giao-dien', moi); } catch (e) {}

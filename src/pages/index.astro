@@ -31,11 +31,11 @@ const noiBat = moiNhat[0] ? dsTruyen.find((t) => t.id === slugCuaChuong(moiNhat[
     <p class="chao">✨ Chào mừng bạn đến với</p>
     <h1>{caiDat.tenWeb}</h1>
     <p class="khau-hieu">{caiDat.khauHieu}</p>
-    <div class="so-lieu">
+    {dsTruyen.length > 0 && <div class="so-lieu">
       <div><strong>{dsTruyen.length}</strong><span>truyện</span></div>
       <div><strong>{tongChuong}</strong><span>chương</span></div>
       <div><strong>100%</strong><span>miễn phí</span></div>
-    </div>
+    </div>}
     <div class="nut-hang giua">
       {noiBat && chuongTheoTruyen[noiBat.id][0] && <a class="nut chinh lon" href={linkChuong(noiBat.id, chuongTheoTruyen[noiBat.id][0].data.so)}>📖 Đọc ngay</a>}
       <a class="nut lon" href={link('/danh-sach/')}>🧭 Khám phá truyện</a>
@@ -43,6 +43,14 @@ const noiBat = moiNhat[0] ? dsTruyen.find((t) => t.id === slugCuaChuong(moiNhat[
   </section>
 
   <ThanhTheLoai />
+
+  {dsTruyen.length === 0 && (
+    <section class="cho-truyen">
+      <span class="bieu-tuong" aria-hidden="true">📖</span>
+      <h2>Truyện đầu tiên sắp ra mắt</h2>
+      <p>Hãy quay lại sau ít ngày nữa nhé!</p>
+    </section>
+  )}
 
   {noiBat && (
     <section class="noi-bat hien-dan" style={`--m1:${kieuTheLoai(noiBat.data.theLoai[0]).mau[0]};--m2:${kieuTheLoai(noiBat.data.theLoai[0]).mau[1]}`}>
@@ -58,7 +66,7 @@ const noiBat = moiNhat[0] ? dsTruyen.find((t) => t.id === slugCuaChuong(moiNhat[
     </section>
   )}
 
-  <section class="hien-dan">
+  {moiNhat.length > 0 && <section class="hien-dan">
     <h2 class="tieu-de-muc">⚡ Chương mới cập nhật</h2>
     {moiNhat.length === 0 ? <p>Chưa có chương nào.</p> : (
       <ul class="ds-moi">
@@ -76,14 +84,14 @@ const noiBat = moiNhat[0] ? dsTruyen.find((t) => t.id === slugCuaChuong(moiNhat[
         })}
       </ul>
     )}
-  </section>
+  </section>}
 
   <QuangCao />
 
-  <section>
+  {dsTruyen.length > 0 && <section>
     <h2 class="tieu-de-muc hien-dan">📚 Tất cả truyện</h2>
     <div class="luoi-truyen">
       {dsTruyen.map((t) => <TheTruyen truyen={t} soChuong={soChuong[t.id]} moi={truyenCoChuongMoi.has(t.id)} />)}
     </div>
-  </section>
+  </section>}
 </Khung>
