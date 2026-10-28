@@ -9,7 +9,7 @@ anhBia: /images/864787625_122098936953525677_497171191317649976_n.jpg
 viTriAnh: Giữa
 theLoai:
   - Kinh dị
-trangThai: Đang ra
+trangThai: Hoàn thành
 deCu: false
 ngayDang: 2026-10-28
 ---
