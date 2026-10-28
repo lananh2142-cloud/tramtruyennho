@@ -1,0 +1,40 @@
+// Luật truy cập kho dữ liệu Firebase của Trạm Truyện Nhỏ.
+// Dán toàn bộ nội dung này vào Firebase → Firestore Database → Rules → Publish.
+// Mã tài khoản của tác giả (Embe) nằm trong laTacGia(); xem mã ở trang Tài khoản trên web.
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function daDangNhap() { return request.auth != null; }
+    function laTacGia() { return daDangNhap() && request.auth.uid in ['5vF8M4gzaYRFTq3Lxo4pcogSxVI2']; }
+    // Đăng ký bằng email phải xác minh email; Google và Facebook thì đã xác minh sẵn
+    function daXacMinh() {
+      return request.auth.token.email_verified == true
+        || request.auth.token.firebase.sign_in_provider in ['google.com', 'facebook.com'];
+    }
+
+    // Tủ truyện của mỗi người: chỉ chính chủ đọc và sửa được
+    match /nguoiDung/{uid} {
+      allow read, delete: if daDangNhap() && request.auth.uid == uid;
+      allow create, update: if daDangNhap() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['lichSu', 'daLuu', 'capNhat'])
+        && request.resource.data.lichSu is map && request.resource.data.daLuu is map;
+    }
+
+    // Bình luận: ai cũng đọc được; người đã đăng nhập và xác minh mới viết được;
+    // chỉ người viết hoặc tác giả xoá được; không ai sửa được
+    match /binhLuan/{id} {
+      allow read: if true;
+      allow create: if daDangNhap() && daXacMinh()
+        && request.resource.data.keys().hasOnly(['noi', 'truyen', 'chuong', 'uid', 'ten', 'anh', 'noiDung', 'luc'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.noi is string && request.resource.data.noi.size() <= 200
+        && request.resource.data.truyen is string && request.resource.data.chuong is number
+        && request.resource.data.ten is string && request.resource.data.ten.size() > 0 && request.resource.data.ten.size() <= 60
+        && (request.resource.data.anh == null || (request.resource.data.anh is string && request.resource.data.anh.size() <= 500))
+        && request.resource.data.noiDung is string && request.resource.data.noiDung.size() > 0 && request.resource.data.noiDung.size() <= 2000
+        && request.resource.data.luc == request.time;
+      allow delete: if daDangNhap() && (resource.data.uid == request.auth.uid || laTacGia());
+      allow update: if false;
+    }
+  }
+}

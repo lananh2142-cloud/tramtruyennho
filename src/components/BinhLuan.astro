@@ -1,0 +1,192 @@
+---
+// Khu bình luận dưới chương / trang truyện. Chỉ có khi đã kết nối Firebase.
+import firebase from '../data/firebase.json';
+import Icon from './Icon.astro';
+interface Props { truyen: string; chuong?: number }
+const { truyen, chuong = 0 } = Astro.props;
+// "noi" xác định chỗ của bình luận: truyện nào, chương nào (0 = trang giới thiệu truyện)
+const noi = `${truyen}#${chuong}`;
+---
+{firebase.apiKey && (
+  <section class="binh-luan" data-noi={noi} data-truyen={truyen} data-chuong={chuong}>
+    <div class="dau-muc"><h2><span class="huy-hieu-muc"><Icon ten="tim" co={16} /></span>Bình luận <small class="dem-binh-luan"></small></h2></div>
+
+    <div class="o-viet" data-trang-thai="cho">
+      <div class="moi-dang-nhap">
+        <p>Đăng nhập để chia sẻ cảm nhận của bạn về {chuong ? 'chương này' : 'truyện này'} nhé!</p>
+        <button type="button" class="nut chinh" data-mo-dang-nhap>Đăng nhập</button>
+        <button type="button" class="nut" data-mo-dang-nhap="dang-ky">Tạo tài khoản</button>
+      </div>
+      <div class="can-xac-minh">
+        <p>Bạn cần xác minh email trước khi bình luận. Hãy mở email Trạm đã gửi và bấm vào link xác minh, rồi tải lại trang này.</p>
+        <button type="button" class="nut nho" data-gui-lai>Gửi lại email xác minh</button>
+      </div>
+      <form class="form-binh-luan">
+        <span class="anh-nho" aria-hidden="true"></span>
+        <div class="o-nhap">
+          <textarea name="noiDung" rows="3" maxlength="2000" required placeholder="Viết bình luận của bạn..."></textarea>
+          <div class="hang-gui">
+            <small class="dem-chu">0/2000</small>
+            <button type="submit" class="nut chinh nho">Gửi bình luận</button>
+          </div>
+        </div>
+      </form>
+      <p class="thong-bao-bl" role="status" aria-live="polite"></p>
+    </div>
+
+    <ol class="ds-binh-luan"></ol>
+    <p class="trong khong-co-bl" hidden>Chưa có bình luận nào. Hãy là người đầu tiên nhé!</p>
+    <button type="button" class="nut nho xem-them-bl" hidden>Xem thêm bình luận</button>
+  </section>
+)}
+
+<script>
+  import { theoDoiDangNhap, layDb, layAuth, daXacMinh, tenHienThi, laQuanTri, loiTiengViet, nguoiDungHienTai } from '../scripts/firebase';
+  import { thoiGianTruoc } from '../scripts/tu-truyen';
+
+  interface BinhLuan { id: string; uid: string; ten: string; anh: string | null; noiDung: string; luc: number }
+  const MOI_LAN = 20;
+
+  document.querySelectorAll<HTMLElement>('.binh-luan').forEach((khu) => {
+    const noi = khu.dataset.noi!;
+    const oViet = khu.querySelector<HTMLElement>('.o-viet')!;
+    const form = khu.querySelector<HTMLFormElement>('.form-binh-luan')!;
+    const oNhap = form.querySelector('textarea')!;
+    const demChu = form.querySelector<HTMLElement>('.dem-chu')!;
+    const ds = khu.querySelector<HTMLOListElement>('.ds-binh-luan')!;
+    const khongCo = khu.querySelector<HTMLElement>('.khong-co-bl')!;
+    const xemThem = khu.querySelector<HTMLButtonElement>('.xem-them-bl')!;
+    const thongBao = khu.querySelector<HTMLElement>('.thong-bao-bl')!;
+    let tatCa: BinhLuan[] = [];
+    let soHien = MOI_LAN;
+
+    const anhNguoi = (anh: string | null, ten: string) => {
+      const s = document.createElement('span');
+      s.className = 'anh-nho';
+      if (anh) {
+        const img = document.createElement('img');
+        img.src = anh; img.alt = ''; img.referrerPolicy = 'no-referrer'; img.loading = 'lazy';
+        s.appendChild(img);
+      } else s.textContent = ten.charAt(0).toUpperCase();
+      return s;
+    };
+
+    const ve = () => {
+      const u = nguoiDungHienTai();
+      ds.replaceChildren(...tatCa.slice(0, soHien).map((bl) => {
+        const li = document.createElement('li');
+        li.className = 'muc-binh-luan';
+        const than = document.createElement('div');
+        than.className = 'than-bl';
+        const dau = document.createElement('div');
+        dau.className = 'dau-bl';
+        const ten = document.createElement('strong');
+        ten.textContent = bl.ten;
+        dau.appendChild(ten);
+        if (laQuanTri(bl.uid)) {
+          const hh = document.createElement('span');
+          hh.className = 'huy-hieu-tac-gia';
+          hh.textContent = 'Tác giả';
+          dau.appendChild(hh);
+        }
+        const tg = document.createElement('time');
+        tg.textContent = thoiGianTruoc(bl.luc);
+        dau.appendChild(tg);
+        if (u && (u.uid === bl.uid || laQuanTri(u.uid))) {
+          const xoa = document.createElement('button');
+          xoa.type = 'button';
+          xoa.className = 'xoa-bl';
+          xoa.textContent = 'Xoá';
+          xoa.addEventListener('click', () => xoaBinhLuan(bl));
+          dau.appendChild(xoa);
+        }
+        const nd = document.createElement('p');
+        nd.textContent = bl.noiDung;
+        than.append(dau, nd);
+        li.append(anhNguoi(bl.anh, bl.ten), than);
+        return li;
+      }));
+      khongCo.hidden = tatCa.length > 0;
+      xemThem.hidden = tatCa.length <= soHien;
+      khu.querySelector('.dem-binh-luan')!.textContent = tatCa.length ? `(${tatCa.length})` : '';
+    };
+
+    const taiBinhLuan = async () => {
+      try {
+        const [db, m] = await Promise.all([layDb(), import('firebase/firestore')]);
+        // Lọc theo "noi" rồi tự sắp xếp, để không cần tạo chỉ mục riêng trên Firebase
+        const kq = await m.getDocs(m.query(m.collection(db, 'binhLuan'), m.where('noi', '==', noi), m.limit(300)));
+        tatCa = kq.docs.map((d) => {
+          const x = d.data();
+          return { id: d.id, uid: x.uid, ten: x.ten, anh: x.anh ?? null, noiDung: x.noiDung, luc: x.luc?.toMillis?.() ?? Date.now() };
+        }).sort((a, b) => b.luc - a.luc);
+        ve();
+      } catch (e) {
+        console.warn('Chưa tải được bình luận:', e);
+      }
+    };
+
+    const xoaBinhLuan = async (bl: BinhLuan) => {
+      if (!confirm('Xoá bình luận này?')) return;
+      try {
+        const [db, m] = await Promise.all([layDb(), import('firebase/firestore')]);
+        await m.deleteDoc(m.doc(db, 'binhLuan', bl.id));
+        tatCa = tatCa.filter((x) => x.id !== bl.id);
+        ve();
+      } catch (e) {
+        alert(loiTiengViet(e));
+      }
+    };
+
+    // Chỉ tải bình luận khi người đọc cuộn gần tới, để tiết kiệm lượt đọc dữ liệu
+    new IntersectionObserver((muc, o) => {
+      if (muc.some((x) => x.isIntersecting)) { o.disconnect(); taiBinhLuan(); }
+    }, { rootMargin: '400px' }).observe(khu);
+
+    xemThem.addEventListener('click', () => { soHien += MOI_LAN; ve(); });
+
+    theoDoiDangNhap((u) => {
+      oViet.dataset.trangThai = !u ? 'khach' : daXacMinh(u) ? 'viet' : 'xac-minh';
+      if (u) form.querySelector('.anh-nho')!.replaceWith(anhNguoi(u.photoURL, tenHienThi(u)));
+      ve();
+    });
+
+    oNhap.addEventListener('input', () => { demChu.textContent = `${oNhap.value.length}/2000`; });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const u = nguoiDungHienTai();
+      const noiDung = oNhap.value.trim();
+      if (!u || !noiDung) return;
+      const nut = form.querySelector<HTMLButtonElement>('[type="submit"]')!;
+      nut.disabled = true;
+      thongBao.textContent = '';
+      try {
+        const [db, m] = await Promise.all([layDb(), import('firebase/firestore')]);
+        const ten = tenHienThi(u).slice(0, 60);
+        const anh = u.photoURL && u.photoURL.length <= 500 ? u.photoURL : null;
+        const ref = await m.addDoc(m.collection(db, 'binhLuan'), {
+          noi, truyen: khu.dataset.truyen, chuong: Number(khu.dataset.chuong), uid: u.uid, ten, anh, noiDung, luc: m.serverTimestamp(),
+        });
+        tatCa.unshift({ id: ref.id, uid: u.uid, ten, anh, noiDung, luc: Date.now() });
+        oNhap.value = '';
+        demChu.textContent = '0/2000';
+        ve();
+      } catch (err) {
+        thongBao.textContent = loiTiengViet(err);
+      } finally {
+        nut.disabled = false;
+      }
+    });
+
+    khu.querySelector('[data-gui-lai]')!.addEventListener('click', async () => {
+      try {
+        const [au, m] = await Promise.all([layAuth(), import('firebase/auth')]);
+        if (au.currentUser) await m.sendEmailVerification(au.currentUser);
+        thongBao.textContent = 'Đã gửi lại email xác minh. Bạn kiểm tra hộp thư (cả mục Thư rác) nhé.';
+      } catch (err) {
+        thongBao.textContent = loiTiengViet(err);
+      }
+    });
+  });
+</script>

@@ -3,6 +3,8 @@ import caiDat from '../data/cai-dat.json';
 import { link, tatCaTheLoai, linkTheLoai } from '../lib/du-lieu';
 import Icon from '../components/Icon.astro';
 import Logo from '../components/Logo.astro';
+import HopDangNhap from '../components/HopDangNhap.astro';
+import firebase from '../data/firebase.json';
 import '../styles.css';
 
 interface Props {
@@ -16,6 +18,8 @@ const tieuDeDayDu = tieuDe ? `${tieuDe} | ${caiDat.tenWeb}` : `${caiDat.tenWeb} 
 const urlTrang = new URL(Astro.url.pathname, Astro.site);
 const urlAnh = anh ? new URL(anh, Astro.site).href : undefined;
 const dsTheLoai = await tatCaTheLoai();
+// Chức năng tài khoản chỉ bật khi đã điền mã kết nối Firebase
+const coTaiKhoan = Boolean(firebase.apiKey);
 ---
 <!doctype html>
 <html lang="vi">
@@ -96,6 +100,12 @@ const dsTheLoai = await tatCaTheLoai();
         </nav>
         <div class="nut-dau">
           {caiDat.ungHo.batTat && <a href={link('/ung-ho/')} class="nut nho nut-ung-ho"><Icon ten="ca-phe" co={16} /> <span>Ủng hộ</span></a>}
+          {coTaiKhoan && (
+            <div id="o-tai-khoan" class="o-tai-khoan" hidden>
+              <button type="button" class="nut nho chinh nut-dang-nhap" data-mo-dang-nhap aria-label="Đăng nhập"><Icon ten="nguoi" co={16} /><span>Đăng nhập</span></button>
+              <a class="anh-dai-dien" href={link('/tai-khoan/')} hidden></a>
+            </div>
+          )}
           <button id="doi-giao-dien" class="nut-tron" type="button" aria-label="Đổi giao diện sáng/tối" title="Đổi giao diện sáng/tối"><Icon ten="trang" co={17} /></button>
           <button id="nut-menu" class="nut-tron" type="button" aria-label="Mở menu" aria-expanded="false" aria-controls="menu-chinh"><Icon ten="menu" co={18} /></button>
         </div>
@@ -119,6 +129,7 @@ const dsTheLoai = await tatCaTheLoai();
             <li><a href={link('/danh-sach/')}>Danh sách truyện</a></li>
             <li><a href={link('/hoan-thanh/')}>Truyện hoàn thành</a></li>
             <li><a href={link('/tu-truyen/')}>Tủ truyện của bạn</a></li>
+            {coTaiKhoan && <li><a href={link('/tai-khoan/')}>Tài khoản</a></li>}
           </ul>
         </div>
         {dsTheLoai.length > 0 && (
@@ -140,6 +151,7 @@ const dsTheLoai = await tatCaTheLoai();
       </div>
       <div class="khung chan-cuoi">© {new Date().getFullYear()} {caiDat.tenWeb}. Mọi truyện trên trang đều thuộc bản quyền của tác giả.</div>
     </footer>
+    {coTaiKhoan && <HopDangNhap />}
     <button id="len-dau" type="button" aria-label="Lên đầu trang" title="Lên đầu trang"><Icon ten="len" co={20} /></button>
     <script is:inline>
       // Nút lên đầu trang
@@ -165,7 +177,13 @@ const dsTheLoai = await tatCaTheLoai();
     </script>
     <script>
       import { capNhatThoiGian } from '../scripts/tu-truyen';
+      import { daBat } from '../scripts/firebase';
       capNhatThoiGian();
+      // Chức năng tài khoản: tải sau khi trang đã hiện để không làm chậm trang
+      if (daBat) {
+        const tai = () => { import('../scripts/dang-nhap'); import('../scripts/dong-bo'); };
+        if ('requestIdleCallback' in window) requestIdleCallback(tai, { timeout: 1500 }); else setTimeout(tai, 300);
+      }
     </script>
   </body>
 </html>

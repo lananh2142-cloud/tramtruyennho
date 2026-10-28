@@ -40,6 +40,18 @@ Trong trang quản trị → mục **Cài đặt web**.
 - **Đọc tiếp** và **Tủ truyện**: web tự nhớ người đọc đang đọc tới đâu, ngay trên máy của họ (không cần đăng nhập).
 - **Cài đặt khi đọc**: màu nền (trắng, giấy vàng, xanh dịu, đen), phông chữ, cỡ chữ, giãn dòng.
 
+## Tài khoản người đọc và bình luận (Firebase)
+Người đọc đăng nhập bằng Google hoặc email + mật khẩu (Facebook sẽ thêm sau).
+Khi đã đăng nhập, Tủ truyện và Đọc tiếp tự đồng bộ giữa các thiết bị, và người đọc bình luận được dưới mỗi chương và trang truyện.
+- **Bạn là tác giả:** khi đăng nhập bằng Gmail của bạn, bình luận của bạn có huy hiệu **Tác giả** và bạn **xoá được mọi bình luận**
+  (nút **Xoá** cạnh mỗi bình luận).
+- **Xem danh sách người đọc đã đăng ký:** https://console.firebase.google.com → dự án `tramtruyennho` → **Xác thực** → thẻ **Người dùng**.
+- **Xem toàn bộ bình luận:** Firebase → **Firestore** → thẻ **Dữ liệu** → bộ sưu tập `binhLuan`.
+- Người đăng ký bằng email phải bấm link xác minh trong email mới bình luận được (chống tài khoản rác).
+- Luật bảo mật của kho dữ liệu nằm trong tệp `firestore.rules`; nếu cần sửa thì dán lại vào Firebase → Firestore → **Quy tắc** → **Xuất bản**.
+- **Gói miễn phí (Spark)** của Firebase đủ cho hàng chục nghìn người đọc mỗi tháng.
+- Google yêu cầu Gmail quản lý Firebase phải bật **xác minh 2 bước**; nếu chưa bật, Google sẽ khoá quyền vào Firebase.
+
 ## Xem thống kê truy cập (chỉ mình bạn xem được)
 - **Google Analytics** (https://analytics.google.com): bao nhiêu người đọc, đọc truyện nào, đến từ Facebook hay Google, dùng điện thoại hay máy tính.
 - **Google Search Console** (https://search.google.com/search-console): web hiện trên Google bao nhiêu lần, người ta tìm từ khoá gì để thấy truyện của bạn.

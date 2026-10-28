@@ -3,10 +3,17 @@ import Khung from '../layouts/Khung.astro';
 import DuLieuTruyen from '../components/DuLieuTruyen.astro';
 import { link } from '../lib/du-lieu';
 import BeSach from '../components/BeSach.astro';
+import firebase from '../data/firebase.json';
 ---
 <Khung tieuDe="Tủ truyện của bạn">
   <h1>Tủ truyện của bạn</h1>
-  <p class="phu">Tủ truyện được lưu ngay trên máy bạn đang dùng, không cần đăng nhập. Nếu bạn đổi máy hoặc xoá dữ liệu trình duyệt, tủ truyện sẽ trống lại.</p>
+  <p class="phu" id="ghi-chu-tu">Tủ truyện được lưu ngay trên máy bạn đang dùng, không cần đăng nhập. Nếu bạn đổi máy hoặc xoá dữ liệu trình duyệt, tủ truyện sẽ trống lại.</p>
+  {firebase.apiKey && (
+    <div class="hop-dong-bo" id="hop-dong-bo" hidden>
+      <p><strong>Đọc trên nhiều máy?</strong> Đăng nhập để tủ truyện tự đồng bộ giữa điện thoại và máy tính.</p>
+      <button type="button" class="nut chinh nho" data-mo-dang-nhap>Đăng nhập</button>
+    </div>
+  )}
 
   <section>
     <div class="dau-muc"><h2>Đang đọc</h2></div>
@@ -23,6 +30,7 @@ import BeSach from '../components/BeSach.astro';
   <DuLieuTruyen />
   <script>
     import { lichSu, daLuu, doiLuu, xoaLichSu, thoiGianTruoc } from '../scripts/tu-truyen';
+    import { theoDoiDangNhap, tenHienThi } from '../scripts/firebase';
     const duLieu = JSON.parse(document.getElementById('du-lieu-truyen')!.textContent!);
 
     const the = (slug: string, dong2: string, link: string, nutXoa: () => void) => {
@@ -70,5 +78,14 @@ import BeSach from '../components/BeSach.astro';
       document.getElementById('da-luu-trong')!.hidden = luu.length > 0;
     }
     ve();
+    // Vẽ lại khi dữ liệu vừa được đồng bộ từ tài khoản
+    addEventListener('tt-da-dong-bo', ve);
+    theoDoiDangNhap((u) => {
+      const hop = document.getElementById('hop-dong-bo');
+      if (hop) hop.hidden = !!u;
+      document.getElementById('ghi-chu-tu')!.textContent = u
+        ? `Tủ truyện đang được đồng bộ với tài khoản ${tenHienThi(u)}. Đăng nhập trên máy khác là thấy ngay.`
+        : 'Tủ truyện được lưu ngay trên máy bạn đang dùng. Đăng nhập để giữ tủ truyện khi đổi máy.';
+    });
   </script>
 </Khung>

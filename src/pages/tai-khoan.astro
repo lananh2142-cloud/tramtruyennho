@@ -1,0 +1,142 @@
+---
+import Khung from '../layouts/Khung.astro';
+import BeSach from '../components/BeSach.astro';
+import firebase from '../data/firebase.json';
+import { link } from '../lib/du-lieu';
+---
+<Khung tieuDe="Tài khoản của bạn" anTimKiem>
+  <article class="trang-tai-khoan">
+    <h1>Tài khoản của bạn</h1>
+    {!firebase.apiKey ? (
+      <BeSach>Chức năng tài khoản sắp ra mắt. Bạn quay lại sau nhé!</BeSach>
+    ) : (
+      <>
+        <div id="tk-khach" hidden>
+          <BeSach>Bạn chưa đăng nhập. Đăng nhập để đồng bộ tủ truyện giữa điện thoại và máy tính, và bình luận cùng mọi người nhé!</BeSach>
+          <div class="nut-hang giua">
+            <button type="button" class="nut chinh lon" data-mo-dang-nhap>Đăng nhập</button>
+            <button type="button" class="nut lon" data-mo-dang-nhap="dang-ky">Tạo tài khoản</button>
+          </div>
+        </div>
+
+        <div id="tk-nguoi-dung" hidden>
+          <section class="hop-phu tk-the">
+            <div class="tk-dau">
+              <span class="anh-dai-dien lon" id="tk-anh"></span>
+              <div>
+                <strong id="tk-ten"></strong>
+                <span id="tk-email"></span>
+                <span id="tk-cach"></span>
+              </div>
+            </div>
+            <p class="tk-xac-minh" id="tk-xac-minh" hidden>
+              Email của bạn chưa được xác minh nên chưa bình luận được.
+              <button type="button" class="nut-chu" id="tk-gui-lai">Gửi lại email xác minh</button>
+            </p>
+          </section>
+
+          <section class="hop-phu tk-the">
+            <h2>Tên hiển thị</h2>
+            <form id="tk-doi-ten" class="tk-form">
+              <input type="text" name="ten" maxlength="40" required aria-label="Tên hiển thị" />
+              <button type="submit" class="nut chinh">Lưu</button>
+            </form>
+            <p class="phu-nho">Đây là tên mọi người thấy khi bạn bình luận.</p>
+          </section>
+
+          <section class="hop-phu tk-the">
+            <h2>Tủ truyện</h2>
+            <p>Tủ truyện và chỗ bạn đang đọc được tự động đồng bộ với tài khoản này. Đăng nhập trên máy khác là thấy ngay.</p>
+            <a class="nut" href={link('/tu-truyen/')}>Mở tủ truyện</a>
+          </section>
+
+          <section class="hop-phu tk-the">
+            <div class="nut-hang">
+              <button type="button" class="nut" id="tk-dang-xuat">Đăng xuất</button>
+              <button type="button" class="nut nut-nguy-hiem" id="tk-xoa">Xoá tài khoản</button>
+            </div>
+            <p class="phu-nho">Xoá tài khoản sẽ xoá vĩnh viễn tủ truyện và mọi bình luận của bạn trên Trạm.</p>
+            <p class="phu-nho tk-ma">Mã tài khoản: <code id="tk-uid"></code></p>
+          </section>
+          <p class="thong-bao-bl" id="tk-thong-bao" role="status" aria-live="polite"></p>
+        </div>
+      </>
+    )}
+  </article>
+
+  <script>
+    import { daBat, theoDoiDangNhap, layAuth, layDb, tenHienThi, daXacMinh, loiTiengViet, baoCapNhatNguoiDung } from '../scripts/firebase';
+    import type { User } from 'firebase/auth';
+
+    if (daBat) {
+      const $ = (id: string) => document.getElementById(id)!;
+      const bao = (chu: string) => { $('tk-thong-bao').textContent = chu; };
+      let nguoi: User | null = null;
+
+      const CACH: Record<string, string> = { 'google.com': 'Google', 'facebook.com': 'Facebook', password: 'Email và mật khẩu' };
+
+      theoDoiDangNhap((u) => {
+        nguoi = u;
+        $('tk-khach').hidden = !!u;
+        $('tk-nguoi-dung').hidden = !u;
+        if (!u) return;
+        const ten = tenHienThi(u);
+        $('tk-ten').textContent = ten;
+        $('tk-email').textContent = u.email ?? '';
+        $('tk-cach').textContent = 'Đăng nhập bằng ' + u.providerData.map((p) => CACH[p.providerId] ?? p.providerId).join(', ');
+        $('tk-uid').textContent = u.uid;
+        const anh = $('tk-anh');
+        anh.replaceChildren();
+        if (u.photoURL) {
+          const img = document.createElement('img');
+          img.src = u.photoURL; img.alt = ''; img.referrerPolicy = 'no-referrer';
+          anh.appendChild(img);
+        } else anh.textContent = ten.charAt(0).toUpperCase();
+        ($('tk-doi-ten') as HTMLFormElement).querySelector('input')!.value = u.displayName ?? '';
+        $('tk-xac-minh').hidden = daXacMinh(u);
+      });
+
+      $('tk-doi-ten').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!nguoi) return;
+        const ten = String(new FormData(e.target as HTMLFormElement).get('ten')).trim();
+        if (!ten) return;
+        try {
+          const { updateProfile } = await import('firebase/auth');
+          await updateProfile(nguoi, { displayName: ten });
+          baoCapNhatNguoiDung();
+          bao('Đã lưu tên hiển thị mới. Bình luận mới sẽ dùng tên này.');
+        } catch (err) { bao(loiTiengViet(err)); }
+      });
+
+      $('tk-gui-lai').addEventListener('click', async () => {
+        if (!nguoi) return;
+        try {
+          const { sendEmailVerification } = await import('firebase/auth');
+          await sendEmailVerification(nguoi);
+          bao('Đã gửi lại email xác minh. Bạn kiểm tra hộp thư (cả mục Thư rác) nhé.');
+        } catch (err) { bao(loiTiengViet(err)); }
+      });
+
+      $('tk-dang-xuat').addEventListener('click', async () => {
+        const [au, { signOut }] = await Promise.all([layAuth(), import('firebase/auth')]);
+        await signOut(au);
+        bao('Bạn đã đăng xuất. Tủ truyện vẫn còn trên máy này và trên tài khoản.');
+      });
+
+      $('tk-xoa').addEventListener('click', async () => {
+        if (!nguoi) return;
+        if (!confirm('Bạn chắc chắn muốn xoá tài khoản? Tủ truyện và mọi bình luận của bạn sẽ bị xoá vĩnh viễn.')) return;
+        try {
+          const [db, m] = await Promise.all([layDb(), import('firebase/firestore')]);
+          const bl = await m.getDocs(m.query(m.collection(db, 'binhLuan'), m.where('uid', '==', nguoi.uid)));
+          await Promise.all(bl.docs.map((d) => m.deleteDoc(d.ref)));
+          await m.deleteDoc(m.doc(db, 'nguoiDung', nguoi.uid));
+          const { deleteUser } = await import('firebase/auth');
+          await deleteUser(nguoi);
+          bao('Tài khoản của bạn đã được xoá. Cảm ơn bạn đã ghé Trạm!');
+        } catch (err) { bao(loiTiengViet(err)); }
+      });
+    }
+  </script>
+</Khung>
