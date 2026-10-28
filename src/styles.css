@@ -600,3 +600,7 @@ h2 small { font-size: .8em; color: var(--chu-mo); font-weight: 500; }
   background: color-mix(in srgb, var(--nhan) 10%, var(--nen-2)); border: 1px solid color-mix(in srgb, var(--nhan) 25%, var(--vien)); }
 .hop-dong-bo p { margin: 0; font-size: .92rem; color: var(--chu-phu); }
 .trang-tinh ul, .trang-tinh ol { color: var(--chu-phu); line-height: 1.7; padding-left: 22px; }
+
+/* Tiêu đề mục trong chương (dòng viết hoa ngay sau dấu ngắt cảnh) */
+.noi-dung-chuong h3 { font-family: 'Be Vietnam Pro', system-ui, sans-serif; font-size: .82em; font-weight: 700; letter-spacing: .06em; text-align: center; color: var(--nhan-chu); margin: 0 0 1.4em; }
+:root[data-nen-doc] .noi-dung-chuong h3 { color: inherit; opacity: .85; }
