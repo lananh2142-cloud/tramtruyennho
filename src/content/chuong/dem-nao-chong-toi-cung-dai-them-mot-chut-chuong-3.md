@@ -8,13 +8,13 @@ loiTacGia: Theo bạn, thứ gì đã thực sự trở về cùng Quân trong �
   người sống bên cạnh anh?
 ---
 “Đừng đánh thức con. Mẹ dặn rồi mà”  
-Sau đêm ấy, Quân chấp nhận mọi thứ.
+Sau đêm ấy, anh dần chấp nhận mọi thứ.
 
-Những dải vải buộc chân, buộc tay, cả một dải buộc ngang ngực.
+Những miếng vải buộc chân, buộc tay, cả một miếng to buộc ngang ngực anh.
 
 Anh không phàn nàn.
 
-Tôi khóa cửa phòng anh mỗi tối. Ô thoáng phòng Su được thay bằng tấm gỗ ép, đóng đinh chắc chắn vào khung.
+Tôi khóa cửa phòng anh mỗi tối. Ô cửa trong phòng Su được thay bằng tấm gỗ ép, đóng đinh chắc chắn vào khung.
 
 Tôi tự nhủ chúng tôi vẫn có thể sống như vậy.
 
@@ -42,23 +42,23 @@ Sau đó, im bặt.
 
 Tôi mở cửa phòng Quân.
 
-Những dải vải vẫn còn nguyên.
+Những miếng vải vẫn còn nguyên.
 
-Hai chân anh vẫn bị buộc vào thành giường. Hai tay vẫn bị cố định. Dải vải ngang ngực cũng chưa đứt.
+Hai chân anh vẫn bị buộc vào thành giường. Hai tay vẫn bị cố định. MIếng vải ngang ngực cũng chưa đứt.
 
 Nhưng cơ thể anh đã kéo dài qua những khoảng trống giữa các chỗ bị buộc.
 
-Phần thân vắt qua mép giường, trải dài trên sàn rồi trườn lên bậu cửa sổ. Nó luồn qua những song sắt bằng một cách mà tôi không thể hiểu nổi.
+Phần thân vắt qua mép giường, trải dài trên sàn rồi trườn lên bậu cửa sổ. Nó luồn qua những song sắt bằng một cách nào đó mà tôi không thể hiểu nổi.
 
-Qua khoảng trống giữa hai ngôi nhà, tôi nhìn thấy một đoạn cơ thể trắng bệch căng ngang như dây phơi.
+Qua khoảng trống giữa hai ngôi nhà, tôi nhìn thấy một đoạn cơ thể trắng bệch đang căng ngang như dây phơi.
 
-Lớp da mỏng đến mức ánh sáng buổi sớm xuyên qua được.
+Lớp da mỏng đến mức ánh sáng buổi sớm có thể xuyên qua được lớp da ấy.
 
 Phần còn lại đã chui vào cửa sổ tầng ba nhà bác Thịnh.
 
-Tôi đứng chết lặng.
+Tôi đứng im chết lặng.
 
-Lời mẹ chồng lại vang lên trong đầu.
+Lời mẹ chồng lúc ấy bỗng lại vang lên trong đầu.
 
 “Để nó dài quá, sẽ có lúc nó không co về được nữa.”
 
@@ -122,7 +122,7 @@ Anh cũng không còn than mỏi lưng.
 
 Chiều hôm đó, bác Thịnh đi khắp ngõ tìm con chó vàng.
 
-Tôi nghe ông gọi nó từ đầu ngõ đến cuối ngõ.
+Tôi nghe tiếng ông gọi nó từ đầu ngõ đến cuối ngõ.
 
 Không có tiếng sủa nào đáp lại.
 
@@ -132,9 +132,9 @@ Không có tiếng sủa nào đáp lại.
 
 Quân vẫn đi làm, vẫn về nhà đúng sáu giờ và vẫn nấu bữa tối vào thứ Bảy.
 
-Nhìn từ bên ngoài, anh không có gì khác trước. Thậm chí, anh còn hiền hơn.
+Nhìn từ bên ngoài, anh không có gì khác trước. Thậm chí trông anh còn hiền hơn.
 
-Anh không bao giờ cáu giận, không cau mày, không than mệt.
+Anh không còn cáu giận, không cau mày, không than mệt.
 
 Tôi cũng không còn thấy anh chớp mắt.
 
@@ -174,21 +174,21 @@ Tôi không trả lời.
 
 Buổi tối hôm đó, tôi mở chiếc hòm gỗ của mẹ chồng.
 
-Tôi lấy ra đôi dải vải nhỏ nhất.
+Tôi lấy ra hai miếng vải nhỏ nhất.
 
 Chúng không còn đủ dài để buộc quanh mắt cá chân Su.
 
-Tôi ngồi rất lâu với hai dải vải trong tay.
+Tôi ngồi rất lâu với hai miếng vải trong tay.
 
-Cuối cùng, tôi lấy một chiếc áo cũ của mình, xé thành những dải dài hơn.
+Cuối cùng, tôi lấy một chiếc áo cũ của mình, xé thành những miếng dài hơn.
 
 Đêm ấy, sau khi Su nằm xuống, tôi quấn vải quanh hai mắt cá chân con rồi buộc vào chân giường.
 
 Con bé nhìn tôi, tò mò.
 
-– Mẹ làm gì thế?
+– Mẹ làm gì thế ạ?
 
-– Mẹ con mình chơi một trò chơi nhé.
+– Bây giờ mẹ con mình sẽ chơi một trò chơi nhé.
 
 – Trò gì ạ?
 
@@ -212,7 +212,7 @@ Bếp nằm ở tầng một.
 
 Phòng con ở tầng ba, cuối hành lang.
 
-Tối qua, trước khi đi ngủ, tôi đã khóa cửa phòng Su. Ô thoáng vẫn được đóng đinh kín.
+Tối qua, trước khi đi ngủ, tôi đã khóa cửa phòng Su. Ô cửa phía trên vẫn được đóng đinh kín.
 
 Tôi cũng đã buộc chân con.
 
