@@ -8,7 +8,7 @@ import Logo from '../components/Logo.astro';
 import QuangCao from '../components/QuangCao.astro';
 import DuLieuTruyen from '../components/DuLieuTruyen.astro';
 import GocTacGia from '../components/GocTacGia.astro';
-import { DS_TAM_TRANG, hopTamTrang } from '../lib/tam-trang';
+import { DS_TAM_TRANG, tamTrangCuaTruyen } from '../lib/tam-trang';
 import caiDat from '../data/cai-dat.json';
 import { tomTatTatCa, tatCaTheLoai, linkChuong, linkTruyen, linkTheLoai, link, laMoi } from '../lib/du-lieu';
 import { kieuTheLoai } from '../lib/the-loai';
@@ -25,7 +25,8 @@ const hoanThanh = theoCapNhat.filter((t) => t.truyen.data.trangThai === 'Hoàn t
 const moiDang = [...tatCa].sort((a, b) => b.truyen.data.ngayDang.valueOf() - a.truyen.data.ngayDang.valueOf()).slice(0, 6);
 const dsTheLoai = await tatCaTheLoai();
 // Chỉ hiện những tâm trạng đang có truyện phù hợp
-const tamTrang = DS_TAM_TRANG.map((t) => ({ ...t, so: tatCa.filter((x) => hopTamTrang(t, x.truyen.data.theLoai, x.dsChuong.length)).length })).filter((t) => t.so > 0);
+const tamTrangMoiTruyen = tatCa.map((x) => tamTrangCuaTruyen(x.truyen.data.tamTrang, x.truyen.data.theLoai, x.dsChuong.length));
+const tamTrang = DS_TAM_TRANG.map((t) => ({ ...t, so: tamTrangMoiTruyen.filter((ds) => ds.includes(t.ma)).length })).filter((t) => t.so > 0);
 ---
 <Khung>
   {!noiBat ? (

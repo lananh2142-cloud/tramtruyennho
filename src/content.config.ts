@@ -17,6 +17,8 @@ const truyen = defineCollection({
     trangThai: z.enum(['Đang ra', 'Hoàn thành', 'Tạm dừng']).default('Đang ra'),
     // Bật lên để truyện hiện ở mục "Truyện đề cử" trên trang chủ
     deCu: z.boolean().default(false),
+    // Tâm trạng do tác giả chọn; để trống thì web tự xếp theo thể loại và độ dài
+    tamTrang: z.array(z.string()).default([]),
     ngayDang: z.coerce.date(),
   }),
 });

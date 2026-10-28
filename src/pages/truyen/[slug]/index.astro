@@ -6,6 +6,7 @@ import OBia from '../../../components/OBia.astro';
 import Icon from '../../../components/Icon.astro';
 import { tomTatTatCa, linkChuong, linkTheLoai, link, anhHienThi, soChu, phutDoc, hienThoiGian, type TomTat } from '../../../lib/du-lieu';
 import Logo from '../../../components/Logo.astro';
+import { DS_TAM_TRANG, tamTrangCuaTruyen } from '../../../lib/tam-trang';
 import { kieuTheLoai } from '../../../lib/the-loai';
 import { render } from 'astro:content';
 
@@ -30,6 +31,7 @@ const d = truyen.data;
 const { Content } = await render(truyen);
 const MOI_TRANG = 50;
 const hinh = await anhHienThi(truyen);
+const tamTrang = tamTrangCuaTruyen(d.tamTrang, d.theLoai, dsChuong.length).map((ma) => DS_TAM_TRANG.find((t) => t.ma === ma)!);
 const tongPhut = dsChuong.reduce((a, c) => a + phutDoc(soChu(c.body)), 0);
 ---
 <Khung tieuDe={d.ten} moTa={d.gioiThieu} anh={hinh.src}>
@@ -49,6 +51,7 @@ const tongPhut = dsChuong.reduce((a, c) => a + phutDoc(soChu(c.body)), 0);
           {d.tacGia && <><dt>Tác giả</dt><dd>{d.tacGia}</dd></>}
           <dt>Thể loại</dt>
           <dd class="cac-the-loai">{d.theLoai.map((tl) => <a href={linkTheLoai(tl)}>{tl}</a>)}</dd>
+          {tamTrang.length > 0 && <><dt>Tâm trạng</dt><dd class="cac-the-loai">{tamTrang.map((t) => <a class="chip-tam-trang" href={link(`/danh-sach/?tam-trang=${t.ma}`)} style={`--m1:${t.mau}`}><Icon ten={t.icon} co={13} /> {t.ten}</a>)}</dd></>}
           <dt>Trạng thái</dt><dd><span class={`nhan ${d.trangThai === 'Hoàn thành' ? 'xong' : ''}`}>{d.trangThai}</span></dd>
           <dt>Số chương</dt><dd>{dsChuong.length}{dsChuong.length > 0 && <span class="phu-nho"> · đọc hết khoảng {hienThoiGian(tongPhut)}</span>}</dd>
           <dt>Cập nhật</dt><dd><time datetime={capNhat.toISOString()} data-tuong-doi>{capNhat.toLocaleDateString('vi-VN')}</time></dd>

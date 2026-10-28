@@ -488,3 +488,7 @@ h2 small { font-size: .8em; color: var(--chu-mo); font-weight: 500; }
 .tien-do { height: 4px; background: color-mix(in srgb, var(--nhan) 15%, transparent); }
 #thanh-tien-do { position: relative; min-width: 12px; max-width: calc(100% - 12px); }
 #thanh-tien-do .be-sach-chay { right: -11px; top: 0; transform: none; }
+
+/* Tâm trạng ở trang truyện */
+.cac-the-loai a.chip-tam-trang { display: inline-flex; align-items: center; gap: 5px; border-color: color-mix(in srgb, var(--m1) 35%, var(--vien));
+  background: color-mix(in srgb, var(--m1) 10%, var(--nen-2)); color: color-mix(in srgb, var(--m1) 65%, var(--chu)); }

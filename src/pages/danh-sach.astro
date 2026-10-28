@@ -3,6 +3,7 @@ import Khung from '../layouts/Khung.astro';
 import OBia from '../components/OBia.astro';
 import ThanhTheLoai from '../components/ThanhTheLoai.astro';
 import { tomTatTatCa, khongDau } from '../lib/du-lieu';
+import { tamTrangCuaTruyen } from '../lib/tam-trang';
 
 const tatCa = await tomTatTatCa();
 ---
@@ -35,7 +36,7 @@ const tatCa = await tomTatTatCa();
         data-cap-nhat={tt.capNhat.valueOf()}
         data-dang={tt.truyen.data.ngayDang.valueOf()}
         data-chuong={tt.dsChuong.length}
-        data-the-loai={tt.truyen.data.theLoai.join('|')}
+        data-tam-trang={tamTrangCuaTruyen(tt.truyen.data.tamTrang, tt.truyen.data.theLoai, tt.dsChuong.length).join('|')}
       >
         <OBia tt={tt} />
       </div>
@@ -43,7 +44,7 @@ const tatCa = await tomTatTatCa();
   </div>
   <p id="khong-thay" class="trong" hidden>Không tìm thấy truyện nào phù hợp.</p>
   <script>
-    import { DS_TAM_TRANG, hopTamTrang } from '../lib/tam-trang';
+    import { DS_TAM_TRANG } from '../lib/tam-trang';
     const o = document.getElementById('tim-kiem') as HTMLInputElement;
     const tt = document.getElementById('loc-trang-thai') as HTMLSelectElement;
     const sx = document.getElementById('sap-xep') as HTMLSelectElement;
@@ -75,7 +76,7 @@ const tatCa = await tomTatTatCa();
       });
       for (const t of sapXep) {
         const hien = (!q || t.dataset.tim!.includes(q)) && (!tt.value || t.dataset.trangThai === tt.value)
-          && (!tamTrang || hopTamTrang(tamTrang, t.dataset.theLoai!.split('|'), Number(t.dataset.chuong)));
+          && (!tamTrang || t.dataset.tamTrang!.split('|').includes(tamTrang.ma));
         t.hidden = !hien;
         if (hien) dem++;
         luoi.appendChild(t);

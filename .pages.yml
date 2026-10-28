@@ -36,6 +36,12 @@ content:
         default: Đang ra
         options:
           values: [Đang ra, Hoàn thành, Tạm dừng]
+      - name: tamTrang
+        label: Tâm trạng của truyện (chọn một hoặc nhiều; để trống thì web tự xếp theo thể loại)
+        type: select
+        options:
+          multiple: true
+          values: [Muốn cười, Muốn khóc một chút, Muốn hồi hộp, Muốn mơ mộng, Muốn phiêu lưu, Đọc nhanh trước khi ngủ]
       - { name: deCu, label: Đưa lên mục Truyện đề cử ở trang chủ, type: boolean }
       - { name: ngayDang, label: Ngày đăng, type: date, required: true }
       - { name: body, label: Lời giới thiệu thêm (không bắt buộc), type: rich-text }
