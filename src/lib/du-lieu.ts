@@ -76,3 +76,31 @@ export async function tomTatTatCa(): Promise<TomTat[]> {
 
 // Truyện có chương mới trong 7 ngày gần nhất
 export const laMoi = (d: Date) => Date.now() - d.valueOf() < 7 * 24 * 60 * 60 * 1000;
+
+// ===== Ảnh hiển thị của truyện =====
+
+// Lấy các đường dẫn hình có trong nội dung (dạng Markdown ![...](...) hoặc HTML <img src="...">)
+export function anhTrongNoiDung(noiDung?: string): string[] {
+  if (!noiDung) return [];
+  const ds: { viTri: number; src: string }[] = [];
+  for (const m of noiDung.matchAll(/!\[[^\]]*\]\(\s*<?([^)\s>]+)>?(?:\s+"[^"]*")?\s*\)/g)) ds.push({ viTri: m.index!, src: m[1] });
+  for (const m of noiDung.matchAll(/<img\b[^>]*?\ssrc=["']([^"']+)["']/gi)) ds.push({ viTri: m.index!, src: m[1] });
+  return ds.sort((a, b) => a.viTri - b.viTri).map((x) => x.src);
+}
+
+const VI_TRI_ANH = { 'Giữa': 'center', 'Trên': 'top', 'Dưới': 'bottom' } as const;
+const boNhoAnh = new Map<string, Promise<{ src?: string; viTri: string }>>();
+
+// Ảnh tác giả chọn; nếu chưa chọn thì lấy hình đầu tiên trong phần giới thiệu, rồi lần lượt trong các chương
+export function anhHienThi(truyen: Truyen): Promise<{ src?: string; viTri: string }> {
+  if (!boNhoAnh.has(truyen.id)) {
+    boNhoAnh.set(truyen.id, (async () => {
+      const viTri = VI_TRI_ANH[truyen.data.viTriAnh];
+      if (truyen.data.anhBia) return { src: anh(truyen.data.anhBia), viTri };
+      const dau = anhTrongNoiDung(truyen.body)[0]
+        ?? (await chuongCuaTruyen(truyen.id)).map((c) => anhTrongNoiDung(c.body)[0]).find(Boolean);
+      return { src: anh(dau), viTri };
+    })());
+  }
+  return boNhoAnh.get(truyen.id)!;
+}

@@ -121,14 +121,18 @@ h2 small { font-size: .8em; color: var(--chu-mo); font-weight: 500; }
   background: linear-gradient(110deg, var(--nen-2) 35%, color-mix(in srgb, var(--m1) 30%, var(--nen-2))); }
 .banner::after { content: ''; position: absolute; right: -80px; top: -80px; width: 420px; height: 420px; border-radius: 50%; pointer-events: none;
   background: radial-gradient(circle, color-mix(in srgb, var(--m1) 35%, transparent), transparent 70%); }
-.banner-chu { position: relative; z-index: 1; flex: 1; min-width: 0; }
+.banner-nen { position: absolute; z-index: 0; inset: -40px; background-size: cover; filter: blur(36px) saturate(1.2); opacity: .45; transform: scale(1.1); }
+.dau-truyen { position: relative; overflow: hidden; }
+.dau-truyen > :not(.banner-nen) { position: relative; z-index: 2; }
+.banner:has(.banner-nen)::before, .dau-truyen:has(.banner-nen)::before { content: ''; position: absolute; inset: 0; z-index: 1; background: linear-gradient(100deg, var(--nen-2) 30%, color-mix(in srgb, var(--nen-2) 55%, transparent)); }
+.banner-chu { position: relative; z-index: 2; flex: 1; min-width: 0; }
 .banner-nhan { margin: 0 0 10px; display: inline-block; font-size: .78rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--nhan-chu); }
 .banner h1 { margin: 0 0 12px; font-size: clamp(1.7rem, 4vw, 2.6rem); }
 .banner h1 a { color: var(--chu); }
 .banner-phu { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 0 0 14px; color: var(--chu-phu); font-size: .9rem; }
 .banner-phu span { display: inline-flex; align-items: center; gap: 6px; }
 .banner-mo-ta { margin: 0; max-width: 620px; color: var(--chu-phu); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-.banner-bia { position: relative; z-index: 1; flex: 0 0 auto; }
+.banner-bia { position: relative; z-index: 2; flex: 0 0 auto; }
 .banner-bia .bia { width: 200px; box-shadow: 0 20px 40px rgba(0,0,0,.35); }
 @media (max-width: 700px) {
   .banner { flex-direction: column-reverse; align-items: stretch; gap: 20px; padding: 24px 20px; }
@@ -303,6 +307,13 @@ h2 small { font-size: .8em; color: var(--chu-mo); font-weight: 500; }
 :root[data-phong-chu="khong-chan"] .noi-dung-chuong { font-family: 'Be Vietnam Pro', system-ui, sans-serif; }
 :root[data-nen-doc] .noi-dung-chuong { background: var(--nen-doc); padding: 28px clamp(18px, 4vw, 44px); border-radius: var(--bo); }
 .noi-dung-chuong p { margin: 0 0 1.15em; }
+/* Hình minh hoạ trong chương */
+.noi-dung-chuong img { display: block; max-width: 100%; height: auto; margin: 1.6em auto; border-radius: 10px; box-shadow: 0 6px 20px rgba(0,0,0,.25); }
+.noi-dung-chuong p:has(> img:only-child) { margin: 0; }
+.noi-dung-chuong figure { margin: 1.6em 0; }
+.noi-dung-chuong figure img { margin: 0 auto; }
+.noi-dung-chuong figcaption, .noi-dung-chuong img + em { display: block; text-align: center; font-size: .82em; color: var(--chu-mo); margin-top: .6em; }
+.noi-dung-gioi-thieu img { max-width: 100%; border-radius: 10px; }
 .noi-dung-chuong hr { border: 0; text-align: center; margin: 2em 0; }
 .noi-dung-chuong hr::after { content: '* * *'; color: var(--chu-mo); letter-spacing: 10px; }
 .dieu-huong { display: flex; justify-content: space-between; gap: 8px; margin: 24px 0; }

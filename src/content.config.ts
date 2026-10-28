@@ -9,7 +9,10 @@ const truyen = defineCollection({
     ma: z.string().optional(),
     tacGia: z.string().optional(),
     gioiThieu: z.string(),
+    // Ảnh hiển thị của truyện. Để trống thì web tự lấy hình đầu tiên có trong truyện
     anhBia: z.string().optional(),
+    // Phần nào của ảnh được giữ lại khi ảnh phải cắt cho vừa khung
+    viTriAnh: z.enum(['Giữa', 'Trên', 'Dưới']).default('Giữa'),
     theLoai: z.array(z.string()).default([]),
     trangThai: z.enum(['Đang ra', 'Hoàn thành', 'Tạm dừng']).default('Đang ra'),
     // Bật lên để truyện hiện ở mục "Truyện đề cử" trên trang chủ

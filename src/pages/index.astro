@@ -6,7 +6,7 @@ import Icon from '../components/Icon.astro';
 import QuangCao from '../components/QuangCao.astro';
 import DuLieuTruyen from '../components/DuLieuTruyen.astro';
 import caiDat from '../data/cai-dat.json';
-import { tomTatTatCa, tatCaTheLoai, linkChuong, linkTruyen, linkTheLoai, link, laMoi } from '../lib/du-lieu';
+import { tomTatTatCa, tatCaTheLoai, linkChuong, linkTruyen, linkTheLoai, link, laMoi, anhHienThi } from '../lib/du-lieu';
 import { kieuTheLoai } from '../lib/the-loai';
 
 const tatCa = await tomTatTatCa();
@@ -20,6 +20,7 @@ const moiCapNhat = theoCapNhat.filter((t) => t.chuongMoi).slice(0, 15);
 const hoanThanh = theoCapNhat.filter((t) => t.truyen.data.trangThai === 'Hoàn thành').slice(0, 12);
 const moiDang = [...tatCa].sort((a, b) => b.truyen.data.ngayDang.valueOf() - a.truyen.data.ngayDang.valueOf()).slice(0, 6);
 const dsTheLoai = await tatCaTheLoai();
+const hinhNoiBat = noiBat ? await anhHienThi(noiBat.truyen) : undefined;
 ---
 <Khung>
   {!noiBat ? (
@@ -33,6 +34,7 @@ const dsTheLoai = await tatCaTheLoai();
     <>
       <!-- Banner truyện nổi bật -->
       <section class="banner" style={`--m1:${kieuTheLoai(noiBat.truyen.data.theLoai[0]).mau[0]};--m2:${kieuTheLoai(noiBat.truyen.data.theLoai[0]).mau[1]}`}>
+        {hinhNoiBat?.src && <div class="banner-nen" style={`background-image:url("${hinhNoiBat.src}");background-position:${hinhNoiBat.viTri}`} aria-hidden="true"></div>}
         <div class="banner-chu">
           <p class="banner-nhan">Truyện nổi bật</p>
           <h1><a href={linkTruyen(noiBat.truyen.id)}>{noiBat.truyen.data.ten}</a></h1>

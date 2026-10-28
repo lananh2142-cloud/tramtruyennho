@@ -3,7 +3,7 @@ import Khung from '../../../layouts/Khung.astro';
 import QuangCao from '../../../components/QuangCao.astro';
 import Icon from '../../../components/Icon.astro';
 import caiDat from '../../../data/cai-dat.json';
-import { tomTatTatCa, linkChuong, linkTruyen, link, type Truyen, type Chuong } from '../../../lib/du-lieu';
+import { tomTatTatCa, linkChuong, linkTruyen, link, anhHienThi, anhTrongNoiDung, anh, type Truyen, type Chuong } from '../../../lib/du-lieu';
 import { render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -27,8 +27,10 @@ const { Content } = await render(chuong);
 const tieuDe = `Chương ${chuong.data.so}: ${chuong.data.ten}`;
 const linkTruoc = truoc && linkChuong(truyen.id, truoc.data.so);
 const linkSau = sau && linkChuong(truyen.id, sau.data.so);
+// Ảnh khi chia sẻ chương lên mạng xã hội: hình đầu tiên trong chương, nếu không có thì ảnh của truyện
+const anhChiaSe = anh(anhTrongNoiDung(chuong.body)[0]) ?? (await anhHienThi(truyen)).src;
 ---
-<Khung tieuDe={`${truyen.data.ten} - ${tieuDe}`} moTa={`Đọc ${truyen.data.ten} - ${tieuDe}. ${truyen.data.gioiThieu}`}>
+<Khung tieuDe={`${truyen.data.ten} - ${tieuDe}`} moTa={`Đọc ${truyen.data.ten} - ${tieuDe}. ${truyen.data.gioiThieu}`} anh={anhChiaSe}>
   <div class="tien-do" aria-hidden="true"><div id="thanh-tien-do"></div></div>
   <article class="trang-doc" data-slug={truyen.id} data-so={chuong.data.so} data-ten={chuong.data.ten} data-goc={linkChuong(truyen.id, 0).replace(/chuong-0\/$/, 'chuong-')}>
     <nav class="vet-dan" aria-label="Đường dẫn">

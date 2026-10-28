@@ -4,7 +4,7 @@ import QuangCao from '../../../components/QuangCao.astro';
 import BiaTruyen from '../../../components/BiaTruyen.astro';
 import OBia from '../../../components/OBia.astro';
 import Icon from '../../../components/Icon.astro';
-import { tomTatTatCa, linkChuong, linkTheLoai, link, anh, type TomTat } from '../../../lib/du-lieu';
+import { tomTatTatCa, linkChuong, linkTheLoai, link, anhHienThi, type TomTat } from '../../../lib/du-lieu';
 import { kieuTheLoai } from '../../../lib/the-loai';
 import { render } from 'astro:content';
 
@@ -28,8 +28,9 @@ const { truyen, dsChuong, chuongMoi, capNhat } = tt;
 const d = truyen.data;
 const { Content } = await render(truyen);
 const MOI_TRANG = 50;
+const hinh = await anhHienThi(truyen);
 ---
-<Khung tieuDe={d.ten} moTa={d.gioiThieu} anh={anh(d.anhBia)}>
+<Khung tieuDe={d.ten} moTa={d.gioiThieu} anh={hinh.src}>
   <nav class="vet-dan" aria-label="Đường dẫn">
     <a href={link('/')}>Trang chủ</a> ›
     {d.theLoai[0] && <><a href={linkTheLoai(d.theLoai[0])}>{d.theLoai[0]}</a> ›</>}
@@ -38,6 +39,7 @@ const MOI_TRANG = 50;
 
   <article class="trang-truyen" data-slug={truyen.id}>
     <div class="dau-truyen" style={`--m1:${kieuTheLoai(d.theLoai[0]).mau[0]}`}>
+      {hinh.src && <div class="banner-nen" style={`background-image:url("${hinh.src}");background-position:${hinh.viTri}`} aria-hidden="true"></div>}
       <BiaTruyen truyen={truyen} lon />
       <div class="tt-truyen">
         <h1>{d.ten}</h1>
