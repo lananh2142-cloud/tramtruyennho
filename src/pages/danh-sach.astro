@@ -59,7 +59,7 @@ const tatCa = await tomTatTatCa();
     // Lọc theo tâm trạng khi bấm từ trang chủ (?tam-trang=...)
     const tamTrang = DS_TAM_TRANG.find((t) => t.ma === tham.get('tam-trang'));
     if (tamTrang) {
-      document.getElementById('ten-tam-trang')!.textContent = `Truyện cho lúc bạn ${tamTrang.ten.charAt(0).toLowerCase() + tamTrang.ten.slice(1)}`;
+      document.getElementById('ten-tam-trang')!.textContent = `Tâm trạng: ${tamTrang.ten}`;
       document.getElementById('loc-tam-trang')!.hidden = false;
     }
 

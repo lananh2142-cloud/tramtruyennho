@@ -41,7 +41,7 @@ content:
         type: select
         options:
           multiple: true
-          values: [Muốn cười, Muốn khóc một chút, Muốn hồi hộp, Muốn mơ mộng, Muốn phiêu lưu, Đọc nhanh trước khi ngủ]
+          values: [Cười, Khóc một chút, Hồi hộp, Mơ mộng, Phiêu lưu, Đọc nhanh trước khi ngủ]
       - { name: deCu, label: Đưa lên mục Truyện đề cử ở trang chủ, type: boolean }
       - { name: ngayDang, label: Ngày đăng, type: date, required: true }
       - { name: body, label: Lời giới thiệu thêm (không bắt buộc), type: rich-text }
