@@ -8,6 +8,8 @@ trangThai: Đang ra
 deCu: true
 ngayDang: 2026-02-10
 ---
+<img src="/images/mau-hoa-phuong.jpg" alt="Gốc phượng sân trường">
+
 Đây là phần giới thiệu dài hơn của truyện, dùng để thử nút Xem thêm. Đây là phần giới thiệu dài hơn của truyện, dùng để thử nút Xem thêm. Đây là phần giới thiệu dài hơn của truyện, dùng để thử nút Xem thêm. Đây là phần giới thiệu dài hơn của truyện, dùng để thử nút Xem thêm. 
 
 Đây là phần giới thiệu dài hơn của truyện, dùng để thử nút Xem thêm. Đây là phần giới thiệu dài hơn của truyện, dùng để thử nút Xem thêm. Đây là phần giới thiệu dài hơn của truyện, dùng để thử nút Xem thêm. Đây là phần giới thiệu dài hơn của truyện, dùng để thử nút Xem thêm. 
