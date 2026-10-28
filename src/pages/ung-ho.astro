@@ -1,0 +1,26 @@
+---
+import Khung from '../layouts/Khung.astro';
+import caiDat from '../data/cai-dat.json';
+import { anh } from '../lib/du-lieu';
+
+const u = caiDat.ungHo;
+// Nếu có mã ngân hàng (VCB, MB, TCB, ACB...), tự tạo mã QR chuyển khoản bằng dịch vụ miễn phí VietQR
+const qr = anh(u.anhQR) ||
+  (u.maNganHang && u.soTaiKhoan
+    ? `https://img.vietqr.io/image/${u.maNganHang}-${u.soTaiKhoan}-compact2.png?addInfo=${encodeURIComponent('Ung ho ' + caiDat.tenWeb)}&accountName=${encodeURIComponent(u.chuTaiKhoan)}`
+    : '');
+---
+<Khung tieuDe="Ủng hộ tác giả">
+  <article class="trang-tinh hop-ung-ho-lon">
+    <h1>Ủng hộ tác giả</h1>
+    <p>{u.loiNhan}</p>
+    {qr && <img class="qr" src={qr} alt="Mã QR chuyển khoản ủng hộ" width="280" />}
+    <dl class="tt-ngan-hang">
+      <dt>Ngân hàng</dt><dd>{u.nganHang}</dd>
+      <dt>Số tài khoản</dt><dd><strong>{u.soTaiKhoan}</strong></dd>
+      <dt>Chủ tài khoản</dt><dd>{u.chuTaiKhoan}</dd>
+      {u.momo && <><dt>Momo</dt><dd>{u.momo}</dd></>}
+    </dl>
+    <p class="nho">Mọi sự ủng hộ, dù nhỏ, đều giúp tác giả có thêm động lực ra chương mới. Xin cảm ơn!</p>
+  </article>
+</Khung>

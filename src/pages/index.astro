@@ -1,0 +1,47 @@
+---
+import Khung from '../layouts/Khung.astro';
+import TheTruyen from '../components/TheTruyen.astro';
+import QuangCao from '../components/QuangCao.astro';
+import caiDat from '../data/cai-dat.json';
+import { tatCaTruyen, chuongCuaTruyen, chuongMoiNhat, slugCuaChuong, linkChuong, ngay } from '../lib/du-lieu';
+
+const dsTruyen = await tatCaTruyen();
+const soChuong = Object.fromEntries(await Promise.all(dsTruyen.map(async (t) => [t.id, (await chuongCuaTruyen(t.id)).length])));
+const tenTruyen = Object.fromEntries(dsTruyen.map((t) => [t.id, t.data.ten]));
+const moiNhat = await chuongMoiNhat(10);
+---
+<Khung>
+  <section class="bia-trang">
+    <h1>{caiDat.tenWeb}</h1>
+    <p>{caiDat.khauHieu}</p>
+  </section>
+
+  <section>
+    <h2 class="tieu-de-muc">Chương mới cập nhật</h2>
+    {moiNhat.length === 0 ? <p>Chưa có chương nào.</p> : (
+      <ul class="ds-moi">
+        {moiNhat.map((c) => {
+          const slug = slugCuaChuong(c);
+          return (
+            <li>
+              <a href={linkChuong(slug, c.data.so)}>
+                <span class="ten-truyen">{tenTruyen[slug] ?? slug}</span>
+                <span class="ten-chuong">Chương {c.data.so}: {c.data.ten}</span>
+              </a>
+              <time>{ngay(c.data.ngayDang)}</time>
+            </li>
+          );
+        })}
+      </ul>
+    )}
+  </section>
+
+  <QuangCao />
+
+  <section>
+    <h2 class="tieu-de-muc">Tất cả truyện</h2>
+    <div class="luoi-truyen">
+      {dsTruyen.map((t) => <TheTruyen truyen={t} soChuong={soChuong[t.id]} />)}
+    </div>
+  </section>
+</Khung>

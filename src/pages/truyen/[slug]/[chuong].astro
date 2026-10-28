@@ -1,0 +1,81 @@
+---
+import Khung from '../../../layouts/Khung.astro';
+import QuangCao from '../../../components/QuangCao.astro';
+import caiDat from '../../../data/cai-dat.json';
+import { tatCaTruyen, chuongCuaTruyen, linkChuong, linkTruyen, link, type Truyen, type Chuong } from '../../../lib/du-lieu';
+import { render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const dsTruyen = await tatCaTruyen();
+  const trang = [];
+  for (const truyen of dsTruyen) {
+    const dsChuong = await chuongCuaTruyen(truyen.id);
+    dsChuong.forEach((chuong, i) => {
+      trang.push({
+        params: { slug: truyen.id, chuong: `chuong-${chuong.data.so}` },
+        props: { truyen, chuong, truoc: dsChuong[i - 1], sau: dsChuong[i + 1] },
+      });
+    });
+  }
+  return trang;
+}
+
+const { truyen, chuong, truoc, sau } = Astro.props as { truyen: Truyen; chuong: Chuong; truoc?: Chuong; sau?: Chuong };
+const { Content } = await render(chuong);
+const tieuDe = `Chương ${chuong.data.so}: ${chuong.data.ten}`;
+---
+<Khung tieuDe={`${truyen.data.ten} - ${tieuDe}`} moTa={`Đọc ${truyen.data.ten} - ${tieuDe}. ${truyen.data.gioiThieu}`}>
+  <article class="trang-doc">
+    <p class="duong-dan"><a href={linkTruyen(truyen.id)}>← {truyen.data.ten}</a></p>
+    <h1>{tieuDe}</h1>
+
+    <div class="cong-cu-doc">
+      <button type="button" data-co="-1" aria-label="Chữ nhỏ hơn">A−</button>
+      <button type="button" data-co="1" aria-label="Chữ to hơn">A+</button>
+    </div>
+
+    <nav class="dieu-huong">
+      {truoc ? <a class="nut" href={linkChuong(truyen.id, truoc.data.so)}>← <span class="an-dt">Chương</span> trước</a> : <span class="nut tat">← <span class="an-dt">Chương</span> trước</span>}
+      <a class="nut" href={linkTruyen(truyen.id)}>Mục lục</a>
+      {sau ? <a class="nut" href={linkChuong(truyen.id, sau.data.so)}><span class="an-dt">Chương</span> sau →</a> : <span class="nut tat"><span class="an-dt">Chương</span> sau →</span>}
+    </nav>
+
+    <QuangCao />
+
+    <div class="noi-dung-chuong"><Content /></div>
+
+    <QuangCao />
+
+    <nav class="dieu-huong">
+      {truoc ? <a class="nut" href={linkChuong(truyen.id, truoc.data.so)}>← <span class="an-dt">Chương</span> trước</a> : <span class="nut tat">← <span class="an-dt">Chương</span> trước</span>}
+      <a class="nut" href={linkTruyen(truyen.id)}>Mục lục</a>
+      {sau ? <a class="nut chinh" href={linkChuong(truyen.id, sau.data.so)}><span class="an-dt">Chương</span> sau →</a> : <span class="nut tat"><span class="an-dt">Chương</span> sau →</span>}
+    </nav>
+
+    {!sau && <p class="het-chuong">Bạn đã đọc đến chương mới nhất. Hãy quay lại sau để đọc tiếp nhé!</p>}
+
+    {caiDat.ungHo.batTat && (
+      <aside class="hop-ung-ho">
+        <p>{caiDat.ungHo.loiNhan}</p>
+        <a class="nut chinh" href={link('/ung-ho/')}>Ủng hộ tác giả</a>
+      </aside>
+    )}
+  </article>
+  <script is:inline>
+    document.querySelectorAll('[data-co]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var r = document.documentElement;
+        var hienTai = parseFloat(getComputedStyle(r).getPropertyValue('--co-chu')) || 19;
+        var moi = Math.min(30, Math.max(14, hienTai + Number(b.dataset.co)));
+        r.style.setProperty('--co-chu', moi + 'px');
+        try { localStorage.setItem('co-chu', moi); } catch (e) {}
+      });
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.target.tagName === 'INPUT') return;
+      var nav = document.querySelector('.dieu-huong');
+      var a = e.key === 'ArrowLeft' ? nav.firstElementChild : e.key === 'ArrowRight' ? nav.lastElementChild : null;
+      if (a && a.href) location.href = a.href;
+    });
+  </script>
+</Khung>

@@ -1,0 +1,87 @@
+---
+import caiDat from '../data/cai-dat.json';
+import { link } from '../lib/du-lieu';
+import '../styles.css';
+
+interface Props {
+  tieuDe?: string;
+  moTa?: string;
+  anh?: string;
+}
+const { tieuDe, moTa = caiDat.moTa, anh } = Astro.props;
+const tieuDeDayDu = tieuDe ? `${tieuDe} | ${caiDat.tenWeb}` : `${caiDat.tenWeb} – ${caiDat.khauHieu}`;
+const urlTrang = new URL(Astro.url.pathname, Astro.site);
+const urlAnh = anh ? new URL(anh, Astro.site).href : undefined;
+---
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{tieuDeDayDu}</title>
+    <meta name="description" content={moTa} />
+    <link rel="canonical" href={urlTrang} />
+    <meta property="og:title" content={tieuDeDayDu} />
+    <meta property="og:description" content={moTa} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={urlTrang} />
+    {urlAnh && <meta property="og:image" content={urlAnh} />}
+    <meta name="theme-color" content="#0d0b0b" />
+    <link rel="icon" href={link('/favicon.svg')} type="image/svg+xml" />
+    <link rel="sitemap" href={link('/sitemap-index.xml')} />
+    <link rel="alternate" type="application/rss+xml" title={caiDat.tenWeb} href={link('/rss.xml')} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet" />
+    <script is:inline>
+      try {
+        var g = localStorage.getItem('giao-dien');
+        if (g) document.documentElement.dataset.theme = g;
+        var c = localStorage.getItem('co-chu');
+        if (c) document.documentElement.style.setProperty('--co-chu', c + 'px');
+      } catch (e) {}
+    </script>
+    {caiDat.quangCao.adsenseId && (
+      <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${caiDat.quangCao.adsenseId}`} crossorigin="anonymous"></script>
+    )}
+  </head>
+  <body>
+    <header class="dau-trang">
+      <div class="khung">
+        <a class="logo" href={link('/')}>
+          <span class="logo-mat" aria-hidden="true">◉</span> {caiDat.tenWeb}
+        </a>
+        <nav>
+          <a href={link('/')}>Trang chủ</a>
+          <a href={link('/danh-sach/')}>Danh sách</a>
+          {caiDat.ungHo.batTat && <a href={link('/ung-ho/')} class="nut-ung-ho">Ủng hộ</a>}
+          <button id="doi-giao-dien" type="button" aria-label="Đổi sáng/tối" title="Đổi sáng/tối">☾</button>
+        </nav>
+      </div>
+    </header>
+    <main class="khung">
+      <slot />
+    </main>
+    <footer class="chan-trang">
+      <div class="khung">
+        <p><strong>{caiDat.tenWeb}</strong> — {caiDat.khauHieu}</p>
+        <p class="lien-ket-chan">
+          <a href={link('/gioi-thieu/')}>Giới thiệu</a> ·
+          <a href={link('/chinh-sach/')}>Chính sách bảo mật</a> ·
+          <a href={link('/rss.xml')}>RSS</a>
+          {caiDat.facebook && <> · <a href={caiDat.facebook} rel="noopener" target="_blank">Facebook</a></>}
+        </p>
+        <p class="nho">© {new Date().getFullYear()} {caiDat.tenWeb}. Mọi truyện trên trang đều thuộc bản quyền của tác giả.</p>
+      </div>
+    </footer>
+    <script is:inline>
+      document.getElementById('doi-giao-dien').addEventListener('click', function () {
+        var r = document.documentElement;
+        var hienTai = r.dataset.theme || 'dark';
+        var moi = hienTai === 'light' ? 'dark' : 'light';
+        r.dataset.theme = moi;
+        try { localStorage.setItem('giao-dien', moi); } catch (e) {}
+      });
+    </script>
+  </body>
+</html>

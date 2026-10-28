@@ -1,0 +1,33 @@
+---
+import Khung from '../layouts/Khung.astro';
+import TheTruyen from '../components/TheTruyen.astro';
+import { tatCaTruyen, chuongCuaTruyen } from '../lib/du-lieu';
+
+const dsTruyen = await tatCaTruyen();
+const soChuong = Object.fromEntries(await Promise.all(dsTruyen.map(async (t) => [t.id, (await chuongCuaTruyen(t.id)).length])));
+const boDau = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase();
+---
+<Khung tieuDe="Danh sách truyện">
+  <h1>Danh sách truyện</h1>
+  <input id="tim-kiem" class="o-tim" type="search" placeholder="Tìm tên truyện..." aria-label="Tìm truyện" />
+  <div class="luoi-truyen" id="luoi">
+    {dsTruyen.map((t) => (
+      <div data-tim={boDau(`${t.data.ten} ${t.data.gioiThieu} ${t.data.theLoai.join(' ')}`)}>
+        <TheTruyen truyen={t} soChuong={soChuong[t.id]} />
+      </div>
+    ))}
+  </div>
+  <p id="khong-thay" hidden>Không tìm thấy truyện nào.</p>
+  <script is:inline>
+    (function () {
+      var o = document.getElementById('tim-kiem');
+      var the = document.querySelectorAll('#luoi > [data-tim]');
+      var boDau = function (s) { return s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase(); };
+      o.addEventListener('input', function () {
+        var q = boDau(o.value.trim()), dem = 0;
+        the.forEach(function (t) { var hien = !q || t.dataset.tim.indexOf(q) !== -1; t.hidden = !hien; if (hien) dem++; });
+        document.getElementById('khong-thay').hidden = dem > 0;
+      });
+    })();
+  </script>
+</Khung>

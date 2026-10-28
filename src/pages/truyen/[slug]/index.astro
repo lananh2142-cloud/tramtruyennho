@@ -1,0 +1,56 @@
+---
+import Khung from '../../../layouts/Khung.astro';
+import QuangCao from '../../../components/QuangCao.astro';
+import { tatCaTruyen, chuongCuaTruyen, linkChuong, ngay, anh, type Truyen } from '../../../lib/du-lieu';
+import { render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const ds = await tatCaTruyen();
+  return ds.map((truyen) => ({ params: { slug: truyen.id }, props: { truyen } }));
+}
+
+const { truyen } = Astro.props as { truyen: Truyen };
+const d = truyen.data;
+const dsChuong = await chuongCuaTruyen(truyen.id);
+const { Content } = await render(truyen);
+---
+<Khung tieuDe={d.ten} moTa={d.gioiThieu} anh={anh(d.anhBia)}>
+  <article class="trang-truyen">
+    <div class="dau-truyen">
+      <div class="bia lon">
+        {d.anhBia ? <img src={anh(d.anhBia)} alt={`Bìa truyện ${d.ten}`} /> : <span class="bia-chu">{d.ten}</span>}
+      </div>
+      <div>
+        <h1>{d.ten}</h1>
+        <p class="phu">
+          <span class={`nhan ${d.trangThai === 'Hoàn thành' ? 'xong' : ''}`}>{d.trangThai}</span>
+          · {dsChuong.length} chương
+          {d.theLoai.length > 0 && <> · {d.theLoai.join(', ')}</>}
+        </p>
+        <p class="mo-ta-dai">{d.gioiThieu}</p>
+        {dsChuong.length > 0 && (
+          <div class="nut-hang">
+            <a class="nut chinh" href={linkChuong(truyen.id, dsChuong[0].data.so)}>Đọc từ đầu</a>
+            {dsChuong.length > 1 && <a class="nut" href={linkChuong(truyen.id, dsChuong[dsChuong.length - 1].data.so)}>Chương mới nhất</a>}
+          </div>
+        )}
+      </div>
+    </div>
+
+    <div class="noi-dung-gioi-thieu"><Content /></div>
+
+    <QuangCao />
+
+    <h2 class="tieu-de-muc">Danh sách chương</h2>
+    {dsChuong.length === 0 ? <p>Truyện chưa có chương nào.</p> : (
+      <ol class="ds-chuong">
+        {dsChuong.map((c) => (
+          <li>
+            <a href={linkChuong(truyen.id, c.data.so)}>Chương {c.data.so}: {c.data.ten}</a>
+            <time>{ngay(c.data.ngayDang)}</time>
+          </li>
+        ))}
+      </ol>
+    )}
+  </article>
+</Khung>

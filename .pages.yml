@@ -1,0 +1,69 @@
+# Cấu hình trang quản trị Pages CMS (https://app.pagescms.org) để đăng truyện không cần biết code
+media:
+  input: public/images
+  output: /images
+
+content:
+  - name: truyen
+    label: Truyện
+    type: collection
+    path: src/content/truyen
+    filename: "{fields.ma}.md"
+    view:
+      fields: [ten, trangThai, ngayDang]
+    fields:
+      - { name: ten, label: Tên truyện, type: string, required: true }
+      - { name: ma, label: "Mã truyện (viết thường, không dấu, nối bằng gạch ngang, ví dụ: ngoi-nha-cuoi-hem). Đặt một lần, không đổi.", type: string, required: true }
+      - { name: gioiThieu, label: Giới thiệu ngắn, type: text, required: true }
+      - { name: anhBia, label: Ảnh bìa (tỉ lệ 2:3), type: image }
+      - { name: theLoai, label: Thể loại, type: string, list: true }
+      - name: trangThai
+        label: Trạng thái
+        type: select
+        default: Đang ra
+        options:
+          values: [Đang ra, Hoàn thành, Tạm dừng]
+      - { name: ngayDang, label: Ngày đăng, type: date, required: true }
+      - { name: body, label: Lời giới thiệu thêm (không bắt buộc), type: rich-text }
+
+  - name: chuong
+    label: Chương
+    type: collection
+    path: src/content/chuong
+    filename: "{fields.truyen}-chuong-{fields.so}.md"
+    view:
+      fields: [truyen, so, ten, ngayDang]
+    fields:
+      - { name: truyen, label: "Mã truyện (giống ô Mã truyện bên mục Truyện)", type: string, required: true }
+      - { name: ten, label: Tên chương, type: string, required: true }
+      - { name: so, label: Số chương, type: number, required: true }
+      - { name: ngayDang, label: Ngày đăng, type: date, required: true }
+      - { name: body, label: Nội dung chương, type: rich-text, required: true }
+
+  - name: cai-dat
+    label: Cài đặt web
+    type: file
+    path: src/data/cai-dat.json
+    format: json
+    fields:
+      - { name: tenWeb, label: Tên web, type: string }
+      - { name: khauHieu, label: Khẩu hiệu, type: string }
+      - { name: moTa, label: Mô tả (hiện trên Google), type: text }
+      - name: ungHo
+        label: Nhận ủng hộ
+        type: object
+        fields:
+          - { name: batTat, label: Bật trang ủng hộ, type: boolean }
+          - { name: nganHang, label: Tên ngân hàng, type: string }
+          - { name: maNganHang, label: "Mã ngân hàng để tự tạo QR (ví dụ: VCB, MB, TCB, ACB, BIDV, VBA)", type: string }
+          - { name: soTaiKhoan, label: Số tài khoản, type: string }
+          - { name: chuTaiKhoan, label: Tên chủ tài khoản (viết hoa không dấu), type: string }
+          - { name: anhQR, label: Hoặc tải ảnh QR có sẵn, type: image }
+          - { name: momo, label: Số Momo (không bắt buộc), type: string }
+          - { name: loiNhan, label: Lời nhắn, type: text }
+      - name: quangCao
+        label: Quảng cáo
+        type: object
+        fields:
+          - { name: adsenseId, label: "Mã Google AdSense (dạng ca-pub-xxxxxxxx)", type: string }
+      - { name: facebook, label: Link trang Facebook, type: string }

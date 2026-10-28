@@ -1,0 +1,11 @@
+---
+// Ô quảng cáo Google. Chỉ hiện khi đã điền mã AdSense trong src/data/cai-dat.json
+import caiDat from '../data/cai-dat.json';
+const id = caiDat.quangCao.adsenseId;
+---
+{id && (
+  <div class="o-quang-cao">
+    <ins class="adsbygoogle" style="display:block" data-ad-client={id} data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script is:inline>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+)}
