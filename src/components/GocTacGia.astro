@@ -5,7 +5,7 @@ import Logo from './Logo.astro';
 import Icon from './Icon.astro';
 import { anh } from '../lib/du-lieu';
 const g = caiDat.gocTacGia;
-const dongChao = g.loiChao.split('\n').map((d) => d.trim()).filter(Boolean);
+const dongChao = (g.loiChao ?? '').split('\n').map((d) => d.trim()).filter(Boolean);
 ---
 {(g.butDanh || g.loiChao) && (
   <section class="hop-phu goc-tac-gia">
