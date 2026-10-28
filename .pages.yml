@@ -53,6 +53,7 @@ content:
       - { name: so, label: Số chương, type: number, required: true }
       - { name: ngayDang, label: Ngày đăng, type: date, required: true }
       - { name: body, label: Nội dung chương, type: rich-text, required: true }
+      - { name: loiTacGia, label: Lời tác giả cuối chương (không bắt buộc), type: text }
 
   - name: cai-dat
     label: Cài đặt web
@@ -86,4 +87,12 @@ content:
         fields:
           - { name: googleAnalytics, label: "Mã Google Analytics (dạng G-XXXXXXXXXX)", type: string }
           - { name: googleSearchConsole, label: Mã xác minh Google Search Console, type: string }
+      - name: gocTacGia
+        label: Góc tác giả (hiện ở trang chủ, để trống thì ẩn)
+        type: object
+        fields:
+          - { name: butDanh, label: Bút danh, type: string }
+          - { name: anhDaiDien, label: Ảnh đại diện (để trống thì dùng hình Bé Sách), type: image }
+          - { name: loiChao, label: Lời chào gửi người đọc, type: text }
+          - { name: lichRaChuong, label: "Lịch ra chương (ví dụ: Thứ 3, 5, 7 lúc 20h)", type: string }
       - { name: facebook, label: Link trang Facebook, type: string }

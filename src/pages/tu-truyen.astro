@@ -2,6 +2,7 @@
 import Khung from '../layouts/Khung.astro';
 import DuLieuTruyen from '../components/DuLieuTruyen.astro';
 import { link } from '../lib/du-lieu';
+import BeSach from '../components/BeSach.astro';
 ---
 <Khung tieuDe="Tủ truyện của bạn">
   <h1>Tủ truyện của bạn</h1>
@@ -10,7 +11,7 @@ import { link } from '../lib/du-lieu';
   <section>
     <div class="dau-muc"><h2>Đang đọc</h2></div>
     <div class="ds-tu" id="dang-doc"></div>
-    <p class="trong" id="dang-doc-trong" hidden>Bạn chưa đọc truyện nào. <a href={link('/danh-sach/')}>Tìm truyện để đọc →</a></p>
+    <div id="dang-doc-trong" hidden><BeSach>Bạn chưa lên chuyến nào cả. <a href={link('/danh-sach/')}>Chọn một truyện</a> và bắt đầu hành trình cùng mình nhé!</BeSach></div>
   </section>
 
   <section>

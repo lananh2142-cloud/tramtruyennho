@@ -24,6 +24,7 @@ const tatCa = await tomTatTatCa();
       <option value="dang">Mới đăng</option>
     </select>
   </div>
+  <p class="loc-tam-trang" id="loc-tam-trang" hidden><span id="ten-tam-trang"></span> <a href="?">Bỏ lọc ✕</a></p>
   <p class="phu" id="dem-ket-qua"></p>
   <div class="luoi-bia" id="luoi">
     {tatCa.map((tt) => (
@@ -34,6 +35,7 @@ const tatCa = await tomTatTatCa();
         data-cap-nhat={tt.capNhat.valueOf()}
         data-dang={tt.truyen.data.ngayDang.valueOf()}
         data-chuong={tt.dsChuong.length}
+        data-the-loai={tt.truyen.data.theLoai.join('|')}
       >
         <OBia tt={tt} />
       </div>
@@ -41,6 +43,7 @@ const tatCa = await tomTatTatCa();
   </div>
   <p id="khong-thay" class="trong" hidden>Không tìm thấy truyện nào phù hợp.</p>
   <script>
+    import { DS_TAM_TRANG, hopTamTrang } from '../lib/tam-trang';
     const o = document.getElementById('tim-kiem') as HTMLInputElement;
     const tt = document.getElementById('loc-trang-thai') as HTMLSelectElement;
     const sx = document.getElementById('sap-xep') as HTMLSelectElement;
@@ -52,6 +55,12 @@ const tatCa = await tomTatTatCa();
     const tham = new URLSearchParams(location.search);
     o.value = tham.get('q') ?? '';
     if (tham.get('sap')) sx.value = tham.get('sap')!;
+    // Lọc theo tâm trạng khi bấm từ trang chủ (?tam-trang=...)
+    const tamTrang = DS_TAM_TRANG.find((t) => t.ma === tham.get('tam-trang'));
+    if (tamTrang) {
+      document.getElementById('ten-tam-trang')!.textContent = `Truyện cho lúc bạn ${tamTrang.ten.charAt(0).toLowerCase() + tamTrang.ten.slice(1)}`;
+      document.getElementById('loc-tam-trang')!.hidden = false;
+    }
 
     const ap = () => {
       const q = boDau(o.value);
@@ -65,7 +74,8 @@ const tatCa = await tomTatTatCa();
         }
       });
       for (const t of sapXep) {
-        const hien = (!q || t.dataset.tim!.includes(q)) && (!tt.value || t.dataset.trangThai === tt.value);
+        const hien = (!q || t.dataset.tim!.includes(q)) && (!tt.value || t.dataset.trangThai === tt.value)
+          && (!tamTrang || hopTamTrang(tamTrang, t.dataset.theLoai!.split('|'), Number(t.dataset.chuong)));
         t.hidden = !hien;
         if (hien) dem++;
         luoi.appendChild(t);

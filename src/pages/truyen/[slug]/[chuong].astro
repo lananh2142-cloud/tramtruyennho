@@ -3,7 +3,10 @@ import Khung from '../../../layouts/Khung.astro';
 import QuangCao from '../../../components/QuangCao.astro';
 import Icon from '../../../components/Icon.astro';
 import caiDat from '../../../data/cai-dat.json';
-import { tomTatTatCa, linkChuong, linkTruyen, link, anhHienThi, anhTrongNoiDung, anh, type Truyen, type Chuong } from '../../../lib/du-lieu';
+import { tomTatTatCa, linkChuong, linkTruyen, link, anhHienThi, anhTrongNoiDung, anh, soChu, phutDoc, type Truyen, type Chuong } from '../../../lib/du-lieu';
+import Logo from '../../../components/Logo.astro';
+import BeSach from '../../../components/BeSach.astro';
+import GocTacGiaMini from '../../../components/GocTacGiaMini.astro';
 import { render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -31,14 +34,14 @@ const linkSau = sau && linkChuong(truyen.id, sau.data.so);
 const anhChiaSe = anh(anhTrongNoiDung(chuong.body)[0]) ?? (await anhHienThi(truyen)).src;
 ---
 <Khung tieuDe={`${truyen.data.ten} - ${tieuDe}`} moTa={`Đọc ${truyen.data.ten} - ${tieuDe}. ${truyen.data.gioiThieu}`} anh={anhChiaSe}>
-  <div class="tien-do" aria-hidden="true"><div id="thanh-tien-do"></div></div>
+  <div class="tien-do" aria-hidden="true"><div id="thanh-tien-do"><span class="be-sach-chay"><Logo co={22} /></span></div></div>
   <article class="trang-doc" data-slug={truyen.id} data-so={chuong.data.so} data-ten={chuong.data.ten} data-goc={linkChuong(truyen.id, 0).replace(/chuong-0\/$/, 'chuong-')}>
     <nav class="vet-dan" aria-label="Đường dẫn">
       <a href={link('/')}>Trang chủ</a> › <a href={linkTruyen(truyen.id)}>{truyen.data.ten}</a> › <span>Chương {chuong.data.so}</span>
     </nav>
     <p class="ten-truyen-doc"><a href={linkTruyen(truyen.id)}>{truyen.data.ten}</a></p>
     <h1>{tieuDe}</h1>
-    <p class="vi-tri-chuong">Chương {chuong.data.so} / {tong}</p>
+    <p class="vi-tri-chuong">Trạm {chuong.data.so} / {tong} · khoảng {phutDoc(soChu(chuong.body))} phút đọc</p>
 
     <nav class="thanh-cong-cu" aria-label="Điều hướng chương">
       {linkTruoc ? <a class="nut" href={linkTruoc} data-phim="truoc" aria-label="Chương trước"><Icon ten="trai" /><span class="an-dt">Chương trước</span></a> : <span class="nut tat"><Icon ten="trai" /><span class="an-dt">Chương trước</span></span>}
@@ -95,7 +98,15 @@ const anhChiaSe = anh(anhTrongNoiDung(chuong.body)[0]) ?? (await anhHienThi(truy
       {linkSau ? <a class="nut chinh" href={linkSau}>Chương sau <Icon ten="phai" /></a> : <span class="nut tat">Chương sau <Icon ten="phai" /></span>}
     </nav>
 
-    {!sau && <p class="het-chuong">Bạn đã đọc đến chương mới nhất. Bấm "Lưu vào tủ" ở trang truyện để dễ quay lại đọc tiếp nhé!</p>}
+    {chuong.data.loiTacGia && <GocTacGiaMini loi={chuong.data.loiTacGia} />}
+
+    {!sau && (
+      <BeSach>
+        {truyen.data.trangThai === 'Hoàn thành'
+          ? <>Bạn đã về đến <strong>trạm cuối</strong> của chuyến này rồi! Cảm ơn bạn đã đồng hành cùng Trạm Truyện Nhỏ.</>
+          : <>Bạn đã đến <strong>trạm mới nhất</strong> rồi! Bấm <a href={linkTruyen(truyen.id)}>Lưu vào tủ</a> để không lỡ chuyến tiếp theo nhé.</>}
+      </BeSach>
+    )}
 
     {caiDat.ungHo.batTat && (
       <aside class="hop-ung-ho">

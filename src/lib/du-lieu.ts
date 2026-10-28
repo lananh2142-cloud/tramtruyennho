@@ -104,3 +104,16 @@ export function anhHienThi(truyen: Truyen): Promise<{ src?: string; viTri: strin
   }
   return boNhoAnh.get(truyen.id)!;
 }
+
+// Thời gian đọc ước tính (người Việt đọc khoảng 230 chữ mỗi phút)
+export function soChu(noiDung?: string): number {
+  return (noiDung ?? '').replace(/<[^>]+>|!\[[^\]]*\]\([^)]*\)/g, ' ').split(/\s+/).filter(Boolean).length;
+}
+export function phutDoc(chu: number): number {
+  return Math.max(1, Math.ceil(chu / 230));
+}
+export function hienThoiGian(phut: number): string {
+  if (phut < 60) return `${phut} phút`;
+  const gio = Math.floor(phut / 60), du = phut % 60;
+  return du ? `${gio} giờ ${du} phút` : `${gio} giờ`;
+}

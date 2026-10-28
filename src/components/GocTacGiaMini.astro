@@ -1,0 +1,16 @@
+---
+// Ô "Lời tác giả" ở cuối chương
+import caiDat from '../data/cai-dat.json';
+import Logo from './Logo.astro';
+import { anh } from '../lib/du-lieu';
+interface Props { loi: string }
+const { loi } = Astro.props;
+const g = caiDat.gocTacGia;
+---
+<aside class="loi-tac-gia">
+  {g.anhDaiDien ? <img class="anh-tac-gia" src={anh(g.anhDaiDien)} alt="" width="44" height="44" /> : <Logo co={44} />}
+  <div>
+    <strong>Lời tác giả{g.butDanh && <> · {g.butDanh}</>}</strong>
+    <p set:text={loi} />
+  </div>
+</aside>

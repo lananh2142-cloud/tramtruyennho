@@ -4,7 +4,8 @@ import QuangCao from '../../../components/QuangCao.astro';
 import BiaTruyen from '../../../components/BiaTruyen.astro';
 import OBia from '../../../components/OBia.astro';
 import Icon from '../../../components/Icon.astro';
-import { tomTatTatCa, linkChuong, linkTheLoai, link, anhHienThi, type TomTat } from '../../../lib/du-lieu';
+import { tomTatTatCa, linkChuong, linkTheLoai, link, anhHienThi, soChu, phutDoc, hienThoiGian, type TomTat } from '../../../lib/du-lieu';
+import Logo from '../../../components/Logo.astro';
 import { kieuTheLoai } from '../../../lib/the-loai';
 import { render } from 'astro:content';
 
@@ -29,6 +30,7 @@ const d = truyen.data;
 const { Content } = await render(truyen);
 const MOI_TRANG = 50;
 const hinh = await anhHienThi(truyen);
+const tongPhut = dsChuong.reduce((a, c) => a + phutDoc(soChu(c.body)), 0);
 ---
 <Khung tieuDe={d.ten} moTa={d.gioiThieu} anh={hinh.src}>
   <nav class="vet-dan" aria-label="Đường dẫn">
@@ -48,9 +50,13 @@ const hinh = await anhHienThi(truyen);
           <dt>Thể loại</dt>
           <dd class="cac-the-loai">{d.theLoai.map((tl) => <a href={linkTheLoai(tl)}>{tl}</a>)}</dd>
           <dt>Trạng thái</dt><dd><span class={`nhan ${d.trangThai === 'Hoàn thành' ? 'xong' : ''}`}>{d.trangThai}</span></dd>
-          <dt>Số chương</dt><dd>{dsChuong.length}</dd>
+          <dt>Số chương</dt><dd>{dsChuong.length}{dsChuong.length > 0 && <span class="phu-nho"> · đọc hết khoảng {hienThoiGian(tongPhut)}</span>}</dd>
           <dt>Cập nhật</dt><dd><time datetime={capNhat.toISOString()} data-tuong-doi>{capNhat.toLocaleDateString('vi-VN')}</time></dd>
         </dl>
+        <div class="hanh-trinh" id="hanh-trinh" hidden>
+          <div class="duong-ray"><div class="da-di" id="da-di"><span class="be-sach-chay"><Logo co={26} /></span></div></div>
+          <p id="chu-hanh-trinh"></p>
+        </div>
         <div class="nut-hang">
           {dsChuong.length > 0 && <a class="nut chinh" id="nut-doc" href={linkChuong(truyen.id, dsChuong[0].data.so)}><Icon ten="sach" co={18} /> <span>Đọc từ đầu</span></a>}
           {chuongMoi && dsChuong.length > 1 && <a class="nut" href={linkChuong(truyen.id, chuongMoi.data.so)}>Chương mới nhất</a>}
@@ -106,6 +112,16 @@ const hinh = await anhHienThi(truyen);
     const dd = lichSu()[slug];
     const nutDoc = document.getElementById('nut-doc') as HTMLAnchorElement | null;
     if (dd && nutDoc) {
+      // Hành trình đọc: đã đi qua bao nhiêu "trạm" (chương)
+      const tong = document.querySelectorAll('#ds-chuong li').length;
+      if (tong > 0) {
+        const phanTram = Math.min(100, Math.round((dd.so / tong) * 100));
+        document.getElementById('da-di')!.style.width = phanTram + '%';
+        document.getElementById('chu-hanh-trinh')!.textContent = dd.so >= tong
+          ? `Bạn đã đi hết ${tong} trạm của chuyến này!`
+          : `Bạn đã đi qua ${dd.so}/${tong} trạm (${phanTram}%) – còn ${tong - dd.so} trạm nữa`;
+        document.getElementById('hanh-trinh')!.hidden = false;
+      }
       nutDoc.href = nutDoc.href.replace(/chuong-\d+\/$/, `chuong-${dd.so}/`);
       nutDoc.querySelector('span')!.textContent = `Đọc tiếp chương ${dd.so}`;
     }

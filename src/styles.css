@@ -440,3 +440,51 @@ h2 small { font-size: .8em; color: var(--chu-mo); font-weight: 500; }
   .luoi-bia.cuon-ngang > * { flex: 0 0 34%; scroll-snap-align: start; }
 }
 :root[data-theme="dark"] .banner-xoay::before { opacity: .15; }
+
+/* ===== Điểm riêng của Trạm Truyện Nhỏ ===== */
+/* Bé Sách nói chuyện */
+.be-sach { display: flex; align-items: flex-end; gap: 12px; margin: 28px auto; max-width: 560px; text-align: left; }
+.be-sach-hinh { flex: 0 0 auto; animation: nhun 2.6s ease-in-out infinite; }
+@keyframes nhun { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+.bong-thoai { position: relative; flex: 1; padding: 14px 18px; border-radius: 16px 16px 16px 4px; background: var(--nen-2); border: 1px solid var(--vien);
+  box-shadow: var(--bong); color: var(--chu); font-size: .93rem; line-height: 1.6; }
+
+/* Góc tác giả */
+.tac-gia-dau { display: flex; align-items: center; gap: 12px; }
+.tac-gia-dau strong { display: block; font-size: 1rem; }
+.tac-gia-dau span { color: var(--chu-mo); font-size: .82rem; }
+.anh-tac-gia { border-radius: 50%; object-fit: cover; flex: 0 0 auto; }
+.loi-chao { margin: 14px 0 0; padding: 12px 14px; border-radius: 10px; background: var(--nen-3); color: var(--chu-phu); font-size: .9rem; font-style: italic; line-height: 1.6; }
+.lich-ra { display: flex; gap: 8px; align-items: flex-start; margin: 12px 0 0; font-size: .86rem; color: var(--chu-phu); }
+.lich-ra .icon { color: var(--nhan-chu); margin-top: 3px; }
+.lich-ra strong { color: var(--chu); }
+
+/* Lời tác giả cuối chương */
+.loi-tac-gia { display: flex; gap: 14px; align-items: flex-start; margin: 32px 0 8px; padding: 16px 18px; border-radius: var(--bo);
+  background: color-mix(in srgb, var(--nhan) 8%, var(--nen-2)); border: 1px solid color-mix(in srgb, var(--nhan) 25%, var(--vien)); }
+.loi-tac-gia strong { font-size: .88rem; color: var(--nhan-chu); }
+.loi-tac-gia p { margin: 4px 0 0; color: var(--chu-phu); font-size: .93rem; line-height: 1.7; white-space: pre-line; }
+
+/* Chọn truyện theo tâm trạng */
+.luoi-tam-trang { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.o-tam-trang { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 14px; color: var(--chu);
+  background: color-mix(in srgb, var(--m1) 9%, var(--nen-2)); border: 1px solid color-mix(in srgb, var(--m1) 22%, var(--vien)); transition: transform .2s, box-shadow .2s; }
+.o-tam-trang:hover { text-decoration: none; transform: translateY(-2px); box-shadow: 0 8px 20px color-mix(in srgb, var(--m1) 20%, transparent); }
+.tam-trang-icon { flex: 0 0 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; background: var(--m1); }
+.o-tam-trang strong { display: block; font-size: .95rem; }
+.o-tam-trang small { color: var(--chu-mo); font-size: .8rem; }
+@media (max-width: 600px) { .luoi-tam-trang { grid-template-columns: 1fr 1fr; gap: 10px; } .o-tam-trang { flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; } }
+.loc-tam-trang { display: inline-flex; gap: 10px; align-items: center; padding: 6px 14px; border-radius: 99px; background: var(--nen-3); font-size: .9rem; font-weight: 500; }
+
+/* Hành trình đọc: đường ray và Bé Sách chạy theo */
+.hanh-trinh { margin-top: 18px; max-width: 460px; }
+.duong-ray { position: relative; height: 8px; border-radius: 99px; margin-top: 18px;
+  background: repeating-linear-gradient(90deg, var(--vien) 0 10px, transparent 10px 16px), var(--nen-3); }
+.da-di { position: relative; height: 100%; min-width: 8px; border-radius: 99px; background: linear-gradient(90deg, color-mix(in srgb, var(--nhan) 60%, #fff), var(--nhan)); }
+.be-sach-chay { position: absolute; right: -13px; top: 50%; transform: translateY(-62%); line-height: 0; filter: drop-shadow(0 2px 3px rgba(0,0,0,.15)); }
+.hanh-trinh p { margin: 8px 0 0; font-size: .85rem; color: var(--chu-phu); }
+.phu-nho { color: var(--chu-mo); font-size: .85rem; }
+/* Thanh tiến độ ở trang đọc cũng có Bé Sách chạy theo */
+.tien-do { height: 4px; background: color-mix(in srgb, var(--nhan) 15%, transparent); }
+#thanh-tien-do { position: relative; min-width: 12px; max-width: calc(100% - 12px); }
+#thanh-tien-do .be-sach-chay { right: -11px; top: 0; transform: none; }

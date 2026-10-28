@@ -1,0 +1,22 @@
+---
+// Góc tác giả: giới thiệu tác giả, lời chào và lịch ra chương. Ẩn nếu chưa điền trong Cài đặt web
+import caiDat from '../data/cai-dat.json';
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { anh } from '../lib/du-lieu';
+const g = caiDat.gocTacGia;
+---
+{(g.butDanh || g.loiChao) && (
+  <section class="hop-phu goc-tac-gia">
+    <h2><span class="huy-hieu-muc nho"><Icon ten="nguoi" co={14} /></span>Góc tác giả</h2>
+    <div class="tac-gia-dau">
+      {g.anhDaiDien ? <img class="anh-tac-gia" src={anh(g.anhDaiDien)} alt={g.butDanh} width="56" height="56" /> : <Logo co={56} />}
+      <div>
+        {g.butDanh && <strong>{g.butDanh}</strong>}
+        <span>Tác giả của Trạm</span>
+      </div>
+    </div>
+    {g.loiChao && <p class="loi-chao">“{g.loiChao}”</p>}
+    {g.lichRaChuong && <p class="lich-ra"><Icon ten="lich" co={15} /> <span>Lịch ra chương: <strong>{g.lichRaChuong}</strong></span></p>}
+  </section>
+)}

@@ -28,6 +28,8 @@ const chuong = defineCollection({
     truyen: z.string(),
     ten: z.string(),
     so: z.number(),
+    // Lời nhắn của tác giả hiện ở cuối chương (không bắt buộc)
+    loiTacGia: z.string().optional(),
     ngayDang: z.coerce.date(),
   }),
 });
