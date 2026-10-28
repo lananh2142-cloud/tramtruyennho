@@ -2,11 +2,11 @@
    Tông nâu đất, nền kem (mặc định sáng); bấm nút mặt trăng để chuyển sang tối.
    --nen*: nền, --chu*: chữ, --vien: đường viền, --nhan: màu điểm nhấn, --nut / --tren-nut: nút chính */
 :root {
-  --nen: #fbf7f2; --nen-2: #ffffff; --nen-3: #f4ece3; --vien: #eadfd3;
+  --nen: #fffbf7; --nen-2: #ffffff; --nen-3: #fbf1e8; --vien: #f0e4d9;
   --chu: #2b211b; --chu-phu: #66574c; --chu-mo: #9a897c;
   --nhan: #b0623a; --nhan-chu: #9c4f2a; --nut: #9c4f2a; --nut-hover: #833f1f; --tren-nut: #ffffff;
   --xanh: #2f8a5b; --do: #c94b3b;
-  --banner-1: #7a3410; --banner-2: #c9876a;
+  --banner-1: #7d370d; --banner-2: #c78567;
   --bong: 0 1px 2px rgba(60,35,20,.06), 0 8px 24px rgba(60,35,20,.08);
   --bo: 12px; --co-chu: 19px; --gian-dong: 1.85;
   color-scheme: light;
@@ -121,7 +121,7 @@ h2 small { font-size: .8em; color: var(--chu-mo); font-weight: 500; }
 /* Banner truyện đề cử dạng xếp bìa */
 .banner-xoay { position: relative; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); align-items: center; gap: 48px;
   min-height: 400px; padding: 44px 56px; border-radius: 16px; color: #fff;
-  background: linear-gradient(115deg, var(--banner-1), var(--banner-2)); }
+  background: linear-gradient(20deg, var(--banner-1), color-mix(in srgb, var(--banner-1) 50%, var(--banner-2)) 50%, var(--banner-2)); }
 .san-khau { position: relative; height: 320px; }
 .the-xoay { position: absolute; top: 50%; left: 50%; width: 190px; padding: 0; border: 3px solid rgba(255,255,255,.9); border-radius: 10px; background: none; cursor: pointer;
   box-shadow: 0 14px 34px rgba(40,15,0,.4); transition: transform .5s ease, opacity .5s ease, filter .5s ease; transform: translate(-50%, -50%); }
@@ -391,10 +391,6 @@ h2 small { font-size: .8em; color: var(--chu-mo); font-weight: 500; }
 }
 
 /* ===== Làm web sinh động hơn (nhẹ nhàng, không lòe loẹt) ===== */
-/* Ánh màu ấm rất nhẹ phía sau nền */
-body::before { content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
-  background: radial-gradient(ellipse 70% 45% at 15% -5%, color-mix(in srgb, var(--nhan) 12%, transparent), transparent 70%),
-    radial-gradient(ellipse 50% 35% at 100% 0%, color-mix(in srgb, #f4978e 10%, transparent), transparent 70%); }
 .logo-hinh { flex: 0 0 auto; display: block; }
 .logo:hover .logo-hinh { transform: rotate(-6deg); transition: transform .2s; }
 .gioi-thieu-web .logo-hinh { margin: 0 auto; }
