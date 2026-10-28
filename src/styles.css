@@ -120,12 +120,12 @@ h2 small { font-size: .8em; color: var(--chu-mo); font-weight: 500; }
 
 /* Banner truyện đề cử dạng xếp bìa */
 .banner-xoay { position: relative; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); align-items: center; gap: 48px;
-  min-height: 400px; padding: 44px 56px; border-radius: 16px; color: var(--banner-chu);
+  min-height: 400px; padding: 44px 56px; border-radius: 24px; color: var(--banner-chu);
   background: linear-gradient(20deg, var(--banner-1), color-mix(in srgb, var(--banner-1) 45%, var(--banner-2)) 50%, var(--banner-2)); }
 .san-khau { position: relative; height: 320px; }
-.the-xoay { position: absolute; top: 50%; left: 50%; width: 190px; padding: 0; border: 3px solid rgba(255,255,255,.9); border-radius: 10px; background: none; cursor: pointer;
+.the-xoay { position: absolute; top: 50%; left: 50%; width: 190px; padding: 0; border: 3px solid rgba(255,255,255,.95); border-radius: 18px; background: none; cursor: pointer; overflow: hidden;
   box-shadow: 0 14px 30px var(--banner-bong); transition: transform .5s ease, opacity .5s ease, filter .5s ease; transform: translate(-50%, -50%); }
-.the-xoay .bia { border-radius: 7px; box-shadow: none; font-size: 1.05rem; }
+.the-xoay .bia { border-radius: 15px; box-shadow: none; font-size: 1.05rem; }
 .the-xoay[data-vt="0"] { z-index: 5; }
 .the-xoay[data-vt="1"] { z-index: 4; transform: translate(calc(-50% + 120px), -50%) scale(.8); filter: brightness(.94); }
 .the-xoay[data-vt="-1"] { z-index: 4; transform: translate(calc(-50% - 120px), -50%) scale(.8); filter: brightness(.94); }
@@ -455,9 +455,6 @@ h2 small { font-size: .8em; color: var(--chu-mo); font-weight: 500; }
 .tac-gia-dau span { color: var(--chu-mo); font-size: .82rem; }
 .anh-tac-gia { border-radius: 50%; object-fit: cover; flex: 0 0 auto; }
 .loi-chao { margin: 14px 0 0; padding: 12px 14px; border-radius: 10px; background: var(--nen-3); color: var(--chu-phu); font-size: .9rem; font-style: italic; line-height: 1.6; }
-.lich-ra { display: flex; gap: 8px; align-items: flex-start; margin: 12px 0 0; font-size: .86rem; color: var(--chu-phu); }
-.lich-ra .icon { color: var(--nhan-chu); margin-top: 3px; }
-.lich-ra strong { color: var(--chu); }
 
 /* Lời tác giả cuối chương */
 .loi-tac-gia { display: flex; gap: 14px; align-items: flex-start; margin: 32px 0 8px; padding: 16px 18px; border-radius: var(--bo);

@@ -100,5 +100,4 @@ content:
           - { name: butDanh, label: Bút danh, type: string }
           - { name: anhDaiDien, label: Ảnh đại diện (để trống thì dùng hình Bé Sách), type: image }
           - { name: loiChao, label: Lời chào gửi người đọc, type: text }
-          - { name: lichRaChuong, label: "Lịch ra chương (ví dụ: Thứ 3, 5, 7 lúc 20h)", type: string }
       - { name: facebook, label: Link trang Facebook, type: string }

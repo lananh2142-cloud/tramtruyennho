@@ -1,5 +1,5 @@
 ---
-// Góc tác giả: giới thiệu tác giả, lời chào và lịch ra chương. Ẩn nếu chưa điền trong Cài đặt web
+// Góc tác giả: giới thiệu tác giả và lời chào. Ẩn nếu chưa điền trong Cài đặt web
 import caiDat from '../data/cai-dat.json';
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
@@ -17,6 +17,5 @@ const g = caiDat.gocTacGia;
       </div>
     </div>
     {g.loiChao && <p class="loi-chao">“{g.loiChao}”</p>}
-    {g.lichRaChuong && <p class="lich-ra"><Icon ten="lich" co={15} /> <span>Lịch ra chương: <strong>{g.lichRaChuong}</strong></span></p>}
   </section>
 )}
