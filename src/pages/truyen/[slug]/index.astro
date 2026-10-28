@@ -3,6 +3,7 @@ import Khung from '../../../layouts/Khung.astro';
 import QuangCao from '../../../components/QuangCao.astro';
 import BiaTruyen from '../../../components/BiaTruyen.astro';
 import OBia from '../../../components/OBia.astro';
+import Icon from '../../../components/Icon.astro';
 import { tomTatTatCa, linkChuong, linkTheLoai, link, anh, type TomTat } from '../../../lib/du-lieu';
 import { kieuTheLoai } from '../../../lib/the-loai';
 import { render } from 'astro:content';
@@ -43,34 +44,34 @@ const MOI_TRANG = 50;
         <dl class="bang-tt">
           {d.tacGia && <><dt>Tác giả</dt><dd>{d.tacGia}</dd></>}
           <dt>Thể loại</dt>
-          <dd class="cac-the-loai">{d.theLoai.map((tl) => <a href={linkTheLoai(tl)}>{`${kieuTheLoai(tl).icon} ${tl}`}</a>)}</dd>
+          <dd class="cac-the-loai">{d.theLoai.map((tl) => <a href={linkTheLoai(tl)}>{tl}</a>)}</dd>
           <dt>Trạng thái</dt><dd><span class={`nhan ${d.trangThai === 'Hoàn thành' ? 'xong' : ''}`}>{d.trangThai}</span></dd>
           <dt>Số chương</dt><dd>{dsChuong.length}</dd>
           <dt>Cập nhật</dt><dd><time datetime={capNhat.toISOString()} data-tuong-doi>{capNhat.toLocaleDateString('vi-VN')}</time></dd>
         </dl>
         <div class="nut-hang">
-          {dsChuong.length > 0 && <a class="nut chinh" id="nut-doc" href={linkChuong(truyen.id, dsChuong[0].data.so)}>📖 Đọc từ đầu</a>}
+          {dsChuong.length > 0 && <a class="nut chinh" id="nut-doc" href={linkChuong(truyen.id, dsChuong[0].data.so)}><Icon ten="sach" co={18} /> <span>Đọc từ đầu</span></a>}
           {chuongMoi && dsChuong.length > 1 && <a class="nut" href={linkChuong(truyen.id, chuongMoi.data.so)}>Chương mới nhất</a>}
-          <button class="nut" id="nut-luu" type="button" aria-pressed="false">♡ Lưu vào tủ</button>
+          <button class="nut" id="nut-luu" type="button" aria-pressed="false"><Icon ten="danh-dau" co={17} /> <span>Lưu vào tủ</span></button>
         </div>
       </div>
     </div>
 
     <section class="gioi-thieu-truyen">
-      <h2 class="tieu-de-muc">Giới thiệu</h2>
+      <h2>Giới thiệu</h2>
       <div class="noi-dung-gioi-thieu thu-gon" id="gioi-thieu">
         <p>{d.gioiThieu}</p>
         <Content />
       </div>
-      <button class="nut-xem-them" id="xem-them" type="button" hidden>Xem thêm ▾</button>
+      <button class="nut-xem-them" id="xem-them" type="button" hidden>Xem thêm</button>
     </section>
 
     <QuangCao />
 
     <section>
       <div class="dau-muc">
-        <h2 class="tieu-de-muc">Danh sách chương <small>({dsChuong.length})</small></h2>
-        {dsChuong.length > 1 && <button class="nut nho" id="dao-thu-tu" type="button">⇅ Mới nhất trước</button>}
+        <h2>Danh sách chương <small>({dsChuong.length})</small></h2>
+        {dsChuong.length > 1 && <button class="nut nho" id="dao-thu-tu" type="button"><Icon ten="dao" co={15} /> <span>Mới nhất trước</span></button>}
       </div>
       {dsChuong.length === 0 ? <p>Truyện chưa có chương nào.</p> : (
         <>
@@ -89,7 +90,7 @@ const MOI_TRANG = 50;
 
     {cungLoai.length > 0 && (
       <section>
-        <h2 class="tieu-de-muc">Truyện cùng thể loại</h2>
+        <div class="dau-muc"><h2>Truyện cùng thể loại</h2></div>
         <div class="luoi-bia">{cungLoai.map((x) => <OBia tt={x} />)}</div>
       </section>
     )}
@@ -104,13 +105,13 @@ const MOI_TRANG = 50;
     const nutDoc = document.getElementById('nut-doc') as HTMLAnchorElement | null;
     if (dd && nutDoc) {
       nutDoc.href = nutDoc.href.replace(/chuong-\d+\/$/, `chuong-${dd.so}/`);
-      nutDoc.textContent = `📖 Đọc tiếp chương ${dd.so}`;
+      nutDoc.querySelector('span')!.textContent = `Đọc tiếp chương ${dd.so}`;
     }
 
     // Lưu vào tủ truyện
     const nutLuu = document.getElementById('nut-luu')!;
     const veNutLuu = (luu: boolean) => {
-      nutLuu.textContent = luu ? '♥ Đã lưu' : '♡ Lưu vào tủ';
+      nutLuu.querySelector('span')!.textContent = luu ? 'Đã lưu vào tủ' : 'Lưu vào tủ';
       nutLuu.classList.toggle('da-luu', luu);
       nutLuu.setAttribute('aria-pressed', String(luu));
     };
@@ -124,7 +125,7 @@ const MOI_TRANG = 50;
     else gt.classList.remove('thu-gon');
     xemThem.addEventListener('click', () => {
       const gon = gt.classList.toggle('thu-gon');
-      xemThem.textContent = gon ? 'Xem thêm ▾' : 'Thu gọn ▴';
+      xemThem.textContent = gon ? 'Xem thêm' : 'Thu gọn';
     });
 
     // Danh sách chương: chia trang và đảo thứ tự
@@ -153,7 +154,7 @@ const MOI_TRANG = 50;
       nutDao?.addEventListener('click', () => {
         [...ds.children].reverse().forEach((li) => ds.appendChild(li));
         ds.classList.toggle('dao');
-        nutDao.textContent = ds.classList.contains('dao') ? '⇅ Cũ nhất trước' : '⇅ Mới nhất trước';
+        nutDao.querySelector('span')!.textContent = ds.classList.contains('dao') ? 'Cũ nhất trước' : 'Mới nhất trước';
         trang = 0;
         hien();
       });

@@ -1,5 +1,5 @@
 ---
-// Ô bìa truyện dạng lưới (giống mục "Truyện hot" trên các web truyện)
+// Ô bìa truyện dạng lưới
 import BiaTruyen from './BiaTruyen.astro';
 import { linkTruyen, laMoi, type TomTat } from '../lib/du-lieu';
 interface Props { tt: TomTat }
@@ -9,9 +9,8 @@ const d = truyen.data;
 <a class="o-bia" href={linkTruyen(truyen.id)} title={d.ten}>
   <div class="o-bia-anh">
     <BiaTruyen truyen={truyen} />
-    {d.trangThai === 'Hoàn thành' ? <span class="nhan-goc full">FULL</span> : laMoi(capNhat) && <span class="nhan-goc moi">MỚI</span>}
-    <span class="so-chuong-goc">{dsChuong.length} chương</span>
+    {d.trangThai === 'Hoàn thành' ? <span class="nhan-goc full">Full</span> : laMoi(capNhat) && <span class="nhan-goc moi">Mới</span>}
   </div>
   <h3>{d.ten}</h3>
-  {d.tacGia && <p class="tac-gia-nho">{d.tacGia}</p>}
+  <p class="o-bia-phu">{d.theLoai[0] ?? 'Truyện'} · {dsChuong.length} chương</p>
 </a>

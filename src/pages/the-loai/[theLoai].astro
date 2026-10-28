@@ -3,7 +3,6 @@ import Khung from '../../layouts/Khung.astro';
 import OBia from '../../components/OBia.astro';
 import ThanhTheLoai from '../../components/ThanhTheLoai.astro';
 import { tomTatTatCa, tatCaTheLoai, khongDau } from '../../lib/du-lieu';
-import { kieuTheLoai } from '../../lib/the-loai';
 
 export async function getStaticPaths() {
   return (await tatCaTheLoai()).map(({ ten }) => ({ params: { theLoai: khongDau(ten) }, props: { ten } }));
@@ -13,7 +12,7 @@ const { ten } = Astro.props as { ten: string };
 const ds = (await tomTatTatCa()).filter((t) => t.truyen.data.theLoai.includes(ten)).sort((a, b) => b.capNhat.valueOf() - a.capNhat.valueOf());
 ---
 <Khung tieuDe={`Truyện ${ten}`} moTa={`Đọc truyện ${ten} hay, cập nhật chương mới thường xuyên.`}>
-  <h1>{`${kieuTheLoai(ten).icon} Truyện ${ten}`}</h1>
+  <h1>Truyện {ten}</h1>
   <ThanhTheLoai dangChon={ten} />
   <p class="phu">{ds.length} truyện</p>
   <div class="luoi-bia">{ds.map((tt) => <OBia tt={tt} />)}</div>

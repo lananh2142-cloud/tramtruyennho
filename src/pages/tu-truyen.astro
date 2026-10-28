@@ -4,19 +4,19 @@ import DuLieuTruyen from '../components/DuLieuTruyen.astro';
 import { link } from '../lib/du-lieu';
 ---
 <Khung tieuDe="Tủ truyện của bạn">
-  <h1>♡ Tủ truyện của bạn</h1>
+  <h1>Tủ truyện của bạn</h1>
   <p class="phu">Tủ truyện được lưu ngay trên máy bạn đang dùng, không cần đăng nhập. Nếu bạn đổi máy hoặc xoá dữ liệu trình duyệt, tủ truyện sẽ trống lại.</p>
 
   <section>
-    <h2 class="tieu-de-muc">📌 Đang đọc</h2>
+    <div class="dau-muc"><h2>Đang đọc</h2></div>
     <div class="ds-tu" id="dang-doc"></div>
     <p class="trong" id="dang-doc-trong" hidden>Bạn chưa đọc truyện nào. <a href={link('/danh-sach/')}>Tìm truyện để đọc →</a></p>
   </section>
 
   <section>
-    <h2 class="tieu-de-muc">♥ Đã lưu</h2>
+    <div class="dau-muc"><h2>Đã lưu</h2></div>
     <div class="ds-tu" id="da-luu"></div>
-    <p class="trong" id="da-luu-trong" hidden>Chưa có truyện nào. Bấm nút <strong>♡ Lưu vào tủ</strong> ở trang truyện để lưu lại.</p>
+    <p class="trong" id="da-luu-trong" hidden>Chưa có truyện nào. Bấm nút <strong>Lưu vào tủ</strong> ở trang truyện để lưu lại.</p>
   </section>
 
   <DuLieuTruyen />
@@ -29,11 +29,14 @@ import { link } from '../lib/du-lieu';
       const div = document.createElement('div');
       div.className = 'the-tu';
       div.innerHTML = `
-        <a class="icon" style="background:linear-gradient(160deg,${t.mau[0]},${t.mau[1]})">${t.icon}</a>
+        <a class="bia-mini"></a>
         <div class="giua"><a class="ten"></a><small></small></div>
         <a class="nut chinh nho doc">Đọc</a>
-        <button type="button" class="xoa" aria-label="Bỏ khỏi danh sách" title="Bỏ khỏi danh sách">✕</button>`;
-      (div.querySelector('.icon') as HTMLAnchorElement).href = t.link;
+        <button type="button" class="xoa" aria-label="Bỏ khỏi danh sách" title="Bỏ khỏi danh sách"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>`;
+      const bia = div.querySelector('.bia-mini') as HTMLAnchorElement;
+      bia.href = t.link;
+      if (t.anhBia) bia.style.backgroundImage = `url("${t.anhBia}")`;
+      else { bia.style.background = `linear-gradient(160deg,${t.mau[0]},${t.mau[1]})`; bia.textContent = t.ten.charAt(0); }
       const ten = div.querySelector('.ten') as HTMLAnchorElement;
       ten.href = t.link;
       ten.textContent = t.ten;

@@ -1,7 +1,7 @@
 ---
 import caiDat from '../data/cai-dat.json';
 import { link, tatCaTheLoai, linkTheLoai } from '../lib/du-lieu';
-import { kieuTheLoai } from '../lib/the-loai';
+import Icon from '../components/Icon.astro';
 import '../styles.css';
 
 interface Props {
@@ -28,23 +28,18 @@ const dsTheLoai = await tatCaTheLoai();
     <meta property="og:type" content="website" />
     <meta property="og:url" content={urlTrang} />
     {urlAnh && <meta property="og:image" content={urlAnh} />}
-    <meta name="theme-color" content="#171b30" />
+    <meta name="theme-color" content="#151927" />
     <link rel="icon" href={link('/favicon.svg')} type="image/svg+xml" />
     <link rel="sitemap" href={link('/sitemap-index.xml')} />
     <link rel="alternate" type="application/rss+xml" title={caiDat.tenWeb} href={link('/rss.xml')} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
     <script is:inline>
       try {
         var g = localStorage.getItem('giao-dien');
         if (g) document.documentElement.dataset.theme = g;
         var r = document.documentElement;
-        // TẠM CHO BẢN XEM THỬ: chọn bộ màu bằng ?mau=hoang-hon / ngan-ha / sang-ruc / vang-dem
-        var mThu = new URLSearchParams(location.search).get('mau');
-        if (mThu) localStorage.setItem('mau-thu', mThu);
-        mThu = localStorage.getItem('mau-thu');
-        if (mThu && mThu !== 'vang-dem') r.dataset.mau = mThu;
         var c = localStorage.getItem('co-chu');
         if (c) r.style.setProperty('--co-chu', c + 'px');
         var gd = localStorage.getItem('gian-dong');
@@ -75,67 +70,84 @@ const dsTheLoai = await tatCaTheLoai();
   <body>
     <header class="dau-trang" id="dau-trang">
       <div class="khung hang-dau">
-        <a class="logo" href={link('/')}>
-          <span class="logo-mat" aria-hidden="true">✦</span> {caiDat.tenWeb}
+        <a class="logo" href={link('/')} aria-label={`${caiDat.tenWeb} – Trang chủ`}>
+          <span class="logo-dau" aria-hidden="true"><Icon ten="sach" co={18} /></span>
+          <span>{caiDat.tenWeb}</span>
         </a>
         <form class="o-tim-dau" action={link('/danh-sach/')} method="get" role="search">
-          <input name="q" type="search" placeholder="Tìm tên truyện, tác giả..." aria-label="Tìm truyện" />
-          <button type="submit" aria-label="Tìm">🔍</button>
+          <Icon ten="tim-kiem" co={17} />
+          <input name="q" type="search" placeholder="Tìm truyện, tác giả..." aria-label="Tìm truyện" />
         </form>
-        <nav class="menu-chinh" id="menu-chinh">
+        <nav class="menu-chinh" id="menu-chinh" aria-label="Menu chính">
           {dsTheLoai.length > 0 && (
             <details class="menu-the-loai">
-              <summary>Thể loại</summary>
+              <summary>Thể loại <Icon ten="xuong" co={15} /></summary>
               <div class="menu-tha">
-                {dsTheLoai.map(({ ten }) => <a href={linkTheLoai(ten)}>{`${kieuTheLoai(ten).icon} ${ten}`}</a>)}
+                {dsTheLoai.map(({ ten, soTruyen }) => <a href={linkTheLoai(ten)}>{ten} <span>{soTruyen}</span></a>)}
               </div>
             </details>
           )}
           <a href={link('/danh-sach/')}>Danh sách</a>
           <a href={link('/hoan-thanh/')}>Hoàn thành</a>
-          <a href={link('/tu-truyen/')}>♡ Tủ truyện</a>
-          {caiDat.ungHo.batTat && <a href={link('/ung-ho/')} class="nut-ung-ho">Ủng hộ</a>}
+          <a href={link('/tu-truyen/')}><Icon ten="danh-dau" co={16} /> Tủ truyện</a>
         </nav>
-        <button id="doi-giao-dien" type="button" aria-label="Đổi sáng/tối" title="Đổi sáng/tối">☾</button>
-        <button id="nut-menu" type="button" aria-label="Mở menu" aria-expanded="false" aria-controls="menu-chinh">☰</button>
+        <div class="nut-dau">
+          {caiDat.ungHo.batTat && <a href={link('/ung-ho/')} class="nut nho nut-ung-ho"><Icon ten="ca-phe" co={16} /> <span>Ủng hộ</span></a>}
+          <button id="doi-giao-dien" class="nut-tron" type="button" aria-label="Đổi giao diện sáng/tối" title="Đổi giao diện sáng/tối"><Icon ten="trang" co={17} /></button>
+          <button id="nut-menu" class="nut-tron" type="button" aria-label="Mở menu" aria-expanded="false" aria-controls="menu-chinh"><Icon ten="menu" co={18} /></button>
+        </div>
       </div>
     </header>
     <main class="khung">
       <slot />
     </main>
     <footer class="chan-trang">
-      <div class="khung">
-        <p><strong>{caiDat.tenWeb}</strong> — {caiDat.khauHieu}</p>
-        <p class="lien-ket-chan">
-          <a href={link('/gioi-thieu/')}>Giới thiệu</a> ·
-          <a href={link('/danh-sach/')}>Danh sách truyện</a> ·
-          <a href={link('/tu-truyen/')}>Tủ truyện</a> ·
-          <a href={link('/chinh-sach/')}>Chính sách bảo mật</a> ·
-          <a href={link('/rss.xml')}>RSS</a>
-          {caiDat.facebook && <> · <a href={caiDat.facebook} rel="noopener" target="_blank">Facebook</a></>}
-        </p>
-        <p class="nho">© {new Date().getFullYear()} {caiDat.tenWeb}. Mọi truyện trên trang đều thuộc bản quyền của tác giả.</p>
+      <div class="khung chan-luoi">
+        <div class="chan-gioi-thieu">
+          <a class="logo" href={link('/')}>
+            <span class="logo-dau" aria-hidden="true"><Icon ten="sach" co={18} /></span>
+            <span>{caiDat.tenWeb}</span>
+          </a>
+          <p>{caiDat.moTa}</p>
+        </div>
+        <div>
+          <h2>Khám phá</h2>
+          <ul>
+            <li><a href={link('/danh-sach/')}>Danh sách truyện</a></li>
+            <li><a href={link('/hoan-thanh/')}>Truyện hoàn thành</a></li>
+            <li><a href={link('/tu-truyen/')}>Tủ truyện của bạn</a></li>
+          </ul>
+        </div>
+        {dsTheLoai.length > 0 && (
+          <div>
+            <h2>Thể loại</h2>
+            <ul>{dsTheLoai.slice(0, 6).map(({ ten }) => <li><a href={linkTheLoai(ten)}>{ten}</a></li>)}</ul>
+          </div>
+        )}
+        <div>
+          <h2>Thông tin</h2>
+          <ul>
+            <li><a href={link('/gioi-thieu/')}>Giới thiệu</a></li>
+            {caiDat.ungHo.batTat && <li><a href={link('/ung-ho/')}>Ủng hộ tác giả</a></li>}
+            <li><a href={link('/chinh-sach/')}>Chính sách bảo mật</a></li>
+            <li><a href={link('/rss.xml')}>RSS</a></li>
+            {caiDat.facebook && <li><a href={caiDat.facebook} rel="noopener" target="_blank">Facebook</a></li>}
+          </ul>
+        </div>
       </div>
+      <div class="khung chan-cuoi">© {new Date().getFullYear()} {caiDat.tenWeb}. Mọi truyện trên trang đều thuộc bản quyền của tác giả.</div>
     </footer>
-    <button id="len-dau" type="button" aria-label="Lên đầu trang" title="Lên đầu trang">↑</button>
+    <button id="len-dau" type="button" aria-label="Lên đầu trang" title="Lên đầu trang"><Icon ten="len" co={20} /></button>
     <script is:inline>
       // Nút lên đầu trang
       var lenDau = document.getElementById('len-dau');
       addEventListener('scroll', function () { lenDau.classList.toggle('hien', scrollY > 600); }, { passive: true });
       lenDau.addEventListener('click', function () { scrollTo({ top: 0, behavior: 'smooth' }); });
-      // Các khối hiện dần lên khi cuộn tới
-      if ('IntersectionObserver' in window) {
-        var io = new IntersectionObserver(function (ds) {
-          ds.forEach(function (d) { if (d.isIntersecting) { d.target.classList.add('da-hien'); io.unobserve(d.target); } });
-        }, { rootMargin: '0px 0px -40px 0px' });
-        document.querySelectorAll('.hien-dan').forEach(function (el) { el.classList.add('cho-hien'); io.observe(el); });
-      }
       // Menu trên điện thoại
       var nutMenu = document.getElementById('nut-menu');
       nutMenu.addEventListener('click', function () {
         var mo = document.getElementById('dau-trang').classList.toggle('mo-menu');
         nutMenu.setAttribute('aria-expanded', mo);
-        nutMenu.textContent = mo ? '✕' : '☰';
       });
       // Đóng menu thể loại khi bấm ra ngoài
       document.addEventListener('click', function (e) {
@@ -143,8 +155,7 @@ const dsTheLoai = await tatCaTheLoai();
       });
       document.getElementById('doi-giao-dien').addEventListener('click', function () {
         var r = document.documentElement;
-        var hienTai = r.dataset.theme || 'dark';
-        var moi = hienTai === 'light' ? 'dark' : 'light';
+        var moi = (r.dataset.theme || 'dark') === 'light' ? 'dark' : 'light';
         r.dataset.theme = moi;
         try { localStorage.setItem('giao-dien', moi); } catch (e) {}
       });

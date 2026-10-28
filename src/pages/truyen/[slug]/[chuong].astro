@@ -1,6 +1,7 @@
 ---
 import Khung from '../../../layouts/Khung.astro';
 import QuangCao from '../../../components/QuangCao.astro';
+import Icon from '../../../components/Icon.astro';
 import caiDat from '../../../data/cai-dat.json';
 import { tomTatTatCa, linkChuong, linkTruyen, link, type Truyen, type Chuong } from '../../../lib/du-lieu';
 import { render } from 'astro:content';
@@ -38,7 +39,7 @@ const linkSau = sau && linkChuong(truyen.id, sau.data.so);
     <p class="vi-tri-chuong">Chương {chuong.data.so} / {tong}</p>
 
     <nav class="thanh-cong-cu" aria-label="Điều hướng chương">
-      {linkTruoc ? <a class="nut" href={linkTruoc} data-phim="truoc">‹ <span class="an-dt">Chương trước</span></a> : <span class="nut tat">‹ <span class="an-dt">Chương trước</span></span>}
+      {linkTruoc ? <a class="nut" href={linkTruoc} data-phim="truoc" aria-label="Chương trước"><Icon ten="trai" /><span class="an-dt">Chương trước</span></a> : <span class="nut tat"><Icon ten="trai" /><span class="an-dt">Chương trước</span></span>}
       {mucLuc ? (
         <select class="chon-chuong" aria-label="Chọn chương">
           {mucLuc.map((m) => <option value={m.so} selected={m.so === chuong.data.so}>Chương {m.so}: {m.ten}</option>)}
@@ -48,8 +49,8 @@ const linkSau = sau && linkChuong(truyen.id, sau.data.so);
           <input type="number" min="1" max={tong} placeholder={`Đến chương (1–${tong})`} aria-label="Số chương" />
         </form>
       )}
-      <button class="nut nut-cai-dat" type="button" aria-label="Cài đặt đọc" aria-expanded="false" aria-controls="bang-cai-dat">⚙</button>
-      {linkSau ? <a class="nut chinh" href={linkSau} data-phim="sau"><span class="an-dt">Chương sau</span> ›</a> : <span class="nut tat"><span class="an-dt">Chương sau</span> ›</span>}
+      <button class="nut nut-cai-dat" type="button" aria-label="Cài đặt đọc" title="Cài đặt đọc" aria-expanded="false" aria-controls="bang-cai-dat"><Icon ten="cai-dat" /></button>
+      {linkSau ? <a class="nut chinh" href={linkSau} data-phim="sau" aria-label="Chương sau"><span class="an-dt">Chương sau</span><Icon ten="phai" /></a> : <span class="nut tat"><span class="an-dt">Chương sau</span><Icon ten="phai" /></span>}
     </nav>
 
     <div class="bang-cai-dat" id="bang-cai-dat" hidden>
@@ -87,27 +88,27 @@ const linkSau = sau && linkChuong(truyen.id, sau.data.so);
     <QuangCao />
 
     <nav class="dieu-huong">
-      {linkTruoc ? <a class="nut" href={linkTruoc}>‹ Chương trước</a> : <span class="nut tat">‹ Chương trước</span>}
-      <a class="nut" href={linkTruyen(truyen.id)}>☰ Mục lục</a>
-      {linkSau ? <a class="nut chinh" href={linkSau}>Chương sau ›</a> : <span class="nut tat">Chương sau ›</span>}
+      {linkTruoc ? <a class="nut" href={linkTruoc}><Icon ten="trai" /> Chương trước</a> : <span class="nut tat"><Icon ten="trai" /> Chương trước</span>}
+      <a class="nut" href={linkTruyen(truyen.id)}><Icon ten="danh-sach" /> Mục lục</a>
+      {linkSau ? <a class="nut chinh" href={linkSau}>Chương sau <Icon ten="phai" /></a> : <span class="nut tat">Chương sau <Icon ten="phai" /></span>}
     </nav>
 
-    {!sau && <p class="het-chuong">Bạn đã đọc đến chương mới nhất. Bấm ♡ Lưu vào tủ ở trang truyện để dễ quay lại đọc tiếp nhé!</p>}
+    {!sau && <p class="het-chuong">Bạn đã đọc đến chương mới nhất. Bấm "Lưu vào tủ" ở trang truyện để dễ quay lại đọc tiếp nhé!</p>}
 
     {caiDat.ungHo.batTat && (
       <aside class="hop-ung-ho">
         <p>{caiDat.ungHo.loiNhan}</p>
-        <a class="nut chinh" href={link('/ung-ho/')}>Ủng hộ tác giả</a>
+        <a class="nut chinh" href={link('/ung-ho/')}><Icon ten="ca-phe" /> Ủng hộ tác giả</a>
       </aside>
     )}
   </article>
 
   <!-- Thanh điều hướng dưới cùng trên điện thoại -->
   <nav class="thanh-duoi" aria-label="Điều hướng nhanh">
-    {linkTruoc ? <a href={linkTruoc} aria-label="Chương trước">‹</a> : <span class="tat">‹</span>}
-    <a href={linkTruyen(truyen.id)} aria-label="Mục lục">☰</a>
-    <button type="button" class="nut-cai-dat" aria-label="Cài đặt đọc">⚙</button>
-    {linkSau ? <a href={linkSau} aria-label="Chương sau">›</a> : <span class="tat">›</span>}
+    {linkTruoc ? <a href={linkTruoc}><Icon ten="trai" co={20} /><small>Trước</small></a> : <span class="tat"><Icon ten="trai" co={20} /><small>Trước</small></span>}
+    <a href={linkTruyen(truyen.id)}><Icon ten="danh-sach" co={20} /><small>Mục lục</small></a>
+    <button type="button" class="nut-cai-dat"><Icon ten="cai-dat" co={20} /><small>Cài đặt</small></button>
+    {linkSau ? <a href={linkSau}><Icon ten="phai" co={20} /><small>Sau</small></a> : <span class="tat"><Icon ten="phai" co={20} /><small>Sau</small></span>}
   </nav>
 
   <script>
