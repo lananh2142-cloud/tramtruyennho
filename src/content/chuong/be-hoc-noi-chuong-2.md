@@ -1,6 +1,6 @@
 ---
 truyen: be-hoc-noi
-ten: CHƯƠNG 2 - SỢI CHỈ
+ten: "CHƯƠNG 2: SỢI CHỈ"
 so: 2
 ngayDang: 2026-10-29
 ---
