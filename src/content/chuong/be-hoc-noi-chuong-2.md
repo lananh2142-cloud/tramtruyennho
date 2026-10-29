@@ -1,27 +1,26 @@
 ---
 truyen: be-hoc-noi
-ten: SỢI CHỈ
+ten: CHƯƠNG 2 - SỢI CHỈ
 so: 2
 ngayDang: 2026-10-29
 ---
-
 *“Mỗi từ con học được đều phải lấy từ đâu đó.”*
 
-\ *\* \*
+* 
 
 Sáng hôm sau, tôi không dám nhìn vào miệng con.
 
 Tôm ngồi trên ghế ăn, hai chân đung đưa dưới bàn, vui vẻ dùng thìa xúc cháo. Thỉnh thoảng, con ngẩng lên nhìn tôi rồi gọi:
 
-– \_\_\_.
+____ .
 
 Tôi biết con đang gọi mình. Tôi biết âm thanh ấy dùng để gọi người phụ nữ đã sinh ra, nuôi nấng và chăm sóc con.
 
 Nhưng tôi không hiểu từ ấy.
 
-Nó lọt vào tai tôi như một âm thanh xa lạ, một tiếng động không thuộc về ngôn ngữ tôi từng biết. Tôi muốn đáp lại, muốn nói rằng \_\_\_ đây, \_\_\_ nghe con. Nhưng chỗ đáng lẽ phải có từ ấy chỉ còn là khoảng trống. Đức ngồi đối diện, vừa ăn sáng vừa xem điện thoại.
+Nó lọt vào tai tôi như một âm thanh xa lạ, một tiếng động không thuộc về ngôn ngữ tôi từng biết. Tôi muốn đáp lại, muốn nói rằng  đây,  nghe con. Nhưng chỗ đáng lẽ phải có từ ấy chỉ còn là khoảng trống. Đức ngồi đối diện, vừa ăn sáng vừa xem điện thoại.
 
-– Tôm gọi \_\_\_ suốt từ sáng đến giờ. Hôm nay con trai anh tình cảm thế nhỉ?
+– Tôm gọi___suốt từ sáng đến giờ. Hôm nay con trai anh tình cảm thế nhỉ?
 
 Tôi nhìn chồng. Anh vẫn nghe thấy một tiếng gọi bình thường. Chỉ mình tôi không còn hiểu được nó. Một tiếng gọi mà chúng tôi đã mong đợi suốt gần ba năm, giờ đây chỉ còn là âm thanh xa lạ đối với riêng tôi.
 
@@ -43,13 +42,13 @@ Tôi không đáp. Tôm xúc thêm một thìa cháo. Rồi con gọi tôi lần
 
 Tôi quay đi trước khi môi con kịp khép lại.
 
-\ *\* \*
+* 
 
 Trong hai tuần tiếp theo, Tôm học nói nhanh đến mức chị Huyền phải mời một đồng nghiệp sang để cùng quan sát. Con đi từ chỗ gần như không nói được một từ nào đến việc ghép một câu hoàn chỉnh. Sang tuần thứ ba, Tôm đã biết kể chuyện. Con không nói ngọng, không đảo lộn trật tự từ và hiếm khi phải ngập ngừng tìm cách diễn đạt. Những câu con nói đều trọn vẹn, đôi lúc còn cầu kỳ hơn lời một đứa trẻ ba tuổi.
 
 Một buổi sáng, con đẩy bát cháo ra xa.
 
-– Con muốn ăn cháo, nhưng không cho hành. Hành \_\_\_ lắm.
+– Con muốn ăn cháo, nhưng không cho hành. Hành_____lắm.
 
 Cảm giác quen thuộc ấy lại xuất hiện. Một sợi chỉ bị kéo ra. Tôi khựng lại.
 
@@ -65,7 +64,7 @@ Từ hôm đó, tôi bắt đầu để ý từng từ con nói. Không phải t
 
 Tôi từng nghĩ có lẽ mình bị bệnh. Một khối u trong não, một dạng rối loạn trí nhớ, hoặc một chứng bệnh hiếm gặp nào đó mà sách y học chưa giải thích được chẳng hạn. Tôi sợ những khả năng ấy. Nhưng có một điều còn khiến tôi sợ hơn. Nếu tất cả chuyện này thực sự liên quan đến Tôm, thì người đang lấy đi ngôn ngữ của tôi lại chính là đứa con yêu quý của tôi, đứa con mà tôi đã dành gần ba năm để dạy nói.
 
-\ *\* \*
+ * 
 
 Trên tường phòng khách nhà tôi thỉnh thoảng có một con vật nhỏ bò quanh chỗ sáng. Nó thuộc loài bò sát, thân màu xám nhạt, gần như trong suốt. Ban đêm, nó bắt muỗi và phát ra những tiếng kêu chép chép rất khẽ. Bà ngoại từng dạy tôi tên gọi của nó khi tôi còn nhỏ. Đó là một từ gắn với những mùa hè tôi ngủ ở quê, những đêm mất điện và cảm giác sợ hãi mỗi khi con vật ấy bò gần mái tóc mình.
 
@@ -127,7 +126,7 @@ Và tôi không bao giờ lấy lại được nữa.
 
 Đó là đêm tôi bắt đầu viết những trang này. Tôi ghi lại mọi chuyện đúng như những gì đã xảy ra. Chỗ nào để trống là chỗ một từ đã rời khỏi tôi. Khi người khác nói, tôi vẫn nghe được âm thanh của nó. Nhưng khi cầm bút, tay tôi chỉ dừng lại ở đó.
 
-\ *\* \*
+ * 
 
 **Ngày 12 tháng 4**
 
@@ -165,11 +164,11 @@ Lúc sáng, trong khi chờ kết quả ở hành lang, Tôm ngồi cạnh một
 
 Tôm giơ ba ngón tay. Rồi con nhìn lên chiếc đồng hồ treo tường, tặc lưỡi một cái, đưa tay lên trán.
 
-– Thôi \_\_\_, muộn rồi!
+– Thôi_____, muộn rồi!
 
 Đức phá lên cười.
 
-– Giống hệt \_\_\_!
+– Giống hệt !
 
 Bà cụ cũng cười. Mấy người ngồi gần quay sang nhìn Tôm với vẻ thích thú. Chỉ có tôi không cười. Bởi đó là câu tôi thường nói mỗi sáng khi nhìn đồng hồ. Tôi cũng có thói quen tặc lưỡi và đưa tay lên trán. Tôm vừa làm đúng cả ba điều ấy.
 
@@ -197,7 +196,7 @@ Chiều hôm ấy, dù đã mệt, tôi vẫn đưa Tôm đến buổi trị li�
 
 Tôi quyết định để hôm sau gọi lại.
 
-\ *\* \*
+* 
 
 **Ngày 13 tháng 4**
 
@@ -267,7 +266,7 @@ Nếu Tôm không muốn người lớn nghe thấy giọng nói ấy thì sao?
 
 Tôi tắt video. Kể từ lúc ấy, tôi không còn đủ can đảm mở lại video thêm lần nào nữa.
 
-\ *\* \*
+* 
 
 Hai ngày sau, chị Huyền nhắn tin. Chị bảo phải vào Sài Gòn tham gia một khóa học, chưa biết khi nào trở lại. Chị sẽ giới thiệu Tôm sang một đồng nghiệp khác. Chị chúc gia đình tôi mạnh khỏe.
 
@@ -311,10 +310,6 @@ Một câu rất khẽ.
 
 Bằng chính giọng tôi.
 
-– Đừng nói cho \_\_\_ biết.
+– Đừng nói cho____biết.
 
-\ *\* \*
-
-*Lần đầu tiên, tôi nhận ra điều đáng sợ nhất không phải là Tôm có thể nói bằng giọng của tôi. Mà là con có thể dùng giọng ấy để nói những điều tôi chưa từng nói***.**
-
-**HẾT CHƯƠNG 2**
+* **HẾT CHƯƠNG 2**
