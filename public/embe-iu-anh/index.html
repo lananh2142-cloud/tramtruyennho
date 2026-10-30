@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Một món quà nhỏ</title>
+<meta property="og:title" content="Một món quà nhỏ gửi anh">
+<meta property="og:description" content="Embe có một món quà nhỏ xíu gửi riêng cho anh nè">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23e97e93' d='M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.1 0 3.6 1.2 4.3 2.6.7-1.4 2.2-2.6 4.3-2.6 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z'/%3E%3C/svg%3E">
+<style>
+html, body { height: 100%; margin: 0 }
+body { background: #110d26; color: #ffe0a8; display: grid; place-items: center; font: 18px "Comic Sans MS", cursive; text-align: center; padding: 24px; box-sizing: border-box }
+.h { width: 48px; fill: #e97e93; animation: b 1.2s ease-in-out infinite }
+@keyframes b { 50% { transform: scale(1.15) } }
+</style>
+</head>
+<body>
+<div id="m"><svg class="h" viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.1 0 3.6 1.2 4.3 2.6.7-1.4 2.2-2.6 4.3-2.6 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"/></svg><p>Đang mở quà cho anh…</p></div>
+<script>
+(async () => {
+  const msg = t => document.getElementById('m').querySelector('p').textContent = t;
+  try {
+    const k = new URLSearchParams(location.hash.slice(1)).get('k');
+    if (!k) return msg('Link này thiếu mã mở quà. Anh mở lại đúng link embe gửi nha.');
+    const raw = Uint8Array.from(atob(k.replace(/-/g, '+').replace(/_/g, '/') + '=='.slice(0, (4 - k.length % 4) % 4)), ch => ch.charCodeAt(0));
+    const key = await crypto.subtle.importKey('raw', raw, 'AES-GCM', false, ['decrypt']);
+    const dec = async url => {
+      const b = new Uint8Array(await (await fetch(url)).arrayBuffer());
+      return crypto.subtle.decrypt({ name: 'AES-GCM', iv: b.slice(0, 12) }, key, b.slice(12));
+    };
+    const types = { jpg: 'image/jpeg', mp4: 'video/mp4' };
+    window.__open = async name => URL.createObjectURL(new Blob([await dec(name + '.bin')], { type: types[name.split('.').pop()] || '' }));
+    const html = new TextDecoder().decode(await dec('p.bin'));
+    document.open(); document.write(html); document.close();
+  } catch (e) { msg('Không mở được quà. Anh kiểm tra lại link embe gửi nha.'); }
+})();
+</script>
+</body>
+</html>
